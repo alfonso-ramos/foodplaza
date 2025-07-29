@@ -2,10 +2,9 @@ package asedi;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class Main extends Application {
     
@@ -14,7 +13,7 @@ public class Main extends Application {
         try {
             // Cargar el archivo FXML de login
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
-            Parent root = loader.load();
+            Region root = loader.load();
             
             // Configurar la escena
             Scene scene = new Scene(root);
@@ -22,8 +21,15 @@ public class Main extends Application {
             // Configurar la ventana
             primaryStage.setTitle("FoodPlaza - Inicio de Sesión");
             primaryStage.setScene(scene);
-            primaryStage.setResizable(false);
+            primaryStage.setResizable(true);
+            primaryStage.setMinWidth(1000);
+            primaryStage.setMinHeight(600);
+            primaryStage.setMaximized(true);
             primaryStage.centerOnScreen();
+            
+            // Asegurar que el contenido se redimensione correctamente
+            root.prefWidthProperty().bind(scene.widthProperty());
+            root.prefHeightProperty().bind(scene.heightProperty());
             
             // Mostrar la ventana
             primaryStage.show();

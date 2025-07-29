@@ -27,45 +27,65 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-        // Configurar el botón de inicio de sesión
-        loginButton.setOnAction(e -> {
-            String email = emailField.getText();
-            String password = passwordField.getText();
-            System.out.println("Email: " + email + ", Password: " + password);
-            // Aquí puedes validar el login con la base de datos
-        });
+        // Inicialización si es necesaria
+    }
+    
+    @FXML
+    private void handleLogin() {
+        String email = emailField.getText().trim();
+        String password = passwordField.getText();
         
-        // Configurar el enlace para crear cuenta
-        createAccountLink.setOnAction(e -> {
-            try {
-                // Cargar la vista de registro
-                Parent root = FXMLLoader.load(getClass().getResource("/views/registro.fxml"));
-                
-                // Obtener la escena actual
-                Scene scene = createAccountLink.getScene();
-                if (scene == null) {
-                    // Si no hay escena, crear una nueva
-                    scene = new Scene(root);
-                    Stage stage = new Stage();
-                    stage.setScene(scene);
-                    stage.setTitle("FoodPlaza - Registro");
-                    stage.show();
-                } else {
-                    // Si ya hay una escena, usarla
-                    scene.setRoot(root);
-                    Stage stage = (Stage) scene.getWindow();
-                    stage.setTitle("FoodPlaza - Registro");
-                }
-            } catch (IOException ex) {
-                System.err.println("Error al cargar la vista de registro: " + ex.getMessage());
-                ex.printStackTrace();
-                // Mostrar mensaje de error al usuario
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("No se pudo cargar la pantalla de registro. Por favor, intente nuevamente.");
-                alert.showAndWait();
-            }
-        });
+        if (email.isEmpty() || password.isEmpty()) {
+            showAlert("Error", "Por favor, complete todos los campos.", Alert.AlertType.ERROR);
+            return;
+        }
+        
+        // Validación básica de email
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            showAlert("Error", "Por favor, ingrese un correo electrónico válido.", Alert.AlertType.ERROR);
+            return;
+        }
+        
+        // Aquí iría la lógica de autenticación
+        System.out.println("Iniciando sesión con: " + email);
+    }
+    
+    @FXML
+    private void handleCreateAccount() {
+        loadView("/views/registro.fxml", "Registro - FoodPlaza");
+    }
+    
+    @FXML
+    private void handleRecoverPassword() {
+        showAlert("Recuperar Contraseña", "Funcionalidad en desarrollo.", Alert.AlertType.INFORMATION);
+    }
+    
+    private void loadView(String fxmlPath, String title) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+            
+            // Configurar la escena
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/styles/" + fxmlPath.replace("/views/", "").replace(".fxml", ".css"));
+            
+            // Configurar la ventana
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setTitle(title);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "No se pudo cargar la vista: " + fxmlPath, Alert.AlertType.ERROR);
+        }
+    }
+    
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

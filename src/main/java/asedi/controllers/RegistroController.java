@@ -21,86 +21,87 @@ public class RegistroController {
     @FXML private PasswordField confirmarPasswordField;
     @FXML private Button registrarButton;
     @FXML private Hyperlink regresarLink;
+    @FXML private Hyperlink iniciarSesionLink;
 
     @FXML
     private void initialize() {
-        // Configurar el botón de registro
-        registrarButton.setOnAction(e -> registrarUsuario());
-        
-        // Configurar el enlace para regresar al login
-        regresarLink.setOnAction(e -> {
-            try {
-                // Cargar la vista de login
-                Parent root = FXMLLoader.load(getClass().getResource("/views/login.fxml"));
-                
-                // Obtener la escena actual
-                Scene scene = regresarLink.getScene();
-                if (scene == null) {
-                    // Si no hay escena, crear una nueva
-                    scene = new Scene(root);
-                    Stage stage = new Stage();
-                    stage.setScene(scene);
-                    stage.setTitle("FoodPlaza - Inicio de Sesión");
-                    stage.show();
-                } else {
-                    // Si ya hay una escena, usarla
-                    scene.setRoot(root);
-                    Stage stage = (Stage) scene.getWindow();
-                    stage.setTitle("FoodPlaza - Inicio de Sesión");
-                }
-            } catch (IOException ex) {
-                System.err.println("Error al cargar la vista de login: " + ex.getMessage());
-                ex.printStackTrace();
-                // Mostrar mensaje de error al usuario
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("No se pudo cargar la pantalla de inicio de sesión. Por favor, intente nuevamente.");
-                alert.showAndWait();
-            }
-        });
+        // Inicialización si es necesaria
     }
-
-    private void registrarUsuario() {
-        String nombre = nombreField.getText();
-        String email = emailField.getText();
+    
+    @FXML
+    private void handleRegistrar() {
+        String nombre = nombreField.getText().trim();
+        String email = emailField.getText().trim();
         String password = passwordField.getText();
-        String confirmarPassword = confirmarPasswordField.getText();
-
-        // Validar campos vacíos
-        if (nombre.isEmpty() || email.isEmpty() || password.isEmpty() || confirmarPassword.isEmpty()) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Campos vacíos", "Por favor, completa todos los campos.");
-            return;
-        }
-
-        // Validar correo
-        if (!esEmailValido(email)) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Correo inválido", "Ingresa un correo electrónico válido.");
-            return;
-        }
-
-        // Validar contraseñas iguales
-        if (!password.equals(confirmarPassword)) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Contraseñas no coinciden", "Las contraseñas no coinciden. Intenta de nuevo.");
-            return;
-        }
-
-        // Simular registro exitoso
-        mostrarAlerta(Alert.AlertType.INFORMATION, "Registro exitoso", "Usuario registrado correctamente.");
+        String confirmPassword = confirmarPasswordField.getText();
         
-        // Aquí podrías guardar en base de datos o continuar el flujo
+        // Validaciones
+        if (nombre.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            showAlert("Error", "Por favor, complete todos los campos.", Alert.AlertType.ERROR);
+            return;
+        }
+        
+        if (!esEmailValido(email)) {
+            showAlert("Error", "Por favor, ingrese un correo electrónico válido.", Alert.AlertType.ERROR);
+            return;
+        }
+        
+        if (password.length() < 6) {
+            showAlert("Error", "La contraseña debe tener al menos 6 caracteres.", Alert.AlertType.ERROR);
+            return;
+        }
+        
+        if (!password.equals(confirmPassword)) {
+            showAlert("Error", "Las contraseñas no coinciden.", Alert.AlertType.ERROR);
+            return;
+        }
+        
+        // Aquí iría la lógica de registro
+        System.out.println("Registrando usuario: " + email);
+        showAlert("Registro exitoso", "¡Bienvenido a FoodPlaza, " + nombre + "!", Alert.AlertType.INFORMATION);
     }
-
+    
+    @FXML
+    private void handleRegresar() {
+        loadView("/views/login.fxml", "Inicio de Sesión - FoodPlaza");
+    }
+    
+    @FXML
+    private void handleIniciarSesion() {
+        loadView("/views/login.fxml", "Inicio de Sesión - FoodPlaza");
+    }
+    
+    private void loadView(String fxmlPath, String title) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+            
+            // Configurar la escena
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/styles/" + fxmlPath.replace("/views/", "").replace(".fxml", ".css"));
+            
+            // Configurar la ventana
+            Stage stage = (Stage) nombreField.getScene().getWindow();
+            stage.setTitle(title);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "No se pudo cargar la vista: " + fxmlPath, Alert.AlertType.ERROR);
+        }
+    }
+    
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
     private boolean esEmailValido(String email) {
         String regex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
         return Pattern.matches(regex, email);
-    }
-
-    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensaje);
-        alerta.showAndWait();
     }
 }

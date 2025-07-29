@@ -7,35 +7,39 @@
 
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.LoginController" stylesheets="/styles/login.css">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.LoginController" stylesheets="/styles/login.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0">
     
     <!-- Panel verde a la izquierda -->
     <left>
-        <StackPane styleClass="left-pane">
+        <StackPane styleClass="left-pane" BorderPane.alignment="CENTER">
             <Label text="FoodPlaza" styleClass="brand-label"/>
         </StackPane>
     </left>
 
     <!-- Panel blanco a la derecha -->
     <center>
-        <VBox alignment="CENTER" spacing="10.0" styleClass="right-pane">
+        <VBox alignment="CENTER" spacing="15.0" styleClass="right-pane" BorderPane.alignment="CENTER">
             <padding>
-                <Insets top="40" right="40" bottom="40" left="40"/>
+                <Insets top="40.0" right="60.0" bottom="40.0" left="60.0"/>
             </padding>
-            <Label text="Login" styleClass="login-title"/>
+            <Label text="Iniciar Sesión" styleClass="login-title"/>
+            
+            <VBox spacing="10.0" alignment="CENTER" maxWidth="300.0">
+                <Label text="Correo Electrónico" styleClass="form-label"/>
+                <TextField fx:id="emailField" promptText="Ingrese su correo" styleClass="text-field" maxWidth="1.7976931348623157E308"/>
 
-            <VBox spacing="10.0" alignment="CENTER_LEFT" maxWidth="250">
-                <Label text="Correo" />
-                <TextField fx:id="emailField" promptText="Correo"/>
-
-                <Label text="Contraseña" />
-                <PasswordField fx:id="passwordField" promptText="Contraseña"/>
+                <Label text="Contraseña" styleClass="form-label"/>
+                <PasswordField fx:id="passwordField" promptText="Ingrese su contraseña" styleClass="password-field" maxWidth="1.7976931348623157E308"/>
             </VBox>
 
-            <Button text="Iniciar sesión" fx:id="loginButton" styleClass="login-button"/>
+            <Button text="Iniciar Sesión" fx:id="loginButton" styleClass="login-button" onAction="#handleLogin" defaultButton="true"/>
 
-            <Hyperlink text="Crear cuenta" fx:id="createAccountLink"/>
-            <Hyperlink text="Recuperar contraseña" fx:id="recoverPasswordLink"/>
+            <HBox alignment="CENTER" spacing="10">
+                <Label text="¿No tienes una cuenta?" styleClass="form-label"/>
+                <Hyperlink text="Regístrate aquí" fx:id="createAccountLink" onAction="#handleCreateAccount" styleClass="hyperlink"/>
+            </HBox>
+            
+            <Hyperlink text="¿Olvidaste tu contraseña?" fx:id="recoverPasswordLink" onAction="#handleRecoverPassword" styleClass="hyperlink"/>
         </VBox>
     </center>
 </BorderPane>
