@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" style="-fx-padding: 20;" 
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="asedi.controllers.AgregarPlazaController">
+    
+    <Label text="Agregar Nueva Plaza" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #00D561;" />
+    
+    <GridPane hgap="10" vgap="10">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+        
+        <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="nombreField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        
+        <Label text="Ubicación:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="ubicacionField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        
+        <Label text="Capacidad:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <TextField fx:id="capacidadField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+    </GridPane>
+    
+    <HBox spacing="10">
+        <Button text="Guardar" onAction="#guardarPlaza" style="-fx-background-color: #00D561; -fx-text-fill: white;" />
+        <Button text="Cancelar" onAction="#cancelar" style="-fx-background-color: #f44336; -fx-text-fill: white;" />
+    </HBox>
+</VBox>

@@ -1,0 +1,148 @@
+/* Estilos base */
+.root {
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 0;
+    -fx-margin: 0;
+}
+
+/* Sidebar */
+.sidebar {
+    -fx-background-color: #00D561;
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+}
+
+/* Avatar de usuario */
+.user-avatar {
+    -fx-background-color: lightgray;
+    -fx-background-radius: 50%;
+}
+
+/* Texto del usuario */
+.user-name {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.user-role {
+    -fx-text-fill: #e0e0e0;
+    -fx-font-size: 14px;
+}
+
+/* Botones del menú */
+.menu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+    -fx-background-radius: 5px;
+    -fx-font-size: 14px;
+}
+
+.menu-btn:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+.menu-btn:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Botón de cerrar sesión */
+.logout-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-border-color: white;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 8 16px;
+    -fx-cursor: hand;
+}
+
+.logout-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Barra superior */
+.header {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+/* Área de búsqueda */
+.search-field {
+    -fx-pref-width: 250px;
+    -fx-padding: 8px 12px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+}
+
+/* Contenido principal */
+.content {
+    -fx-padding: 20px;
+    -fx-background-color: #f5f5f5;
+}
+
+/* Estilos para el contenido dinámico */
+.content-pane {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 1);
+}
+
+/* Títulos de la aplicación */
+.app-title {
+    -fx-text-fill: #00D561;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.section-title {
+    -fx-text-fill: #666666;
+    -fx-font-size: 16px;
+}
+
+/* Mensaje de bienvenida */
+.welcome-title {
+    -fx-text-fill: #333333;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.welcome-subtitle {
+    -fx-text-fill: #666666;
+    -fx-font-size: 16px;
+}
+
+/* Efecto de sombra para el contenido */
+.content {
+    -fx-padding: 20px;
+    -fx-background-color: #f5f5f5;
+}
+
+/* Asegurar que el contenido ocupe todo el espacio disponible */
+BorderPane {
+    -fx-pref-width: 100%;
+    -fx-pref-height: 100%;
+}
+
+/* Estilos para el área de búsqueda */
+.search-field {
+    -fx-pref-width: 250px;
+    -fx-padding: 8px 12px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+}
+
+.search-field:focused {
+    -fx-border-color: #00D561;
+    -fx-effect: dropshadow(gaussian, rgba(0,211,97,0.2), 10, 0, 0, 3);
+}

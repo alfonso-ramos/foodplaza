@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="asedi.controllers.AdminDashboardController"
+            stylesheets="@/styles/adminDashboard/adminDashboard.css">
+
+    <!-- Sidebar izquierdo simplificado -->
+    <left>
+        <VBox style="-fx-background-color: #00D561;" spacing="10" prefWidth="200">
+            <!-- Menú de navegación -->
+            <VBox spacing="10" style="-fx-padding: 20;">
+                <Button text="Plazas" onAction="#cargarPlazas" styleClass="menu-btn" />
+                <Button text="Agregar plaza" onAction="#cargarAgregarPlaza" styleClass="menu-btn" />
+                <Button text="Cerrar sesión" onAction="#cerrarSesion" styleClass="menu-btn" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Área de contenido principal -->
+    <center>
+        <StackPane fx:id="contenidoPane" style="-fx-padding: 20;">
+            <Label text="Bienvenido al Panel de Administración" style="-fx-font-size: 24px;" />
+        </StackPane>
+    </center>
+
+</BorderPane>

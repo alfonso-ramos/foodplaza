@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" style="-fx-padding: 20;" 
+      xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="asedi.controllers.PlazasController">
+    <Label text="Gestión de Plazas" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #00D561;" />
+    <Label text="Aquí se mostrará la lista de plazas disponibles" />
+    
+    <TableView style="-fx-padding: 10 0 0 0;">
+        <columns>
+            <TableColumn text="ID" />
+            <TableColumn text="Nombre" />
+            <TableColumn text="Ubicación" />
+            <TableColumn text="Acciones" />
+        </columns>
+    </TableView>
+    
+    <HBox spacing="10" style="-fx-padding: 10 0 0 0;">
+        <Button text="Agregar Plaza" onAction="#cargarAgregarPlaza" style="-fx-background-color: #00D561; -fx-text-fill: white;" />
+    </HBox>
+</VBox>

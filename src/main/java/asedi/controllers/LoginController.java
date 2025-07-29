@@ -1,7 +1,9 @@
 package asedi.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -31,23 +33,15 @@ public class LoginController {
     }
     
     @FXML
-    private void handleLogin() {
-        String email = emailField.getText().trim();
-        String password = passwordField.getText();
-        
-        if (email.isEmpty() || password.isEmpty()) {
-            showAlert("Error", "Por favor, complete todos los campos.", Alert.AlertType.ERROR);
+    private void handleLogin(ActionEvent event) {
+        // Validación simple - cualquier correo y contraseña funcionarán
+        if (emailField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+            showAlert("Error", "Por favor ingrese correo y contraseña", Alert.AlertType.WARNING);
             return;
         }
         
-        // Validación básica de email
-        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            showAlert("Error", "Por favor, ingrese un correo electrónico válido.", Alert.AlertType.ERROR);
-            return;
-        }
-        
-        // Aquí iría la lógica de autenticación
-        System.out.println("Iniciando sesión con: " + email);
+        // Cargar la vista del dashboard usando el método loadView existente
+        loadView("/views/adminDashboard.fxml", "Panel de Administración - FoodPlaza");
     }
     
     @FXML
@@ -62,22 +56,80 @@ public class LoginController {
     
     private void loadView(String fxmlPath, String title) {
         try {
+            System.out.println("Intentando cargar vista: " + fxmlPath);
+            
+            // Verificar si el archivo FXML existe
+            if (getClass().getResource(fxmlPath) == null) {
+                throw new IOException("No se pudo encontrar el archivo: " + fxmlPath);
+            }
+            
+            // Cargar el FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
             
             // Configurar la escena
             Scene scene = new Scene(root);
-            scene.getStylesheets().add("/styles/" + fxmlPath.replace("/views/", "").replace(".fxml", ".css"));
+            
+            // Cargar estilos CSS
+            loadStyles(fxmlPath, scene);
             
             // Configurar la ventana
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setTitle(title);
             stage.setScene(scene);
+            
+            // Maximizar la ventana si es el dashboard
+            if (fxmlPath.equals("/views/adminDashboard.fxml")) {
+                stage.setMaximized(true);
+            }
+            
+            // Centrar la ventana
             stage.centerOnScreen();
             
+            // Mostrar la ventana
+            stage.show();
+            
+            System.out.println("Vista cargada exitosamente: " + fxmlPath);
+            
         } catch (IOException e) {
+            String errorMsg = "Error al cargar la vista " + fxmlPath + ": " + e.getMessage();
+            System.err.println(errorMsg);
             e.printStackTrace();
-            showAlert("Error", "No se pudo cargar la vista: " + fxmlPath, Alert.AlertType.ERROR);
+            showAlert("Error", errorMsg, Alert.AlertType.ERROR);
+        }
+    }
+    
+    /**
+     * Carga los estilos CSS para una vista específica.
+     * @param fxmlPath Ruta del archivo FXML
+     * @param scene Escena a la que se aplicarán los estilos
+     */
+    private void loadStyles(String fxmlPath, Scene scene) {
+        try {
+            String cssPath;
+            
+            // Determinar la ruta del CSS basado en la vista
+            if (fxmlPath.equals("/views/adminDashboard.fxml")) {
+                cssPath = "/styles/adminDashboard/adminDashboard.css";
+            } else if (fxmlPath.equals("/views/registro.fxml")) {
+                cssPath = "/styles/registro.css";
+            } else {
+                // Ruta por defecto para otras vistas
+                cssPath = fxmlPath.replace("/views/", "/styles/").replace(".fxml", ".css");
+            }
+            
+            // Cargar el CSS si existe
+            if (getClass().getResource(cssPath) != null) {
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
+                System.out.println("Estilos cargados desde: " + cssPath);
+            } else {
+                System.out.println("No se encontraron estilos en: " + cssPath);
+            }
+            
+        } catch (Exception e) {
+            System.err.println("Error al cargar estilos para " + fxmlPath + ": " + e.getMessage());
+            e.printStackTrace();
         }
     }
     
