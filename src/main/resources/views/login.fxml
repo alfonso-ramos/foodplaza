@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.LoginController" stylesheets="/styles/login.css">
+    
+    <!-- Panel verde a la izquierda -->
+    <left>
+        <StackPane styleClass="left-pane">
+            <Label text="FoodPlaza" styleClass="brand-label"/>
+        </StackPane>
+    </left>
+
+    <!-- Panel blanco a la derecha -->
+    <center>
+        <VBox alignment="CENTER" spacing="10.0" styleClass="right-pane">
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
+            <Label text="Login" styleClass="login-title"/>
+
+            <VBox spacing="10.0" alignment="CENTER_LEFT" maxWidth="250">
+                <Label text="Correo" />
+                <TextField fx:id="emailField" promptText="Correo"/>
+
+                <Label text="Contraseña" />
+                <PasswordField fx:id="passwordField" promptText="Contraseña"/>
+            </VBox>
+
+            <Button text="Iniciar sesión" fx:id="loginButton" styleClass="login-button"/>
+
+            <Hyperlink text="Crear cuenta" fx:id="createAccountLink"/>
+            <Hyperlink text="Recuperar contraseña" fx:id="recoverPasswordLink"/>
+        </VBox>
+    </center>
+</BorderPane>
