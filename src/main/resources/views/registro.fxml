@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.RegistroController" stylesheets="/styles/registro.css">
+    <!-- Sección Izquierda -->
+    <left>
+        <StackPane styleClass="left-pane">
+            <Label text="FoodPlaza" styleClass="brand-label"/>
+        </StackPane>
+    </left>
+
+    <!-- Sección Derecha -->
+    <center>
+        <VBox styleClass="right-pane">
+            <!-- Botón Regresar -->
+            <HBox alignment="TOP_LEFT">
+                <Hyperlink text="Regresar" fx:id="regresarLink" styleClass="hyperlink" />
+            </HBox>
+
+            <!-- Título -->
+            <Label text="Registrate" styleClass="registro-title"/>
+
+            <!-- Formulario -->
+            <VBox spacing="10">
+                <Label text="Nombre" styleClass="form-label"/>
+                <TextField fx:id="nombreField" styleClass="text-field"/>
+
+                <Label text="Correo electrónico" styleClass="form-label"/>
+                <TextField fx:id="emailField" styleClass="text-field"/>
+
+                <Label text="Password" styleClass="form-label"/>
+                <PasswordField fx:id="passwordField" styleClass="password-field"/>
+
+                <Label text="Confirmar contraseña" styleClass="form-label"/>
+                <PasswordField fx:id="confirmarPasswordField" styleClass="password-field"/>
+            </VBox>
+
+            <!-- Botón Crear Cuenta -->
+            <Button text="Crear Cuenta" fx:id="registrarButton" styleClass="login-button" />
+        </VBox>
+    </center>
+</BorderPane>
