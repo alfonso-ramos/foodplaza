@@ -2,24 +2,52 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="10" style="-fx-padding: 20;" 
-      xmlns:fx="http://javafx.com/fxml" 
-      fx:controller="asedi.controllers.PlazasController">
-    <Label text="Gestión de Plazas" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #00D561;" />
-    <Label text="Aquí se mostrará la lista de plazas disponibles" />
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="asedi.controllers.PlazasController"
+            stylesheets="@../styles/plazas.css">
     
-    <TableView style="-fx-padding: 10 0 0 0;">
-        <columns>
-            <TableColumn text="ID" />
-            <TableColumn text="Nombre" />
-            <TableColumn text="Ubicación" />
-            <TableColumn text="Acciones" />
-        </columns>
-    </TableView>
+    <center>
+        <StackPane>
+            <!-- Main Content -->
+            <ScrollPane fitToWidth="true"
+                        hbarPolicy="NEVER"
+                        vbarPolicy="AS_NEEDED"
+                        style="-fx-background: #f5f5f5;">
+                
+                <VBox spacing="20" style="-fx-padding: 20; -fx-background: #f5f5f5;">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Gestión de Plazas" styleClass="title-label" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button text="↻ Actualizar" onAction="#refreshPlazas" styleClass="refresh-button" />
+                        <Button text="+ Agregar Plaza" onAction="#cargarAgregarPlaza" styleClass="add-button" />
+                    </HBox>
+                    
+                    <Separator style="-fx-padding: 0 0 10 0;" />
+                    
+                    <!-- Main grid container -->
+                    <GridPane fx:id="gridPlazas" hgap="20" vgap="20" />
+                    
+                    <!-- Empty state -->
+                    <VBox fx:id="emptyState" alignment="CENTER" spacing="20" visible="false" managed="false">
+                        <Label text="📋" style="-fx-font-size: 48px; -fx-opacity: 0.7;" />
+                        <Label text="No hay plazas registradas" style="-fx-text-fill: #666; -fx-font-size: 16px;" />
+                        <Button text="Agregar primera plaza" onAction="#cargarAgregarPlaza" styleClass="primary-button" />
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+            
+            <!-- Loading Overlay -->
+            <StackPane fx:id="loadingOverlay" style="-fx-background-color: rgba(255, 255, 255, 0.8);" visible="false">
+                <VBox alignment="CENTER" spacing="15">
+                    <ProgressIndicator fx:id="loadingIndicator" progress="-1" style="-fx-progress-color: #00D561;" />
+                    <Label fx:id="statusLabel" style="-fx-text-fill: #333; -fx-font-size: 14px;" />
+                    <Button fx:id="retryButton" text="Reintentar" onAction="#cargarPlazas" style="-fx-background-color: #f44336; -fx-text-fill: white;" visible="false" />
+                </VBox>
+            </StackPane>
+        </StackPane>
+    </center>
     
-    <HBox spacing="10" style="-fx-padding: 10 0 0 0;">
-        <Button text="Agregar Plaza" onAction="#cargarAgregarPlaza" style="-fx-background-color: #00D561; -fx-text-fill: white;" />
-    </HBox>
-</VBox>
+</BorderPane>

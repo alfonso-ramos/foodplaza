@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+    <!-- Fondo gris claro -->
+    <rect width="400" height="300" fill="#f0f0f0"/>
+    
+    <!-- Icono de edificio -->
+    <rect x="100" y="150" width="200" height="120" fill="#cccccc" rx="5" ry="5"/>
+    <rect x="120" y="170" width="40" height="40" fill="#aaaaaa" rx="3" ry="3"/>
+    <rect x="180" y="170" width="40" height="40" fill="#aaaaaa" rx="3" ry="3"/>
+    <rect x="240" y="170" width="40" height="40" fill="#aaaaaa" rx="3" ry="3"/>
+    
+    <!-- Texto de placeholder -->
+    <text x="200" y="130" font-family="Arial" font-size="16" text-anchor="middle" fill="#888888">Sin imagen</text>
+    
+    <!-- Sombra -->
+    <rect x="100" y="150" width="200" height="10" fill="#dddddd" rx="2" ry="2" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;0.4;0.8" dur="2s" repeatCount="indefinite"/>
+    </rect>
+</svg>

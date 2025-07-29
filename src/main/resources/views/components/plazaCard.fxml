@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox fx:id="cardContainer" styleClass="plaza-card" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="asedi.controllers.PlazaCardController"
+      stylesheets="@../../styles/plazaCard.css">
+    
+    <!-- Plaza Image Container -->
+    <StackPane styleClass="image-container">
+        <ImageView fx:id="imagenPlaza" fitWidth="360" fitHeight="180" preserveRatio="true" />
+    </StackPane>
+    
+    <!-- Card Content -->
+    <VBox styleClass="content">
+        <VBox spacing="4">
+            <Label fx:id="nombreLabel" styleClass="title" />
+            <HBox alignment="CENTER_LEFT" spacing="4">
+                <ImageView fitWidth="16" fitHeight="16" preserveRatio="true" pickOnBounds="true">
+                    <image>
+                        <Image url="@/images/icons/location.svg" />
+                    </image>
+                </ImageView>
+                <Label fx:id="ubicacionLabel" styleClass="location" />
+            </HBox>
+        </VBox>
+        
+        <Label fx:id="descripcionLabel" styleClass="description" wrapText="true" />
+        
+        <HBox styleClass="button-container" spacing="8">
+            <Button text="Modificar" onAction="#onModificar" styleClass="button button-modify" />
+            <Button text="Eliminar" onAction="#onEliminar" styleClass="button button-delete" />
+        </HBox>
+    </VBox>
+</VBox>

@@ -1,0 +1,46 @@
+{
+  "plazas": [
+    {
+      "id": 1,
+      "nombre": "Plaza Central",
+      "ubicacion": "Centro de la ciudad",
+      "imagen": "/images/plazas/plaza1.jpg",
+      "descripcion": "La plaza principal con gran variedad de locales"
+    },
+    {
+      "id": 2,
+      "nombre": "Plaza del Sol",
+      "ubicacion": "Zona Norte",
+      "imagen": "/images/plazas/plaza2.jpg",
+      "descripcion": "Amplia plaza con zona de comidas"
+    },
+    {
+      "id": 3,
+      "nombre": "Plaza Jardines",
+      "ubicacion": "Zona Sur",
+      "imagen": "/images/plazas/plaza3.jpg",
+      "descripcion": "Ambiente familiar con áreas verdes"
+    },
+    {
+      "id": 4,
+      "nombre": "Plaza Moda",
+      "ubicacion": "Distrito Comercial",
+      "imagen": "/images/plazas/plaza4.jpg",
+      "descripcion": "Especializada en tiendas de moda"
+    },
+    {
+      "id": 5,
+      "nombre": "Plaza Gourmet",
+      "ubicacion": "Zona Gastronómica",
+      "imagen": "/images/plazas/plaza5.jpg",
+      "descripcion": "Los mejores restaurantes en un solo lugar"
+    },
+    {
+      "id": 6,
+      "nombre": "Plaza Tecnológica",
+      "ubicacion": "Distrito de Innovación",
+      "imagen": "/images/plazas/plaza6.jpg",
+      "descripcion": "Tecnología y electrónica de punta"
+    }
+  ]
+}
