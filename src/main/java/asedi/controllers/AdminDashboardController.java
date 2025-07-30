@@ -1,5 +1,6 @@
 package asedi.controllers;
 
+import asedi.services.AuthService;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,15 +12,26 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class AdminDashboardController {
 
     @FXML
     private StackPane contenidoPane;
+    
+    @FXML
+    private Label userLabel;
 
     @FXML
     public void initialize() {
+        // Mostrar información del usuario actual
+        AuthService authService = AuthService.getInstance();
+        if (authService.getCurrentUser() != null) {
+            userLabel.setText(authService.getCurrentUser().getFullName());
+        }
+        
         // Mostrar un mensaje de bienvenida cuando se inicia el dashboard
         mostrarMensajeBienvenida();
     }
@@ -27,18 +39,21 @@ public class AdminDashboardController {
     @FXML
     private void cerrarSesion(ActionEvent event) {
         try {
+            // Cerrar sesión
+            AuthService.getInstance().logout();
+            
             // Cerrar la ventana actual
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             
             // Cargar la vista de login
-            Parent root = FXMLLoader.load(getClass().getResource("/views/login.fxml"));
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
+            Parent root = loader.load();
+            
+            stage.setScene(new Scene(root));
             stage.setTitle("Inicio de Sesión - FoodPlaza");
             stage.setMaximized(false);
             stage.centerOnScreen();
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Error", "No se pudo cargar la vista de login", AlertType.ERROR);
@@ -54,9 +69,22 @@ public class AdminDashboardController {
     }
 
     private void mostrarMensajeBienvenida() {
-        Label mensaje = new Label("Bienvenido al Panel de Administración\n\nSeleccione una opción del menú para comenzar.");
-        mensaje.setStyle("-fx-font-size: 16px; -fx-text-alignment: center;");
-        contenidoPane.getChildren().setAll(mensaje);
+        VBox welcomeBox = new VBox(20);
+        welcomeBox.setAlignment(javafx.geometry.Pos.CENTER);
+        
+        Text welcomeText = new Text("Bienvenido al Panel de Administración");
+        welcomeText.setStyle("-fx-font-size: 28px; -fx-fill: #2c3e50; -fx-font-weight: bold;");
+        
+        Text instructionText = new Text("Seleccione una opción del menú para comenzar");
+        instructionText.setStyle("-fx-font-size: 16px; -fx-fill: #7f8c8d;");
+        
+        welcomeBox.getChildren().addAll(welcomeText, instructionText);
+        contenidoPane.getChildren().setAll(welcomeBox);
+    }
+    
+    @FXML
+    public void cargarInicio() {
+        mostrarMensajeBienvenida();
     }
 
     @FXML 

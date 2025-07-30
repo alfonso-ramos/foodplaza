@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="asedi.controllers.UsuarioDashboardController"
+            stylesheets="@/styles/adminDashboard/adminDashboard.css">
+    
+    <!-- Sidebar izquierdo -->
+    <left>
+        <VBox style="-fx-background-color: #4A90E2;" spacing="10" prefWidth="200">
+            <!-- Encabezado -->
+            <VBox style="-fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER;">
+                <Label text="USUARIO" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Label fx:id="userNameLabel" text="Usuario" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+            </VBox>
+            
+            <!-- Menú de navegación -->
+            <VBox style="-fx-padding: 0 20 20 20;" spacing="5">
+                <Label text="MENÚ PRINCIPAL" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 12px; -fx-padding: 10 0 5 15; -fx-text-transform: uppercase;"/>
+                <Button text="Inicio" onAction="#cargarInicio" styleClass="menu-btn"/>
+                
+                <Label text="MIS DATOS" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 12px; -fx-padding: 10 0 5 15; -fx-text-transform: uppercase;"/>
+                <Button text="Perfil" onAction="#cargarPerfil" styleClass="menu-btn"/>
+                <Button text="Reservas" onAction="#cargarReservas" styleClass="menu-btn"/>
+                
+                <VBox style="-fx-padding: 20 0 0 0;">
+                    <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="logout-btn"/>
+                </VBox>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Área de contenido principal -->
+    <center>
+        <StackPane fx:id="contenidoPane" style="-fx-padding: 20;">
+            <VBox alignment="CENTER" spacing="20">
+                <Text text="Bienvenido a FoodPlaza" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-fill: #333;"/>
+                <Text text="¡Gracias por usar nuestra plataforma!" style="-fx-font-size: 16px; -fx-fill: #666;"/>
+            </VBox>
+        </StackPane>
+    </center>
+    
+</BorderPane>

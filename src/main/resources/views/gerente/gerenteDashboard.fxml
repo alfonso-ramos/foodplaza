@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="asedi.controllers.GerenteDashboardController"
+            stylesheets="@/styles/adminDashboard/adminDashboard.css">
+    
+    <!-- Sidebar izquierdo -->
+    <left>
+        <VBox style="-fx-background-color: #00D561;" spacing="10" prefWidth="200">
+            <!-- Encabezado -->
+            <VBox style="-fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER;">
+                <Label text="GERENTE" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Label fx:id="userNameLabel" text="Usuario" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+            </VBox>
+            
+            <!-- Menú de navegación -->
+            <VBox style="-fx-padding: 0 20 20 20;" spacing="5">
+                <Label text="MENÚ PRINCIPAL" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 12px; -fx-padding: 10 0 5 15; -fx-text-transform: uppercase;"/>
+                <Button text="Panel Principal" onAction="#cargarPanelPrincipal" styleClass="menu-btn"/>
+                
+                <Label text="GESTIÓN" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 12px; -fx-padding: 10 0 5 15; -fx-text-transform: uppercase;"/>
+                <Button text="Locales" onAction="#cargarLocales" styleClass="menu-btn"/>
+                <Button text="Reportes" onAction="#cargarReportes" styleClass="menu-btn"/>
+                
+                <VBox style="-fx-padding: 20 0 0 0;">
+                    <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="logout-btn"/>
+                </VBox>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Área de contenido principal -->
+    <center>
+        <StackPane fx:id="contenidoPane" style="-fx-padding: 20;">
+            <VBox alignment="CENTER" spacing="20">
+                <Text text="Bienvenido al Panel de Gerente" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                <Text text="Seleccione una opción del menú para comenzar." style="-fx-font-size: 16px;"/>
+            </VBox>
+        </StackPane>
+    </center>
+    
+</BorderPane>

@@ -1,9 +1,10 @@
 package asedi.controllers;
 
+import asedi.services.AuthService;
+import asedi.models.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -34,14 +35,37 @@ public class LoginController {
     
     @FXML
     private void handleLogin(ActionEvent event) {
-        // Validación simple - cualquier correo y contraseña funcionarán
-        if (emailField.getText().isEmpty() || passwordField.getText().isEmpty()) {
-            showAlert("Error", "Por favor ingrese correo y contraseña", Alert.AlertType.WARNING);
+        String email = emailField.getText().trim();
+        String password = passwordField.getText();
+        
+        if (email.isEmpty() || password.isEmpty()) {
+            showAlert("Error", "Por favor ingrese su correo y contraseña", Alert.AlertType.WARNING);
             return;
         }
         
-        // Cargar la vista del dashboard usando el método loadView existente
-        loadView("/views/adminDashboard.fxml", "Panel de Administración - FoodPlaza");
+        // Validar formato de correo electrónico
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            showAlert("Error", "Por favor ingrese un correo electrónico válido", Alert.AlertType.WARNING);
+            return;
+        }
+        
+        AuthService authService = AuthService.getInstance();
+        if (authService.login(email, password)) {
+            User user = authService.getCurrentUser();
+            String dashboardPath = "/views/" + getDashboardForRole(user.getRole()) + ".fxml";
+            String title = "Panel de " + user.getRole().getDisplayName() + " - FoodPlaza";
+            loadView(dashboardPath, title);
+        } else {
+            showAlert("Error", "Usuario o contraseña incorrectos", Alert.AlertType.ERROR);
+        }
+    }
+    
+    private String getDashboardForRole(User.UserRole role) {
+        return switch (role) {
+            case ADMIN -> "adminDashboard";
+            case MANAGER -> "gerente/gerenteDashboard";
+            case USER -> "usuario/usuarioDashboard";
+        };
     }
     
     @FXML
