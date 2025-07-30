@@ -30,39 +30,70 @@
     -fx-font-size: 14px;
 }
 
+/* Secciones del menú */
+.section-title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 5 15;
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 1px;
+}
+
 /* Botones del menú */
 .menu-btn {
     -fx-background-color: transparent;
     -fx-text-fill: white;
-    -fx-font-weight: bold;
+    -fx-font-weight: 500;
     -fx-alignment: CENTER_LEFT;
-    -fx-padding: 10 20 10 20;
+    -fx-padding: 8 15 8 25;
     -fx-cursor: hand;
-    -fx-background-radius: 5px;
-    -fx-font-size: 14px;
+    -fx-background-radius: 4px;
+    -fx-font-size: 13px;
+    -fx-effect: null;
+    -fx-transition: all 0.2s;
 }
 
 .menu-btn:hover {
-    -fx-background-color: rgba(0, 0, 0, 0.1);
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+    -fx-translate-x: 2px;
 }
 
 .menu-btn:pressed {
-    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-translate-x: 0;
+}
+
+/* Estilo para el botón activo */
+.menu-btn:selected {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-font-weight: bold;
+}
+
+/* Separador entre secciones */
+.separator {
+    -fx-padding: 10 0;
 }
 
 /* Botón de cerrar sesión */
 .logout-btn {
-    -fx-background-color: transparent;
+    -fx-background-color: #e74c3c;
     -fx-text-fill: white;
-    -fx-border-color: white;
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px;
-    -fx-padding: 8 16px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-radius: 4px;
+    -fx-padding: 10 20px;
     -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);
+    -fx-transition: all 0.2s;
 }
 
 .logout-btn:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-color: #c0392b;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);
 }
 
 /* Barra superior */

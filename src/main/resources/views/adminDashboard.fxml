@@ -13,9 +13,20 @@
         <VBox style="-fx-background-color: #00D561;" spacing="10" prefWidth="200">
             <!-- Menú de navegación -->
             <VBox spacing="10" style="-fx-padding: 20;">
+                <Label text="PLAZAS" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
                 <Button text="Plazas" onAction="#cargarPlazas" styleClass="menu-btn" />
                 <Button text="Agregar plaza" onAction="#cargarAgregarPlaza" styleClass="menu-btn" />
-                <Button text="Cerrar sesión" onAction="#cerrarSesion" styleClass="menu-btn" />
+                
+                <Label text="LOCALES" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+                <Button text="Locales" onAction="#cargarLocales" styleClass="menu-btn" />
+                <Button text="Agregar local" onAction="#cargarAgregarLocal" styleClass="menu-btn" />
+                
+                <Label text="ADMINISTRACIÓN" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+                <Button text="Asignar gerencia" onAction="#cargarAsignarGerencia" styleClass="menu-btn" />
+                
+                <VBox style="-fx-padding: 20 0 0 0;">
+                    <Button text="Cerrar sesión" onAction="#cerrarSesion" styleClass="menu-btn" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" />
+                </VBox>
             </VBox>
         </VBox>
     </left>

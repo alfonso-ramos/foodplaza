@@ -99,6 +99,32 @@ public class AdminDashboardController {
     }
     
     @FXML 
+    public void cargarLocales() {
+        try {
+            // Cargar la vista de gestión de locales
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/locales.fxml"));
+            Parent localesView = loader.load();
+            contenidoPane.getChildren().setAll(localesView);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "No se pudo cargar la vista de locales", AlertType.ERROR);
+        }
+    }
+    
+    @FXML 
+    public void cargarAsignarGerencia() {
+        try {
+            // Cargar la vista de asignación de gerencia
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/asignarGerencia.fxml"));
+            Parent asignarGerenciaView = loader.load();
+            contenidoPane.getChildren().setAll(asignarGerenciaView);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "No se pudo cargar la vista de asignar gerencia", AlertType.ERROR);
+        }
+    }
+    
+    @FXML 
     public void cargarAgregarGerentes() {
         try {
             // Cargar la vista para agregar gerentes
