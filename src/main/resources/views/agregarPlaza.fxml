@@ -3,30 +3,41 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
 
-<VBox spacing="20" style="-fx-padding: 20;" 
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="asedi.controllers.AgregarPlazaController">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="asedi.controllers.AgregarPlazaController"
+            stylesheets="@/styles/agregarPlaza.css">
     
-    <Label text="Agregar Nueva Plaza" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #00D561;" />
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <!-- Título del formulario -->
+            <Label text="Agregar Nueva Plaza" styleClass="title" />
+            
+            <!-- Contenedor del formulario -->
+            <VBox styleClass="form-container" spacing="20">
+                <!-- Campo Nombre -->
+                <VBox spacing="5">
+                    <Label text="Nombre de la Plaza" styleClass="label" />
+                    <TextField fx:id="nombreField" promptText="Ej: Plaza Central" styleClass="input-field" />
+                </VBox>
+                
+                <!-- Campo Dirección -->
+                <VBox spacing="5">
+                    <Label text="Dirección" styleClass="label" />
+                    <TextField fx:id="direccionField" promptText="Ej: Av. Principal #123" styleClass="input-field" />
+                </VBox>
+                
+                <!-- Mensaje de error -->
+                <Label fx:id="errorLabel" styleClass="error-message" />
+                
+                <!-- Botones de acción -->
+                <HBox styleClass="button-container" alignment="CENTER" spacing="10">
+                    <Button text="Cancelar" onAction="#cancelar" styleClass="cancel-button" />
+                    <Button text="Guardar Plaza" onAction="#guardarPlaza" styleClass="save-button" />
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
     
-    <GridPane hgap="10" vgap="10">
-        <padding>
-            <Insets top="10" right="10" bottom="10" left="10"/>
-        </padding>
-        
-        <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <TextField fx:id="nombreField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        
-        <Label text="Ubicación:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <TextField fx:id="ubicacionField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        
-        <Label text="Capacidad:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <TextField fx:id="capacidadField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-    </GridPane>
-    
-    <HBox spacing="10">
-        <Button text="Guardar" onAction="#guardarPlaza" style="-fx-background-color: #00D561; -fx-text-fill: white;" />
-        <Button text="Cancelar" onAction="#cancelar" style="-fx-background-color: #f44336; -fx-text-fill: white;" />
-    </HBox>
-</VBox>
+</BorderPane>

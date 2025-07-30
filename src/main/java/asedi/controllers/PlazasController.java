@@ -288,39 +288,7 @@ public class PlazasController {
             e.printStackTrace();
         }
     }
-    
-    @FXML
-    public void cargarAgregarPlaza(ActionEvent event) {
-        try {
-            // Cargar la vista para agregar plaza
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/agregarPlaza.fxml"));
-            Parent agregarPlazaView = loader.load();
-            
-            // Obtener el nodo que disparó el evento
-            Node sourceNode = (Node) event.getSource();
-            
-            // Obtener el contenido principal del dashboard y limpiarlo
-            VBox contenidoPane = (VBox) sourceNode.getScene().lookup("#contenidoPlazas");
-            if (contenidoPane != null) {
-                contenidoPane.getChildren().setAll(agregarPlazaView);
-            } else {
-                // Si no se encuentra el contenidoPane, intentar cargar la vista de otra manera
-                Stage stage = (Stage) sourceNode.getScene().getWindow();
-                Scene scene = new Scene(agregarPlazaView);
-                stage.setScene(scene);
-                stage.show();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "No se pudo cargar la vista de agregar plaza: " + e.getMessage(), AlertType.ERROR);
-        }
-    }
-    
-    public void modificarPlaza(int id) {
-        // Implementar lógica para modificar la plaza
-        showAlert("Modificar Plaza", "Modificando plaza con ID: " + id, AlertType.INFORMATION);
-    }
-    
+
     public void eliminarPlaza(int id) {
         // Mostrar confirmación antes de eliminar
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -389,6 +357,39 @@ public class PlazasController {
     @FXML
     public void refreshPlazas() {
         cargarPlazas();
+    }
+    
+    @FXML
+    public void cargarAgregarPlaza(ActionEvent event) {
+        try {
+            // Cargar la vista para agregar plaza
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/agregarPlaza.fxml"));
+            Parent agregarPlazaView = loader.load();
+            
+            // Obtener el nodo que disparó el evento
+            Node sourceNode = (Node) event.getSource();
+            
+            // Buscar el contenido principal del dashboard
+            StackPane contenidoPane = (StackPane) sourceNode.getScene().lookup("#contenidoPane");
+            if (contenidoPane != null) {
+                // Limpiar y cargar la vista en el contenido principal
+                contenidoPane.getChildren().setAll(agregarPlazaView);
+            } else {
+                // Si no se encuentra el contenidoPane, cargar la vista en una nueva escena (solo para pruebas)
+                Stage stage = (Stage) sourceNode.getScene().getWindow();
+                Scene scene = new Scene(agregarPlazaView);
+                stage.setScene(scene);
+                stage.show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "No se pudo cargar la vista de agregar plaza: " + e.getMessage(), AlertType.ERROR);
+        }
+    }
+    
+    public void modificarPlaza(int id) {
+        // Implementar lógica para modificar la plaza
+        showAlert("Modificar Plaza", "Modificando plaza con ID: " + id, AlertType.INFORMATION);
     }
     
     private void showAlert(String title, String message, AlertType type) {

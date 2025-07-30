@@ -5,8 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -17,37 +16,56 @@ public class AgregarPlazaController {
     private TextField nombreField;
     
     @FXML
-    private TextField ubicacionField;
+    private TextField direccionField;
     
     @FXML
-    private TextField capacidadField;
+    private Label errorLabel;
     
     @FXML
     public void initialize() {
-        // Inicialización si es necesaria
+        // Inicialización básica si es necesaria
     }
     
     @FXML
     public void guardarPlaza() {
-        // Validar campos
-        if (nombreField.getText().isEmpty() || ubicacionField.getText().isEmpty() || capacidadField.getText().isEmpty()) {
-            showAlert("Error", "Por favor complete todos los campos", AlertType.ERROR);
+        // Limpiar mensajes de error previos
+        errorLabel.setText("");
+        
+        // Obtener los valores del formulario
+        String nombre = nombreField.getText().trim();
+        String direccion = direccionField.getText().trim();
+        
+        // Validar campos requeridos
+        if (nombre.isEmpty() || direccion.isEmpty()) {
+            errorLabel.setText("Por favor complete todos los campos");
+            return;
+        }
+        
+        // Validaciones adicionales
+        if (nombre.length() < 3) {
+            errorLabel.setText("El nombre debe tener al menos 3 caracteres");
+            return;
+        }
+        
+        if (direccion.length() < 5) {
+            errorLabel.setText("La dirección debe tener al menos 5 caracteres");
             return;
         }
         
         try {
-            // Validar que la capacidad sea un número
-            int capacidad = Integer.parseInt(capacidadField.getText());
-            
             // Aquí iría la lógica para guardar la plaza en la base de datos
             // Por ahora, solo mostramos un mensaje de éxito
+            System.out.println("Guardando plaza: " + nombre + ", " + direccion);
+            
+            // Mostrar mensaje de éxito
             showAlert("Éxito", "Plaza guardada correctamente", AlertType.INFORMATION);
             
             // Volver a la vista de plazas
             volverAVistaPlazas();
             
-        } catch (NumberFormatException e) {
-            showAlert("Error", "La capacidad debe ser un número válido", AlertType.ERROR);
+        } catch (Exception e) {
+            errorLabel.setText("Error al guardar la plaza: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     
