@@ -4,18 +4,19 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="asedi.controllers.AgregarPlazaController"
             stylesheets="@/styles/agregarPlaza.css">
     
     <center>
-        <VBox alignment="CENTER" spacing="20">
+        <VBox style="-fx-padding: 20; -fx-spacing: 20; -fx-max-width: 800;" alignment="CENTER">
             <!-- Título del formulario -->
             <Label text="Agregar Nueva Plaza" styleClass="title" />
             
             <!-- Contenedor del formulario -->
-            <VBox styleClass="form-container" spacing="20">
+            <VBox styleClass="form-container" spacing="20" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2);" alignment="TOP_CENTER">
                 <!-- Campo Nombre -->
                 <VBox spacing="5">
                     <Label text="Nombre de la Plaza" styleClass="label" />
@@ -28,11 +29,25 @@
                     <TextField fx:id="direccionField" promptText="Ej: Av. Principal #123" styleClass="input-field" />
                 </VBox>
                 
-                <!-- Mensaje de error -->
-                <Label fx:id="errorLabel" styleClass="error-message" />
+                <!-- Área de subida de imágenes simplificada -->
+                <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-border-width: 1;" alignment="TOP_LEFT">
+                    <Label text="Imágenes de la Plaza" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #333; -fx-padding: 0 0 10 0;" />
+                    <Button text="Seleccionar Imágenes" onAction="#seleccionarImagenes" 
+                            styleClass="select-images-button" style="-fx-font-size: 14; -fx-padding: 8 16;" />
+                    <Label text="Máx. 5 imágenes (5MB c/u)" style="-fx-text-fill: #999; -fx-font-size: 12; -fx-padding: 5 0 0 0;" />
+                    
+                    <!-- Vista previa de miniaturas -->
+                    <VBox spacing="10" style="-fx-padding: 10 0 0 0;" alignment="TOP_LEFT">
+                        <Label text="Vista previa:" style="-fx-font-weight: bold; -fx-text-fill: #555; -fx-font-size: 13;" />
+                        <FlowPane fx:id="thumbnailsContainer" hgap="10" vgap="10" alignment="TOP_LEFT" />
+                    </VBox>
+                    
+                    <!-- Mensaje de error -->
+                    <Label fx:id="errorLabel" styleClass="error-message" style="-fx-text-fill: #d32f2f; -fx-padding: 5 0 0 0; -fx-wrap-text: true; -fx-max-width: 1.7976931348623157E308;" />
+                </VBox>
                 
                 <!-- Botones de acción -->
-                <HBox styleClass="button-container" alignment="CENTER" spacing="10">
+                <HBox style="-fx-spacing: 15; -fx-padding: 10 0 0 0;" alignment="CENTER_RIGHT">
                     <Button text="Cancelar" onAction="#cancelar" styleClass="cancel-button" />
                     <Button text="Guardar Plaza" onAction="#guardarPlaza" styleClass="save-button" />
                 </HBox>

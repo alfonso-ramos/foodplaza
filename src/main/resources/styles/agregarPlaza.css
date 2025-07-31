@@ -211,6 +211,104 @@
     -fx-background-color: #EEEEEE;
 }
 
+/* Estilos para el área de subida de imágenes */
+.select-images-button {
+    /* Standard properties */
+    background-color: #00C853;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    
+    /* JavaFX specific properties */
+    -fx-background-color: #00C853;
+    -fx-text-fill: white;
+    -fx-padding: 8 16;
+    -fx-border-radius: 4;
+    -fx-cursor: hand;
+}
+
+.select-images-button:hover {
+    background-color: #00B84A;
+    -fx-background-color: #00B84A;
+}
+
+/* Estilos para las miniaturas de imágenes */
+.thumbnail-container {
+    /* Standard properties */
+    background-color: white;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    
+    /* JavaFX specific properties */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);
+    -fx-background-color: white;
+    -fx-padding: 5;
+    -fx-border-radius: 4;
+}
+
+/* Botón de eliminar en las miniaturas */
+.delete-button {
+    /* Standard properties */
+    background-color: #ff4444;
+    color: white;
+    font-weight: bold;
+    min-width: 20px;
+    min-height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 10px;
+    padding: 0;
+    cursor: pointer;
+    border: none;
+    
+    /* JavaFX specific properties */
+    -fx-background-color: #ff4444;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-min-width: 20;
+    -fx-min-height: 20;
+    -fx-max-width: 20;
+    -fx-max-height: 20;
+    -fx-background-radius: 10;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+.delete-button:hover {
+    background-color: #cc0000;
+    -fx-background-color: #cc0000;
+}
+
+/* Efecto hover para el área de arrastrar */
+.drop-zone:hover {
+    border-color: #00C853 !important;
+    background-color: #e8f5e9 !important;
+    -fx-border-color: #00C853 !important;
+    -fx-background-color: #e8f5e9 !important;
+}
+
+/* Estilo para el mensaje de error */
+.error-message {
+    color: #d32f2f;
+    padding: 5px 0 0 0;
+    -fx-text-fill: #d32f2f;
+    -fx-padding: 5 0 0 0;
+}
+
+/* Estilo para el subtítulo de la sección */
+.subtitle {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    padding: 0 0 10px 0;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding: 0 0 10 0;
+}
+
 .cancel-button:pressed, .cancel-button:active {
     /* Standard properties */
     background-color: #E0E0E0;

@@ -2,13 +2,26 @@ package asedi.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AgregarPlazaController {
 
@@ -22,8 +35,126 @@ public class AgregarPlazaController {
     private Label errorLabel;
     
     @FXML
+    private FlowPane thumbnailsContainer;
+    
+    private List<File> imagenesSeleccionadas = new ArrayList<>();
+    
+    @FXML
     public void initialize() {
-        // Inicialización básica si es necesaria
+        // Configurar el contenedor de miniaturas
+        thumbnailsContainer.setHgap(10);
+        thumbnailsContainer.setVgap(10);
+        thumbnailsContainer.setPadding(new Insets(10));
+    }
+    
+    @FXML
+    private void seleccionarImagenes() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccionar Imágenes");
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Imágenes", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+        
+        // Permitir selección múltiple
+        List<File> archivos = fileChooser.showOpenMultipleDialog(null);
+        
+        if (archivos != null && !archivos.isEmpty()) {
+            if (imagenesSeleccionadas.size() + archivos.size() > 5) {
+                mostrarError("Solo puedes subir un máximo de 5 imágenes");
+                return;
+            }
+            
+            for (File archivo : archivos) {
+                if (archivo.length() > 5 * 1024 * 1024) { // 5MB
+                    mostrarError("La imagen " + archivo.getName() + " excede el tamaño máximo de 5MB");
+                    continue;
+                }
+                
+                if (!imagenesSeleccionadas.contains(archivo)) {
+                    imagenesSeleccionadas.add(archivo);
+                }
+            }
+            
+            actualizarVistaPrevia();
+        }
+    }
+    
+    private void actualizarVistaPrevia() {
+        thumbnailsContainer.getChildren().clear();
+        
+        for (File archivo : imagenesSeleccionadas) {
+            try {
+                ImageView imageView = new ImageView(new Image(archivo.toURI().toString(), 100, 100, true, true));
+                imageView.setFitWidth(100);
+                imageView.setFitHeight(100);
+                imageView.setPreserveRatio(false);
+                
+                // Botón para eliminar
+                Button btnEliminar = new Button("X");
+                btnEliminar.getStyleClass().add("delete-button");
+                btnEliminar.setOnAction(e -> {
+                    imagenesSeleccionadas.remove(archivo);
+                    actualizarVistaPrevia();
+                });
+                
+                StackPane stackPane = new StackPane(imageView, btnEliminar);
+                StackPane.setAlignment(btnEliminar, javafx.geometry.Pos.TOP_RIGHT);
+                
+                thumbnailsContainer.getChildren().add(stackPane);
+            } catch (Exception e) {
+                mostrarError("Error al cargar la imagen: " + archivo.getName());
+            }
+        }
+    }
+    
+    @FXML
+    private void handleDragOver(javafx.scene.input.DragEvent event) {
+        if (event.getDragboard().hasFiles()) {
+            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+        }
+        event.consume();
+    }
+    
+    @FXML
+    private void handleDrop(javafx.scene.input.DragEvent event) {
+        Dragboard db = event.getDragboard();
+        boolean success = false;
+        
+        if (db.hasFiles()) {
+            for (File file : db.getFiles()) {
+                String fileName = file.getName().toLowerCase();
+                if (fileName.endsWith(".png") || fileName.endsWith(".jpg") || 
+                    fileName.endsWith(".jpeg") || fileName.endsWith(".gif")) {
+                    
+                    if (imagenesSeleccionadas.size() >= 5) {
+                        mostrarError("Solo puedes subir un máximo de 5 imágenes");
+                        break;
+                    }
+                    
+                    if (file.length() > 5 * 1024 * 1024) {
+                        mostrarError("La imagen " + file.getName() + " excede el tamaño máximo de 5MB");
+                        continue;
+                    }
+                    
+                    if (!imagenesSeleccionadas.contains(file)) {
+                        imagenesSeleccionadas.add(file);
+                        success = true;
+                    }
+                }
+            }
+            
+            if (success) {
+                actualizarVistaPrevia();
+            }
+        }
+        
+        event.setDropCompleted(success);
+        event.consume();
+    }
+    
+    private void mostrarError(String mensaje) {
+        errorLabel.setText(mensaje);
+        errorLabel.setVisible(true);
     }
     
     @FXML
