@@ -15,7 +15,6 @@ import asedi.model.Local;
 import asedi.model.Plaza;
 import asedi.services.LocalService;
 import asedi.services.PlazaService;
-import asedi.controllers.EditarLocalController;
 
 public class LocalesController {
     @FXML private VBox root;
@@ -39,7 +38,7 @@ public class LocalesController {
         localService = new LocalService();
         
         // Configurar el ComboBox
-        plazasComboBox.setCellFactory(lv -> new ListCell<Plaza>() {
+        plazasComboBox.setCellFactory(_ -> new ListCell<Plaza>() {
             @Override
             protected void updateItem(Plaza plaza, boolean empty) {
                 super.updateItem(plaza, empty);
@@ -55,22 +54,22 @@ public class LocalesController {
             }
         });
         
-        plazasComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newVal) -> {
-            if (newVal != null) {
+        plazasComboBox.valueProperty().addListener((_, __, newValue) -> {
+            if (newValue != null) {
                 mostrarCargando(true, "Cargando locales...");
-                cargarLocales(newVal.getId());
+                cargarLocales(newValue.getId());
             }
         });
         
         // Configurar el campo de búsqueda
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+        searchField.textProperty().addListener((_, __, ___) -> {
             if (plazasComboBox.getValue() != null) {
                 cargarLocales(plazasComboBox.getValue().getId());
             }
         });
         
         // Configurar el botón de reintento
-        retryButton.setOnAction(event -> {
+        retryButton.setOnAction(_ -> {
             if (plazasComboBox.getValue() != null) {
                 mostrarCargando(true, "Cargando locales...");
                 cargarLocales(plazasComboBox.getValue().getId());
@@ -102,7 +101,7 @@ public class LocalesController {
         
         new Thread(() -> {
             try {
-                List<Plaza> plazasCargadas = plazaService.obtenerTodasLasPlazas();
+                List<Plaza> plazasCargadas = plazaService.obtenerTodas();
                 
                 javafx.application.Platform.runLater(() -> {
                     plazas = plazasCargadas;
@@ -133,7 +132,7 @@ public class LocalesController {
         }
     }
     
-    public void cargarLocales(int plazaId) {
+    public void cargarLocales(Long plazaId) {
         String filtroBusqueda = searchField.getText().toLowerCase();
         
         new Thread(() -> {

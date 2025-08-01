@@ -1,6 +1,5 @@
 package asedi.controllers;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -96,6 +95,7 @@ public class EditarLocalController implements Initializable {
             }
         } catch (Exception e) {
             mostrarError("Error al actualizar el local: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     

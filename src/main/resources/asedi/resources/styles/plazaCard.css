@@ -1,0 +1,250 @@
+/* Main card container */
+.plaza-card {
+    /* Standard CSS properties */
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 0;
+    min-width: 280px;
+    max-width: 280px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    /* JavaFX specific properties */
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+    -fx-padding: 0;
+    -fx-spacing: 0;
+    -fx-min-width: 280px;
+    -fx-max-width: 280px;
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.plaza-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 12, 0, 0, 4);
+    -fx-translate-y: -3px;
+}
+
+/* Image container */
+.image-container {
+    /* Standard properties */
+    background-color: #f5f5f5;
+    min-height: 160px;
+    max-height: 160px;
+    
+    /* JavaFX specific properties */
+    -fx-background-color: #f5f5f5;
+    -fx-min-height: 160px;
+    -fx-max-height: 160px;
+    -fx-alignment: center;
+}
+
+.image-container .image-view {
+    /* Standard properties */
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    
+    /* JavaFX specific properties */
+    -fx-fit-width: 100%;
+    -fx-fit-height: 100%;
+    -fx-padding: 0;
+}
+
+/* Card content */
+.card-content {
+    /* Standard properties */
+    padding: 16px;
+    
+    /* JavaFX specific properties */
+    -fx-spacing: 10px;
+    -fx-padding: 16px;
+}
+
+/* Text styles */
+.nombre-plaza {
+    /* Standard properties */
+    font-size: 18px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-weight: 600;
+    color: #2c3e50;
+    
+    /* JavaFX specific properties */
+    -fx-font-size: 18px;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-weight: 600;
+    -fx-text-fill: #2c3e50;
+}
+
+.ubicacion-plaza {
+    /* Standard properties */
+    font-size: 14px;
+    color: #7f8c8d;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 5px 0;
+    
+    /* JavaFX specific properties */
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+    -fx-graphic: url('/images/icons/location.png');
+    -fx-graphic-text-gap: 5px;
+}
+
+.descripcion-plaza {
+    /* Standard properties */
+    font-size: 14px;
+    color: #555;
+    white-space: normal;
+    word-wrap: break-word;
+    padding: 5px 0;
+    line-height: 1.5;
+    
+    /* JavaFX specific properties */
+    -fx-font-size: 14px;
+    -fx-text-fill: #555;
+    -fx-wrap-text: true;
+    -fx-padding: 5px 0;
+    -fx-line-spacing: 1.2em;
+}
+
+/* Button container */
+.button-container {
+    /* Standard properties */
+    padding: 10px 0 0 0;
+    display: flex;
+    gap: 10px;
+    
+    /* JavaFX specific properties */
+    -fx-spacing: 10px;
+    -fx-padding: 10px 0 0 0;
+}
+
+/* Button styles */
+.button-modify, .button-delete {
+    /* Standard properties */
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    
+    /* JavaFX specific properties */
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-background-radius: 4px;
+    -fx-transition: all 0.2s ease;
+}
+
+.plaza-card .button {
+    /* Standard properties */
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    
+    /* JavaFX specific properties */
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.plaza-card .button:hover {
+    /* Standard properties */
+    background-color: #2980b9;
+    
+    /* JavaFX specific properties */
+    -fx-background-color: #2980b9;
+}
+
+.button-modify {
+    /* Standard properties */
+    background-color: #3498db;
+    color: white;
+    
+    /* JavaFX specific properties */
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.button-modify:hover {
+    /* Standard properties */
+    background-color: #45a049;
+    
+    /* JavaFX specific properties */
+    -fx-background-color: #45a049;
+}
+
+.button-delete {
+    /* Standard properties */
+    background-color: #e74c3c;
+    color: white;
+    
+    /* JavaFX specific properties */
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+}
+
+.button-delete:hover {
+    /* Standard properties */
+    background-color: #d32f2f;
+    
+    /* JavaFX specific properties */
+    -fx-background-color: #d32f2f;
+}
+
+.button-modificar {
+    /* Standard properties */
+    background-color: #4CAF50;
+    color: white;
+    
+    /* JavaFX specific properties */
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}
+
+.button-modificar:hover {
+    -fx-background-color: #45a049;
+}
+
+.button-eliminar {
+    /* Standard properties */
+    background-color: #f44336;
+    color: white;
+    
+    /* JavaFX specific properties */
+    -fx-background-color: #f44336;
+    -fx-text-fill: white;
+}
+
+.button-eliminar:hover {
+    -fx-background-color: #d32f2f;
+}
+
+/* Estilo para la imagen */
+.plaza-card .image-view {
+    /* Standard properties */
+    border-radius: 4px 4px 0 0;
+    object-fit: cover;
+    
+    /* JavaFX specific properties */
+    -fx-background-radius: 4px 4px 0 0;
+    -fx-border-radius: 4px 4px 0 0;
+}

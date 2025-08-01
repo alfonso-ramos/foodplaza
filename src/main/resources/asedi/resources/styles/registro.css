@@ -1,0 +1,117 @@
+/* Estilos para la vista de registro */
+
+/* Estilos para el panel izquierdo */
+.left-pane {
+    -fx-background-color: #00D561;
+    -fx-alignment: center;
+    -fx-pref-width: 400;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 0);
+}
+
+/* Estilos para el panel derecho */
+.right-pane {
+    -fx-background-color: white;
+    -fx-padding: 30;
+    -fx-spacing: 15;
+    -fx-alignment: TOP_CENTER;
+    -fx-pref-width: 400;
+}
+
+/* Estilos para la etiqueta de la marca */
+.brand-label {
+    -fx-font-size: 48px;
+    -fx-text-fill: white;
+    -fx-font-family: 'Arial Black';
+    -fx-font-weight: bold;
+}
+
+/* Estilos para el título de registro */
+.registro-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+/* Estilos para el botón de registro */
+.login-button {
+    -fx-background-color: #00D561;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 40 10 40;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);
+}
+
+/* Efecto hover para el botón de registro */
+.login-button:hover {
+    -fx-background-color: #00B04A;
+}
+
+/* Efecto presionado para el botón de registro */
+.login-button:pressed {
+    -fx-background-color: #00963D;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}
+
+/* Estilos para los campos de texto */
+.text-field {
+    -fx-pref-height: 35;
+    -fx-background-radius: 5;
+    -fx-border-color: #DDD;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+    -fx-padding: 5 10 5 10;
+}
+
+/* Estilos para los campos de contraseña */
+.password-field {
+    -fx-pref-height: 35;
+    -fx-background-radius: 5;
+    -fx-border-color: #DDD;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+    -fx-padding: 5 10 5 10;
+}
+
+/* Efecto focus para los campos de texto y contraseña */
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #00D561;
+    -fx-effect: dropshadow(gaussian, rgba(0,213,97,0.3), 5, 0, 0, 1);
+}
+
+/* Estilos para los hipervínculos */
+.hyperlink {
+    -fx-text-fill: #00D561;
+    -fx-border-color: transparent;
+    -fx-padding: 2 0 2 0;
+    -fx-font-weight: normal;
+    -fx-underline: false;
+}
+
+/* Efecto hover para los hipervínculos */
+.hyperlink:hover {
+    -fx-text-fill: #00B04A;
+    -fx-underline: true;
+}
+
+/* Efecto presionado para los hipervínculos */
+.hyperlink:pressed {
+    -fx-text-fill: #00963D;
+}
+
+/* Estilos para las etiquetas de los campos del formulario */
+.form-label {
+    -fx-text-fill: #00D561;
+    -fx-font-weight: bold;
+}
+
+/* Estilos para el contenedor del formulario */
+VBox {
+    -fx-spacing: 10;
+}
+
+/* Estilos para el contenedor del botón de regresar */
+HBox {
+    -fx-alignment: TOP_LEFT;
+}

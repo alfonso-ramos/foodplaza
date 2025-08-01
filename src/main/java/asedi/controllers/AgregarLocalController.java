@@ -22,7 +22,6 @@ import asedi.model.Plaza;
 import asedi.services.LocalService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 
 public class AgregarLocalController {

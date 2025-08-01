@@ -7,14 +7,25 @@ import asedi.model.Plaza;
 public class PlazaService {
     // TODO: Implementar conexión real con la API
     
+    /**
+     * Obtiene todas las plazas disponibles.
+     * @return Lista de todas las plazas
+     */
+    public List<Plaza> obtenerTodas() {
+        return obtenerTodasLasPlazas();
+    }
+    
+    /**
+     * @deprecated Usar obtenerTodas() en su lugar
+     */
     public List<Plaza> obtenerTodasLasPlazas() {
         // Simulación de datos para pruebas
         List<Plaza> plazas = new ArrayList<>();
         
         // Datos de ejemplo
-        plazas.add(new Plaza(1, "Plaza Central", "Av. Principal #123", "Plaza principal de la ciudad"));
-        plazas.add(new Plaza(2, "Plaza del Sol", "Calle del Sol #456", "Plaza comercial con variedad de locales"));
-        plazas.add(new Plaza(3, "Centro Comercial Luna", "Boulevard Luna #789", "Centro comercial moderno con estacionamiento"));
+        plazas.add(new Plaza(1L, "Plaza Central", "Av. Principal #123", "Plaza principal de la ciudad"));
+        plazas.add(new Plaza(2L, "Plaza del Sol", "Calle del Sol #456", "Plaza comercial con variedad de locales"));
+        plazas.add(new Plaza(3L, "Centro Comercial Luna", "Boulevard Luna #789", "Centro comercial moderno con estacionamiento"));
         
         return plazas;
     }

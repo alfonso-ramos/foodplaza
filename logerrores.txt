@@ -1,47 +1,27 @@
-javafx.fxml.LoadException: URL is not a valid type.
-/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/components/localCard.fxml:10
-
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2718)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.createElement(FXMLLoader.java:2920)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2850)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2649)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531)
-        at asedi.controllers.LocalesController.mostrarLocales(LocalesController.java:179)
-        at asedi.controllers.LocalesController.lambda$cargarLocales$8(LocalesController.java:153)
-        at javafx.graphics@21.0.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456)
-        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-        at javafx.graphics@21.0.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$10(GtkApplication.java:263)
-        at java.base/java.lang.Thread.run(Thread.java:1583)
-javafx.fxml.LoadException: URL is not a valid type.
-/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/components/localCard.fxml:10
-
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2718)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.createElement(FXMLLoader.java:2920)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2850)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2649)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531)
-        at asedi.controllers.LocalesController.mostrarLocales(LocalesController.java:179)
-        at asedi.controllers.LocalesController.lambda$cargarLocales$8(LocalesController.java:153)
-        at javafx.graphics@21.0.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456)
-        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-        at javafx.graphics@21.0.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$10(GtkApplication.java:263)
-        at java.base/java.lang.Thread.run(Thread.java:1583)
+Test
+Intentando cargar vista: /views/adminDashboard.fxml
+Aug 01, 2025 2:40:24 PM com.sun.javafx.css.StyleManager loadStylesheetUnPrivileged
+INFO: Could not find stylesheet: file:/home/poncho/Documents/Workspace/foodplaza-frontend/target/styles/adminDashboard/adminDashboard.css
+Estilos cargados desde: /styles/adminDashboard/adminDashboard.css
+Vista cargada exitosamente: /views/adminDashboard.fxml
+Error al procesar una plaza: El ID de la plaza debe ser un número
+Error al procesar una plaza: El ID de la plaza debe ser un número
+Error al procesar una plaza: El ID de la plaza debe ser un número
+Error al procesar una plaza: El ID de la plaza debe ser un número
+Error al procesar una plaza: El ID de la plaza debe ser un número
+Error al procesar una plaza: El ID de la plaza debe ser un número
+Aug 01, 2025 2:40:29 PM com.sun.javafx.css.StyleManager loadStylesheetUnPrivileged
+INFO: Could not find stylesheet: file:/home/poncho/Documents/Workspace/foodplaza-frontend/target/styles/agregarPlaza.css
+Aug 01, 2025 2:40:29 PM javafx.css.CssParser term
+WARNING: CSS Error parsing '*{-fx-text-fill: #d32f2f; -fx-padding: 5 0 0 0; -fx-wrap-text: true; -fx-max-width: 1.7976931348623157E308;}: Unexpected token '1.7976931348623157E' at [1,84]
 javafx.fxml.LoadException: 
-/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/agregarLocal.fxml:12
+/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/locales.fxml:65
 
         at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2722)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2700)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2665)
         at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
         at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531)
-        at asedi.controllers.AdminDashboardController.cargarAgregarLocal(AdminDashboardController.java:121)
+        at asedi.foodplaza@1.0-SNAPSHOT/asedi.controllers.AdminDashboardController.cargarLocales(AdminDashboardController.java:134)
         at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
         at java.base/java.lang.reflect.Method.invoke(Method.java:580)
         at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:72)
@@ -96,14 +76,79 @@ javafx.fxml.LoadException:
         at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
         at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$10(GtkApplication.java:263)
         at java.base/java.lang.Thread.run(Thread.java:1583)
-Caused by: java.lang.IllegalArgumentException: Can not set javafx.scene.layout.StackPane field asedi.controllers.AgregarLocalController.contenidoPadre to javafx.scene.layout.BorderPane
-        at java.base/jdk.internal.reflect.FieldAccessorImpl.throwSetIllegalArgumentException(FieldAccessorImpl.java:228)
-        at java.base/jdk.internal.reflect.FieldAccessorImpl.throwSetIllegalArgumentException(FieldAccessorImpl.java:232)
-        at java.base/jdk.internal.reflect.MethodHandleObjectFieldAccessorImpl.set(MethodHandleObjectFieldAccessorImpl.java:115)
-        at java.base/java.lang.reflect.Field.set(Field.java:836)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.injectFields(FXMLLoader.java:1175)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$ValueElement.processValue(FXMLLoader.java:870)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$ValueElement.processStartElement(FXMLLoader.java:764)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2853)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2649)
+Caused by: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[65,11]
+Message: The element type "VBox" must be terminated by the matching end-tag "</VBox>".
+        at java.xml/com.sun.org.apache.xerces.internal.impl.XMLStreamReaderImpl.next(XMLStreamReaderImpl.java:652)
+        at java.xml/javax.xml.stream.util.StreamReaderDelegate.next(StreamReaderDelegate.java:84)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2635)
         ... 57 more
+javafx.fxml.LoadException: Invalid resource: /styles/agregarPlaza.css not found on the classpath
+/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/agregarLocal.fxml:109
+
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2718)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$Element.resolvePrefixedValue(FXMLLoader.java:411)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$Element.populateListFromString(FXMLLoader.java:512)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$Element.processValue(FXMLLoader.java:366)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$Element.processPropertyAttribute(FXMLLoader.java:337)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$Element.processInstancePropertyAttributes(FXMLLoader.java:248)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$ValueElement.processEndElement(FXMLLoader.java:780)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.processEndElement(FXMLLoader.java:2969)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2654)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531)
+        at asedi.foodplaza@1.0-SNAPSHOT/asedi.controllers.AdminDashboardController.cargarAgregarLocal(AdminDashboardController.java:121)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:72)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at javafx.base@21.0.1/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:270)
+        at javafx.fxml@21.0.1/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1855)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1726)
+        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+        at javafx.base@21.0.1/javafx.event.Event.fireEvent(Event.java:198)
+        at javafx.graphics@21.0.1/javafx.scene.Node.fireEvent(Node.java:8875)
+        at javafx.controls@21.0.1/javafx.scene.control.Button.fire(Button.java:203)
+        at javafx.controls@21.0.1/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:207)
+        at javafx.controls@21.0.1/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+        at javafx.base@21.0.1/javafx.event.Event.fireEvent(Event.java:198)
+        at javafx.graphics@21.0.1/javafx.scene.Scene$MouseHandler.process(Scene.java:3984)
+        at javafx.graphics@21.0.1/javafx.scene.Scene.processMouseEvent(Scene.java:1890)
+        at javafx.graphics@21.0.1/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2708)
+        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+        at javafx.graphics@21.0.1/com.sun.glass.ui.View.handleMouseEvent(View.java:551)
+        at javafx.graphics@21.0.1/com.sun.glass.ui.View.notifyMouse(View.java:937)
+        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
+        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$10(GtkApplication.java:263)
+        at java.base/java.lang.Thread.run(Thread.java:1583)
+                      

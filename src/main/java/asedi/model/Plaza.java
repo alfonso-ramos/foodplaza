@@ -3,7 +3,7 @@ package asedi.model;
 import java.util.List;
 
 public class Plaza {
-    private int id;
+    private Long id;
     private String nombre;
     private String direccion;
     private String descripcion;
@@ -14,7 +14,7 @@ public class Plaza {
     }
     
     // Constructor con parámetros
-    public Plaza(int id, String nombre, String direccion, String descripcion) {
+    public Plaza(Long id, String nombre, String direccion, String descripcion) {
         this.id = id;
         this.nombre = nombre;
         this.direccion = direccion;
@@ -22,11 +22,11 @@ public class Plaza {
     }
     
     // Getters y Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
     
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
     

@@ -3,8 +3,8 @@ package asedi.model;
 import java.util.List;
 
 public class Local {
-    private int id;
-    private int plazaId;
+    private Long id;
+    private Long plazaId;
     private String nombre;
     private String descripcion;
     private String direccion;
@@ -18,7 +18,7 @@ public class Local {
     }
     
     // Constructor con parámetros
-    public Local(int id, int plazaId, String nombre, String descripcion, String direccion, 
+    public Local(Long id, Long plazaId, String nombre, String descripcion, String direccion, 
                 String horarioApertura, String horarioCierre, String tipoComercio) {
         this.id = id;
         this.plazaId = plazaId;
@@ -31,19 +31,19 @@ public class Local {
     }
     
     // Getters y Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
     
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
     
-    public int getPlazaId() {
+    public Long getPlazaId() {
         return plazaId;
     }
     
-    public void setPlazaId(int plazaId) {
+    public void setPlazaId(Long plazaId) {
         this.plazaId = plazaId;
     }
     
