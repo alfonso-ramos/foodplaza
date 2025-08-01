@@ -32,6 +32,9 @@
                 <Label text="Correo Electrónico" styleClass="form-label"/>
                 <TextField fx:id="emailField" promptText="ejemplo@correo.com" styleClass="text-field" maxWidth="1.7976931348623157E308"/>
 
+                <Label text="Teléfono" styleClass="form-label"/>
+                <TextField fx:id="telefonoField" promptText="Número de teléfono" styleClass="text-field" maxWidth="1.7976931348623157E308"/>
+
                 <Label text="Contraseña" styleClass="form-label"/>
                 <PasswordField fx:id="passwordField" promptText="Cree una contraseña" styleClass="password-field" maxWidth="1.7976931348623157E308"/>
 

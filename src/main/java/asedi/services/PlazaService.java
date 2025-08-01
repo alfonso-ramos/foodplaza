@@ -18,6 +18,7 @@ public class PlazaService {
     /**
      * @deprecated Usar obtenerTodas() en su lugar
      */
+    @Deprecated
     public List<Plaza> obtenerTodasLasPlazas() {
         // Simulación de datos para pruebas
         List<Plaza> plazas = new ArrayList<>();

@@ -1,154 +1,60 @@
-Test
-Intentando cargar vista: /views/adminDashboard.fxml
-Aug 01, 2025 2:40:24 PM com.sun.javafx.css.StyleManager loadStylesheetUnPrivileged
-INFO: Could not find stylesheet: file:/home/poncho/Documents/Workspace/foodplaza-frontend/target/styles/adminDashboard/adminDashboard.css
-Estilos cargados desde: /styles/adminDashboard/adminDashboard.css
-Vista cargada exitosamente: /views/adminDashboard.fxml
-Error al procesar una plaza: El ID de la plaza debe ser un número
-Error al procesar una plaza: El ID de la plaza debe ser un número
-Error al procesar una plaza: El ID de la plaza debe ser un número
-Error al procesar una plaza: El ID de la plaza debe ser un número
-Error al procesar una plaza: El ID de la plaza debe ser un número
-Error al procesar una plaza: El ID de la plaza debe ser un número
-Aug 01, 2025 2:40:29 PM com.sun.javafx.css.StyleManager loadStylesheetUnPrivileged
-INFO: Could not find stylesheet: file:/home/poncho/Documents/Workspace/foodplaza-frontend/target/styles/agregarPlaza.css
-Aug 01, 2025 2:40:29 PM javafx.css.CssParser term
-WARNING: CSS Error parsing '*{-fx-text-fill: #d32f2f; -fx-padding: 5 0 0 0; -fx-wrap-text: true; -fx-max-width: 1.7976931348623157E308;}: Unexpected token '1.7976931348623157E' at [1,84]
-javafx.fxml.LoadException: 
-/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/locales.fxml:65
-
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2722)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2665)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531)
-        at asedi.foodplaza@1.0-SNAPSHOT/asedi.controllers.AdminDashboardController.cargarLocales(AdminDashboardController.java:134)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:72)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at javafx.base@21.0.1/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:270)
-        at javafx.fxml@21.0.1/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1855)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1726)
-        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
-        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
-        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
-        at javafx.base@21.0.1/javafx.event.Event.fireEvent(Event.java:198)
-        at javafx.graphics@21.0.1/javafx.scene.Node.fireEvent(Node.java:8875)
-        at javafx.controls@21.0.1/javafx.scene.control.Button.fire(Button.java:203)
-        at javafx.controls@21.0.1/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:207)
-        at javafx.controls@21.0.1/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
-        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
-        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
-        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
-        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
-        at javafx.base@21.0.1/javafx.event.Event.fireEvent(Event.java:198)
-        at javafx.graphics@21.0.1/javafx.scene.Scene$MouseHandler.process(Scene.java:3984)
-        at javafx.graphics@21.0.1/javafx.scene.Scene.processMouseEvent(Scene.java:1890)
-        at javafx.graphics@21.0.1/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2708)
-        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
-        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
-        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
-        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
-        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.View.handleMouseEvent(View.java:551)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.View.notifyMouse(View.java:937)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$10(GtkApplication.java:263)
-        at java.base/java.lang.Thread.run(Thread.java:1583)
-Caused by: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[65,11]
-Message: The element type "VBox" must be terminated by the matching end-tag "</VBox>".
-        at java.xml/com.sun.org.apache.xerces.internal.impl.XMLStreamReaderImpl.next(XMLStreamReaderImpl.java:652)
-        at java.xml/javax.xml.stream.util.StreamReaderDelegate.next(StreamReaderDelegate.java:84)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2635)
-        ... 57 more
-javafx.fxml.LoadException: Invalid resource: /styles/agregarPlaza.css not found on the classpath
-/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/agregarLocal.fxml:109
-
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2718)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$Element.resolvePrefixedValue(FXMLLoader.java:411)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$Element.populateListFromString(FXMLLoader.java:512)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$Element.processValue(FXMLLoader.java:366)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$Element.processPropertyAttribute(FXMLLoader.java:337)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$Element.processInstancePropertyAttributes(FXMLLoader.java:248)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$ValueElement.processEndElement(FXMLLoader.java:780)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.processEndElement(FXMLLoader.java:2969)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2654)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531)
-        at asedi.foodplaza@1.0-SNAPSHOT/asedi.controllers.AdminDashboardController.cargarAgregarLocal(AdminDashboardController.java:121)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:72)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at javafx.base@21.0.1/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:270)
-        at javafx.fxml@21.0.1/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1855)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1726)
-        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
-        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
-        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
-        at javafx.base@21.0.1/javafx.event.Event.fireEvent(Event.java:198)
-        at javafx.graphics@21.0.1/javafx.scene.Node.fireEvent(Node.java:8875)
-        at javafx.controls@21.0.1/javafx.scene.control.Button.fire(Button.java:203)
-        at javafx.controls@21.0.1/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:207)
-        at javafx.controls@21.0.1/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
-        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
-        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
-        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
-        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
-        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
-        at javafx.base@21.0.1/javafx.event.Event.fireEvent(Event.java:198)
-        at javafx.graphics@21.0.1/javafx.scene.Scene$MouseHandler.process(Scene.java:3984)
-        at javafx.graphics@21.0.1/javafx.scene.Scene.processMouseEvent(Scene.java:1890)
-        at javafx.graphics@21.0.1/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2708)
-        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
-        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
-        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
-        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
-        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.View.handleMouseEvent(View.java:551)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.View.notifyMouse(View.java:937)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$10(GtkApplication.java:263)
-        at java.base/java.lang.Thread.run(Thread.java:1583)
-                      
+[WARNING] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/services/PlazaService.java:[21,24] deprecated item is not annotated with @Deprecated
+[INFO] 1 warning
+[INFO] -------------------------------------------------------------
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[10,23] package org.json.simple does not exist
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[11,23] package org.json.simple does not exist
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[12,30] package org.json.simple.parser does not exist
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[124,25] cannot find symbol
+  symbol: class JSONParser
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[124,49] cannot find symbol
+  symbol: class JSONParser
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[125,25] cannot find symbol
+  symbol: class JSONObject
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[125,50] cannot find symbol
+  symbol: class JSONObject
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[127,25] cannot find symbol
+  symbol: class JSONArray
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[127,45] cannot find symbol
+  symbol: class JSONArray
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[148,33] cannot find symbol
+  symbol: class JSONObject
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[148,53] cannot find symbol
+  symbol: class JSONObject
+[INFO] 11 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.398 s
+[INFO] Finished at: 2025-08-01T15:54:22-07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project foodplaza-frontend: Compilation failure: Compilation failure: 
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[10,23] package org.json.simple does not exist
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[11,23] package org.json.simple does not exist
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[12,30] package org.json.simple.parser does not exist
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[124,25] cannot find symbol
+[ERROR]   symbol: class JSONParser
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[124,49] cannot find symbol
+[ERROR]   symbol: class JSONParser
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[125,25] cannot find symbol
+[ERROR]   symbol: class JSONObject
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[125,50] cannot find symbol
+[ERROR]   symbol: class JSONObject
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[127,25] cannot find symbol
+[ERROR]   symbol: class JSONArray
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[127,45] cannot find symbol
+[ERROR]   symbol: class JSONArray
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[148,33] cannot find symbol
+[ERROR]   symbol: class JSONObject
+[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[148,53] cannot find symbol
+[ERROR]   symbol: class JSONObject
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -62,7 +62,7 @@ public class LocalesController {
         });
         
         // Configurar el campo de búsqueda
-        searchField.textProperty().addListener((_, __, ___) -> {
+        searchField.textProperty().addListener((_, _, _) -> {
             if (plazasComboBox.getValue() != null) {
                 cargarLocales(plazasComboBox.getValue().getId());
             }
