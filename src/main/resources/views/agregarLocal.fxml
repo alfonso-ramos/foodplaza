@@ -2,8 +2,108 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
 
-<VBox alignment="CENTER" spacing="20" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-    <Label text="Módulo de Agregar Local" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-    <Label text="(En desarrollo)" style="-fx-font-style: italic;"/>
-</VBox>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="asedi.controllers.AgregarLocalController"
+            stylesheets="@/styles/agregarPlaza.css"
+            fx:id="contentPane">
+    
+    <center>
+        <ScrollPane fitToWidth="true" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER" style="-fx-background: #f5f5f5;">
+            <VBox style="-fx-padding: 20; -fx-spacing: 20; -fx-max-width: 1000;" alignment="CENTER">
+                <!-- Título del formulario -->
+                <Label text="Agregar Nuevo Local" styleClass="title" />
+                
+                <!-- Contenedor del formulario -->
+                <GridPane styleClass="form-container" style="-fx-padding: 30; -fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2);" alignment="TOP_CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10" prefWidth="300" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10" prefWidth="300" />
+                    </columnConstraints>
+                    
+                    <!-- Fila 1: Nombre y Estado -->
+                    <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Nombre del Local*" styleClass="label" />
+                        <TextField fx:id="nombreField" promptText="Ej: Restaurante La Casona" styleClass="input-field" />
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Estado*" styleClass="label" />
+                        <ComboBox fx:id="estadoCombo" styleClass="input-field" promptText="Seleccione un estado" />
+                    </VBox>
+                    
+                    <!-- Fila 2: Descripción (ocupa las dos columnas) -->
+                    <VBox spacing="5" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1" style="-fx-padding: 10 0;">
+                        <Label text="Descripción" styleClass="label" />
+                        <TextArea fx:id="descripcionField" promptText="Describe el local..." styleClass="input-field" wrapText="true" prefRowCount="3" />
+                    </VBox>
+                    
+                    <!-- Fila 3: Dirección y Tipo de Comercio -->
+                    <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <Label text="Dirección*" styleClass="label" />
+                        <TextField fx:id="direccionField" promptText="Ubicación dentro de la plaza" styleClass="input-field" />
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label text="Tipo de Comercio*" styleClass="label" />
+                        <ComboBox fx:id="tipoComercioCombo" styleClass="input-field" promptText="Seleccione un tipo" />
+                    </VBox>
+                    
+                    <!-- Fila 4: Horarios -->
+                    <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                        <Label text="Hora de Apertura*" styleClass="label" />
+                        <TextField fx:id="horaAperturaField" promptText="HH:mm" styleClass="input-field" />
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <Label text="Hora de Cierre*" styleClass="label" />
+                        <TextField fx:id="horaCierreField" promptText="HH:mm" styleClass="input-field" />
+                    </VBox>
+                    
+                    <!-- Fila 5: ID de Plaza (oculto) -->
+                    <TextField fx:id="plazaIdField" visible="false" managed="false" />
+                    
+                    <!-- Fila 6: Selector de Plaza -->
+                    <VBox spacing="5" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4" style="-fx-padding: 10 0 0 0;">
+                        <Label text="Seleccionar Plaza*" styleClass="label" />
+                        <ComboBox fx:id="plazaCombo" styleClass="input-field" promptText="Selecciona una plaza" />
+                    </VBox>
+                    
+                    <!-- Fila 7: Área de subida de imágenes (ocupa ambas columnas) -->
+                    <VBox GridPane.columnSpan="2" GridPane.rowIndex="5" spacing="10" style="-fx-padding: 15; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-border-width: 1; -fx-margin-top: 15;" alignment="TOP_LEFT">
+                        <Label text="Imágenes del Local" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #333; -fx-padding: 0 0 10 0;" />
+                        
+                        <!-- Instrucciones y botón de selección -->
+                        <VBox spacing="5">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Button text="Seleccionar Imágenes" onAction="#seleccionarImagenes" 
+                                        styleClass="select-images-button" style="-fx-font-size: 14; -fx-padding: 8 16;" />
+                                <Label text="Máx. 5 imágenes (5MB c/u)" style="-fx-text-fill: #666; -fx-font-size: 12; -fx-padding: 5 0 0 0;" />
+                            </HBox>
+                            <Label text="Recomendado: Imágenes en formato JPG o PNG con relación de aspecto 16:9" style="-fx-text-fill: #666; -fx-font-size: 11; -fx-padding: 2 0 0 5;" />
+                        </VBox>
+                        
+                        <!-- Vista previa de miniaturas -->
+                        <VBox spacing="10" style="-fx-padding: 15 0 5 0;" alignment="TOP_LEFT">
+                            <Label text="Vista previa:" style="-fx-font-weight: bold; -fx-text-fill: #555; -fx-font-size: 13;" />
+                            <FlowPane fx:id="thumbnailsContainer" hgap="15" vgap="15" alignment="TOP_LEFT" style="-fx-padding: 5;" />
+                        </VBox>
+                        
+                        <!-- Mensaje de error -->
+                        <Label fx:id="errorLabel" style="-fx-text-fill: #d32f2f; -fx-padding: 5 0 0 0; -fx-wrap-text: true; -fx-max-width: 1.7976931348623157E308; -fx-font-size: 12;" />
+                    </VBox>
+                    
+                    <!-- Fila 8: Botones de acción (ocupan ambas columnas) -->
+                    <HBox GridPane.columnSpan="2" GridPane.rowIndex="6" style="-fx-spacing: 15; -fx-padding: 20 0 0 0;" alignment="CENTER_RIGHT">
+                        <Button text="Cancelar" onAction="#cancelar" styleClass="cancel-button" style="-fx-font-size: 14; -fx-padding: 8 24;" />
+                        <Button text="Guardar Local" onAction="#guardarLocal" styleClass="save-button" style="-fx-font-size: 14; -fx-padding: 8 24; -fx-font-weight: bold;" />
+                    </HBox>
+                </GridPane>
+            </VBox>
+        </ScrollPane>
+    </center>
+    
+</BorderPane>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="root" styleClass="local-card" onMouseClicked="#handleClick" 
+      xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.LocalCardController">
+    <stylesheets>
+        <URL value="@/styles/locales.css" />
+    </stylesheets>
+    
+    <ImageView fx:id="imagenLocal" fitWidth="200" fitHeight="150" 
+               style="-fx-background-color: #f0f0f0; -fx-cursor: hand;" />
+    
+    <VBox style="-fx-padding: 10; -fx-spacing: 5;">
+        <Label fx:id="nombreLabel" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+        <Label fx:id="tipoComercioLabel" styleClass="tipo-comercio" />
+        <Label fx:id="horarioLabel" styleClass="horario" />
+    </VBox>
+</VBox>

@@ -1,0 +1,111 @@
+/* Main container */
+.root {
+    -fx-background: #f5f5f5;
+    -fx-background-color: #f5f5f5;
+}
+
+/* Title bar */
+.title-bar {
+    -fx-background-color: #2c3e50;
+    -fx-padding: 15;
+}
+
+.title-label {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* Buttons */
+.add-button {
+    -fx-background-color: #00D561;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.add-button:hover {
+    -fx-background-color: #00b74f;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);
+}
+
+/* Search bar */
+.search-container {
+    -fx-background-color: white;
+    -fx-padding: 15;
+    -fx-background-radius: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.search-field {
+    -fx-pref-width: 300;
+    -fx-padding: 8 12;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1;
+}
+
+/* Locales grid */
+.locales-grid {
+    -fx-hgap: 20;
+    -fx-vgap: 20;
+    -fx-padding: 20;
+}
+
+/* Empty state */
+.empty-state {
+    -fx-alignment: center;
+    -fx-spacing: 20;
+}
+
+.empty-state .icon {
+    -fx-font-size: 48px;
+    -fx-opacity: 0.7;
+}
+
+.empty-state .message {
+    -fx-text-fill: #666;
+    -fx-font-size: 16px;
+}
+
+/* Local card */
+.local-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-cursor: hand;
+}
+
+.local-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 4);
+}
+
+.local-card .image-container {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.local-card .content {
+    -fx-padding: 15;
+    -fx-spacing: 10;
+}
+
+.local-card .title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.local-card .tipo-comercio {
+    -fx-text-fill: #666;
+    -fx-font-size: 14px;
+}
+
+.local-card .horario {
+    -fx-text-fill: #888;
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}

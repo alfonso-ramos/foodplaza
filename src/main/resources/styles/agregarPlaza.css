@@ -1,24 +1,11 @@
 /* Estilos para el contenedor principal */
 .root {
-    /* Standard properties */
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: #f5f5f5;
-    
-    /* JavaFX specific properties */
     -fx-font-family: 'Segoe UI', Arial, sans-serif;
     -fx-background-color: #f5f5f5;
 }
 
 /* Estilo para el título */
 .title {
-    /* Standard properties */
-    font-size: 24px;
-    font-weight: bold;
-    color: #00C853;
-    padding: 0 0 20px 0;
-    margin: 0;
-    
-    /* JavaFX specific properties */
     -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-text-fill: #00C853;
@@ -27,15 +14,6 @@
 
 /* Estilo para el contenedor del formulario */
 .form-container {
-    /* Standard properties */
-    background-color: white;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    max-width: 500px;
-    width: 100%;
-    
-    /* JavaFX specific properties */
     -fx-background-color: white;
     -fx-background-radius: 10;
     -fx-padding: 30;
@@ -45,13 +23,6 @@
 
 /* Estilo para las etiquetas */
 .label {
-    /* Standard properties */
-    font-size: 14px;
-    color: #333;
-    padding: 5px 0;
-    display: block;
-    
-    /* JavaFX specific properties */
     -fx-font-size: 14px;
     -fx-text-fill: #333;
     -fx-padding: 5 0 5 0;
@@ -59,21 +30,6 @@
 
 /* Estilo para los campos de texto */
 .text-field, .spinner, .text-area, .combo-box {
-    /* Standard properties */
-    min-height: 40px;
-    border-radius: 5px;
-    border: 1px solid #DDD;
-    padding: 0 10px;
-    font-size: 14px;
-    width: 100%;
-    box-sizing: border-box;
-    
-    /* Standard border properties */
-    border-color: #DDD;
-    border-style: solid;
-    border-width: 1px;
-    
-    /* JavaFX specific properties */
     -fx-pref-height: 40;
     -fx-background-radius: 5;
     -fx-border-color: #DDD;
@@ -85,12 +41,6 @@
 
 /* Efecto focus para los campos */
 .text-field:focused, .spinner:focused, .text-area:focused, .combo-box:focused {
-    /* Standard properties */
-    border-color: #00C853;
-    box-shadow: 0 0 0 1px #00C853, 0 0 5px rgba(0, 200, 83, 0.2);
-    outline: none;
-    
-    /* JavaFX specific properties */
     -fx-border-color: #00C853;
     -fx-effect: dropshadow(gaussian, rgba(0,200,83,0.2), 5, 0, 0, 1);
 }
