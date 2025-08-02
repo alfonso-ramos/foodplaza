@@ -20,8 +20,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import asedi.model.Plaza;
+import asedi.services.PlazaService;
 
 public class AgregarPlazaController {
 
@@ -184,15 +188,28 @@ public class AgregarPlazaController {
         }
         
         try {
-            // Aquí iría la lógica para guardar la plaza en la base de datos
-            // Por ahora, solo mostramos un mensaje de éxito
-            System.out.println("Guardando plaza: " + nombre + ", " + direccion);
+            // Crear el servicio de plazas
+            PlazaService plazaService = new PlazaService();
             
-            // Mostrar mensaje de éxito
-            showAlert("Éxito", "Plaza guardada correctamente", AlertType.INFORMATION);
+            // Crear el objeto plaza
+            Plaza nuevaPlaza = new Plaza(nombre, direccion);
             
-            // Volver a la vista de plazas
-            volverAVistaPlazas();
+            // Guardar la plaza usando el servicio
+            boolean exito = plazaService.guardarPlaza(nuevaPlaza);
+            
+            if (exito) {
+                // Mostrar mensaje de éxito
+                showAlert("Éxito", "Plaza guardada correctamente", AlertType.INFORMATION);
+                
+                // Limpiar el formulario
+                nombreField.clear();
+                direccionField.clear();
+                
+                // Volver a la vista de plazas
+                volverAVistaPlazas();
+            } else {
+                errorLabel.setText("No se pudo guardar la plaza. Intente nuevamente.");
+            }
             
         } catch (Exception e) {
             errorLabel.setText("Error al guardar la plaza: " + e.getMessage());

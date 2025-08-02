@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -36,9 +37,68 @@ public class HttpClientUtil {
         }
     }
     
+    /**
+     * Realiza una petición GET a la API.
+     * @param endpoint El endpoint de la API (sin la URL base)
+     * @param responseType La clase del tipo de respuesta esperada
+     * @param <T> El tipo de la respuesta
+     * @return Un HttpResponseWrapper con la respuesta
+     * @throws IOException Si hay un error en la comunicación
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> HttpResponseWrapper<T> get(String endpoint, Class<T> responseType) throws IOException {
+        // Configurar el cliente HTTP para seguir redirecciones
+        try (CloseableHttpClient httpClient = HttpClients.custom()
+                .setRedirectStrategy(new LaxRedirectStrategy()) // Sigue redirecciones 301, 302, 303, 307, 308
+                .build()) {
+            // Eliminar la barra inicial del endpoint si existe para evitar doble barra
+            String cleanEndpoint = endpoint.startsWith("/") ? endpoint.substring(1) : endpoint;
+            String fullUrl = API_BASE_URL + cleanEndpoint;
+            
+            org.apache.http.client.methods.HttpGet request = new org.apache.http.client.methods.HttpGet(fullUrl);
+            
+            // Configurar headers
+            request.setHeader("Accept", "application/json");
+            
+            // Realizar la petición
+            HttpResponse response = httpClient.execute(request);
+            
+            // Obtener el cuerpo de la respuesta
+            String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+            
+            // Parsear la respuesta al tipo especificado
+            T responseObject = null;
+            if (responseType == String.class) {
+                responseObject = (T) responseBody;
+            } else {
+                responseObject = gson.fromJson(responseBody, responseType);
+            }
+            
+            return new HttpResponseWrapper<>(
+                response.getStatusLine().getStatusCode(),
+                responseObject
+            );
+        } catch (Exception e) {
+            System.err.println("Error en petición GET a " + endpoint + ": " + e.getMessage());
+            throw new IOException("Error en la petición: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Realiza una petición POST a la API.
+     * @param endpoint El endpoint de la API (sin la URL base)
+     * @param requestBody El cuerpo de la petición
+     * @param responseType La clase del tipo de respuesta esperada
+     * @param <T> El tipo de la respuesta
+     * @return Un HttpResponseWrapper con la respuesta
+     * @throws IOException Si hay un error en la comunicación
+     */
     @SuppressWarnings("unchecked")
     public static <T> HttpResponseWrapper<T> post(String endpoint, Object requestBody, Class<T> responseType) throws IOException {
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+        // Configurar el cliente HTTP para seguir redirecciones
+        try (CloseableHttpClient httpClient = HttpClients.custom()
+                .setRedirectStrategy(new LaxRedirectStrategy()) // Sigue redirecciones 301, 302, 303, 307, 308
+                .build()) {
             // Eliminar la barra inicial del endpoint si existe para evitar doble barra
             String cleanEndpoint = endpoint.startsWith("/") ? endpoint.substring(1) : endpoint;
             String fullUrl = API_BASE_URL + cleanEndpoint;
@@ -61,6 +121,10 @@ public class HttpClientUtil {
             System.out.println("  Accept: application/json");
             System.out.println("Cuerpo de la petición (JSON):");
             System.out.println(jsonBody);
+            
+            // Configuración de redirecciones ya aplicada en la creación del cliente HTTP
+            System.out.println("Realizando petición a: " + fullUrl);
+            System.out.println("Redirecciones automáticas habilitadas");
             System.out.println("==============================\n");
             
             // Configurar el cuerpo de la petición
