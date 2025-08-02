@@ -10,17 +10,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +92,7 @@ public class AgregarPlazaController {
                 // Botón para eliminar
                 Button btnEliminar = new Button("X");
                 btnEliminar.getStyleClass().add("delete-button");
-                btnEliminar.setOnAction(e -> {
+                btnEliminar.setOnAction(_ -> {
                     imagenesSeleccionadas.remove(archivo);
                     actualizarVistaPrevia();
                 });
@@ -109,14 +105,6 @@ public class AgregarPlazaController {
                 mostrarError("Error al cargar la imagen: " + archivo.getName());
             }
         }
-    }
-    
-    @FXML
-    private void handleDragOver(javafx.scene.input.DragEvent event) {
-        if (event.getDragboard().hasFiles()) {
-            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-        }
-        event.consume();
     }
     
     @FXML
@@ -187,34 +175,72 @@ public class AgregarPlazaController {
             return;
         }
         
-        try {
-            // Crear el servicio de plazas
-            PlazaService plazaService = new PlazaService();
-            
-            // Crear el objeto plaza
-            Plaza nuevaPlaza = new Plaza(nombre, direccion);
-            
-            // Guardar la plaza usando el servicio
-            boolean exito = plazaService.guardarPlaza(nuevaPlaza);
-            
-            if (exito) {
-                // Mostrar mensaje de éxito
-                showAlert("Éxito", "Plaza guardada correctamente", AlertType.INFORMATION);
+        // Crear diálogo de carga
+        Alert loadingAlert = new Alert(AlertType.INFORMATION);
+        loadingAlert.setTitle("Guardando plaza");
+        loadingAlert.setHeaderText("Guardando plaza y subiendo imágenes...");
+        loadingAlert.setContentText("Por favor espere...");
+        loadingAlert.show();
+        
+        // Ejecutar en un hilo separado para no bloquear la interfaz
+        new Thread(() -> {
+            try {
+                // Crear el servicio de plazas
+                PlazaService plazaService = new PlazaService();
                 
-                // Limpiar el formulario
-                nombreField.clear();
-                direccionField.clear();
+                // Crear el objeto plaza
+                Plaza nuevaPlaza = new Plaza(nombre, direccion);
                 
-                // Volver a la vista de plazas
-                volverAVistaPlazas();
-            } else {
-                errorLabel.setText("No se pudo guardar la plaza. Intente nuevamente.");
+                // Guardar la plaza usando el servicio
+                Long plazaId = plazaService.guardarPlazaYDevolverId(nuevaPlaza);
+                
+                if (plazaId != null) {
+                    // Subir imágenes si hay alguna seleccionada
+                    if (!imagenesSeleccionadas.isEmpty()) {
+                        try {
+                            // Subir solo la primera imagen (según los requisitos)
+                            File imagen = imagenesSeleccionadas.get(0);
+                            plazaService.subirImagenPlaza(plazaId, imagen, nombre);
+                            
+                            // Actualizar la UI en el hilo de JavaFX
+                            javafx.application.Platform.runLater(() -> {
+                                loadingAlert.close();
+                                showAlert("Éxito", "Plaza guardada e imagen subida correctamente", AlertType.INFORMATION);
+                                limpiarFormulario();
+                            });
+                        } catch (Exception e) {
+                            // Si falla la subida de la imagen, mostramos un mensaje de advertencia
+                            // pero consideramos que la plaza se guardó correctamente
+                            System.err.println("Error al subir la imagen: " + e.getMessage());
+                            javafx.application.Platform.runLater(() -> {
+                                loadingAlert.close();
+                                showAlert("Advertencia", 
+                                    "La plaza se guardó correctamente, pero hubo un error al subir la imagen: " + e.getMessage(), 
+                                    AlertType.WARNING);
+                                limpiarFormulario();
+                            });
+                        }
+                    } else {
+                        // No hay imágenes para subir
+                        javafx.application.Platform.runLater(() -> {
+                            loadingAlert.close();
+                            showAlert("Éxito", "Plaza guardada correctamente", AlertType.INFORMATION);
+                            limpiarFormulario();
+                        });
+                    }
+                } else {
+                    throw new Exception("No se pudo guardar la plaza. Intente nuevamente.");
+                }
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Mostrar error en el hilo de JavaFX
+                javafx.application.Platform.runLater(() -> {
+                    loadingAlert.close();
+                    errorLabel.setText("Error al guardar la plaza: " + e.getMessage());
+                });
             }
-            
-        } catch (Exception e) {
-            errorLabel.setText("Error al guardar la plaza: " + e.getMessage());
-            e.printStackTrace();
-        }
+        }).start();
     }
     
     @FXML
@@ -222,6 +248,20 @@ public class AgregarPlazaController {
         volverAVistaPlazas();
     }
     
+    /**
+     * Limpia el formulario después de un guardado exitoso
+     */
+    private void limpiarFormulario() {
+        nombreField.clear();
+        direccionField.clear();
+        imagenesSeleccionadas.clear();
+        thumbnailsContainer.getChildren().clear();
+        volverAVistaPlazas();
+    }
+    
+    /**
+     * Navega de vuelta a la vista de plazas
+     */
     private void volverAVistaPlazas() {
         try {
             // Obtener el nodo actual

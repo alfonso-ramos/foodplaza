@@ -71,7 +71,7 @@ public class AsignarGerenciaController implements Initializable {
             actualizarEstadoBotonAsignar();
         });
         
-        localCombo.getSelectionModel().selectedItemProperty().addListener((_, __, ___) -> 
+        localCombo.getSelectionModel().selectedItemProperty().addListener((_, _, _) -> 
             actualizarEstadoBotonAsignar()
         );
         

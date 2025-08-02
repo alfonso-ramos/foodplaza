@@ -34,7 +34,6 @@ public class AuthService {
      * @return Respuesta del servidor con los datos del usuario
      * @throws IOException Si hay un error de red o las credenciales son inválidas
      */
-    @SuppressWarnings("unchecked")
     public RespuestaLogin login(String email, String password) throws IOException {
         try {
             // Validar campos
