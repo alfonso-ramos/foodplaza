@@ -29,7 +29,7 @@ public class AdminDashboardController {
         // Mostrar información del usuario actual
         AuthService authService = AuthService.getInstance();
         if (authService.getCurrentUser() != null) {
-            userLabel.setText(authService.getCurrentUser().getFullName());
+            userLabel.setText(authService.getCurrentUser().getNombre());
         }
         
         // Mostrar un mensaje de bienvenida cuando se inicia el dashboard

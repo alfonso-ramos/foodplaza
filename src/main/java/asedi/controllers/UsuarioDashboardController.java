@@ -19,7 +19,7 @@ public class UsuarioDashboardController {
         // Mostrar el nombre del usuario actual
         AuthService authService = AuthService.getInstance();
         if (authService.getCurrentUser() != null) {
-            userNameLabel.setText(authService.getCurrentUser().getFullName());
+            userNameLabel.setText(authService.getCurrentUser().getNombre());
         }
     }
 

@@ -1,81 +1,102 @@
 package asedi.controllers;
 
+import asedi.models.RespuestaLogin;
+import asedi.models.Usuario;
 import asedi.services.AuthService;
-import asedi.models.User;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+
 import java.io.IOException;
 
 public class LoginController {
-
-    @FXML
-    private TextField emailField;
-
-    @FXML
-    private PasswordField passwordField;
-
-    @FXML
-    private Button loginButton;
-
-    @FXML
-    private Hyperlink createAccountLink;
-
-    @FXML
-    private Hyperlink recoverPasswordLink;
-
-    @FXML
-    public void initialize() {
-        // Inicialización si es necesaria
-    }
+    @FXML private TextField emailField;
+    @FXML private PasswordField passwordField;
     
+    private final AuthService authService = AuthService.getInstance();
+
     @FXML
-    private void handleLogin(ActionEvent event) {
+    private void handleLogin() {
         String email = emailField.getText().trim();
         String password = passwordField.getText();
         
         if (email.isEmpty() || password.isEmpty()) {
-            showAlert("Error", "Por favor ingrese su correo y contraseña", Alert.AlertType.WARNING);
+            mostrarAlerta("Error", "Por favor ingrese su correo y contraseña", Alert.AlertType.ERROR);
             return;
         }
-        
-        // Validar formato de correo electrónico
-        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            showAlert("Error", "Por favor ingrese un correo electrónico válido", Alert.AlertType.WARNING);
-            return;
-        }
-        
-        AuthService authService = AuthService.getInstance();
-        if (authService.login(email, password)) {
-            User user = authService.getCurrentUser();
-            String dashboardPath = "/views/" + getDashboardForRole(user.getRole()) + ".fxml";
-            String title = "Panel de " + user.getRole().getDisplayName() + " - FoodPlaza";
-            loadView(dashboardPath, title);
-        } else {
-            showAlert("Error", "Usuario o contraseña incorrectos", Alert.AlertType.ERROR);
+
+        try {
+            RespuestaLogin respuesta = authService.login(email, password);
+            if (respuesta != null && respuesta.getUsuario() != null) {
+                redirigirSegunRol(respuesta.getUsuario());
+            } else {
+                mostrarAlerta("Error", "Credenciales inválidas", Alert.AlertType.ERROR);
+            }
+        } catch (IOException e) {
+            mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
-    
-    private String getDashboardForRole(User.UserRole role) {
-        return switch (role) {
-            case ADMIN -> "adminDashboard";
-            case MANAGER -> "gerente/gerenteDashboard";
-            case USER -> "usuario/usuarioDashboard";
-        };
+
+    private void redirigirSegunRol(Usuario usuario) {
+        String rutaVista;
+        String titulo;
+        
+        switch (usuario.getRol().toLowerCase()) {
+            case "administrador":
+                rutaVista = "/views/adminDashboard.fxml";
+                titulo = "Panel de Administración";
+                break;
+            case "gerente":
+                rutaVista = "/views/gerente/gerenteDashboard.fxml";
+                titulo = "Panel de Gerencia";
+                break;
+            case "usuario":
+            default:
+                rutaVista = "/views/usuario/usuarioDashboard.fxml";
+                titulo = "Mi Cuenta";
+                break;
+        }
+
+        loadView(rutaVista, titulo);
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        
+        // Centrar la alerta en la ventana
+        Window window = emailField.getScene().getWindow();
+        alert.setX(window.getX() + (window.getWidth() - 400) / 2);
+        alert.setY(window.getY() + (window.getHeight() - 200) / 2);
+        
+        alert.showAndWait();
     }
     
     @FXML
-    private void handleCreateAccount() {
-        loadView("/views/registro.fxml", "Registro - FoodPlaza");
+    private void handleRegistro() {
+        try {
+            // Cargar la vista de registro
+            Parent root = FXMLLoader.load(getClass().getResource("/views/registro.fxml"));
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cargar la vista de registro", Alert.AlertType.ERROR);
+        }
     }
     
     @FXML
     private void handleRecoverPassword() {
-        showAlert("Recuperar Contraseña", "Funcionalidad en desarrollo.", Alert.AlertType.INFORMATION);
+        mostrarAlerta("Recuperar Contraseña", "Funcionalidad en desarrollo.", Alert.AlertType.INFORMATION);
     }
     
     private void loadView(String fxmlPath, String title) {
@@ -102,11 +123,6 @@ public class LoginController {
             stage.setTitle(title);
             stage.setScene(scene);
             
-            // Maximizar la ventana si es el dashboard
-            if (fxmlPath.equals("/views/adminDashboard.fxml")) {
-                stage.setMaximized(true);
-            }
-            
             // Centrar la ventana
             stage.centerOnScreen();
             
@@ -119,7 +135,7 @@ public class LoginController {
             String errorMsg = "Error al cargar la vista " + fxmlPath + ": " + e.getMessage();
             System.err.println(errorMsg);
             e.printStackTrace();
-            showAlert("Error", errorMsg, Alert.AlertType.ERROR);
+            mostrarAlerta("Error", errorMsg, Alert.AlertType.ERROR);
         }
     }
     
@@ -157,11 +173,5 @@ public class LoginController {
         }
     }
     
-    private void showAlert(String title, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
 }

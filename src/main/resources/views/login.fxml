@@ -36,7 +36,7 @@
 
             <HBox alignment="CENTER" spacing="10">
                 <Label text="¿No tienes una cuenta?" styleClass="form-label"/>
-                <Hyperlink text="Regístrate aquí" fx:id="createAccountLink" onAction="#handleCreateAccount" styleClass="hyperlink"/>
+                <Hyperlink text="Regístrate aquí" fx:id="createAccountLink" onAction="#handleRegistro" styleClass="hyperlink"/>
             </HBox>
             
             <Hyperlink text="¿Olvidaste tu contraseña?" fx:id="recoverPasswordLink" onAction="#handleRecoverPassword" styleClass="hyperlink"/>

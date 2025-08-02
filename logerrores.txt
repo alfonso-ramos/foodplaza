@@ -1,60 +1,53 @@
-[WARNING] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/services/PlazaService.java:[21,24] deprecated item is not annotated with @Deprecated
-[INFO] 1 warning
-[INFO] -------------------------------------------------------------
-[INFO] -------------------------------------------------------------
-[ERROR] COMPILATION ERROR : 
-[INFO] -------------------------------------------------------------
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[10,23] package org.json.simple does not exist
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[11,23] package org.json.simple does not exist
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[12,30] package org.json.simple.parser does not exist
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[124,25] cannot find symbol
-  symbol: class JSONParser
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[124,49] cannot find symbol
-  symbol: class JSONParser
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[125,25] cannot find symbol
-  symbol: class JSONObject
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[125,50] cannot find symbol
-  symbol: class JSONObject
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[127,25] cannot find symbol
-  symbol: class JSONArray
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[127,45] cannot find symbol
-  symbol: class JSONArray
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[148,33] cannot find symbol
-  symbol: class JSONObject
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[148,53] cannot find symbol
-  symbol: class JSONObject
-[INFO] 11 errors 
-[INFO] -------------------------------------------------------------
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD FAILURE
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  2.398 s
-[INFO] Finished at: 2025-08-01T15:54:22-07:00
-[INFO] ------------------------------------------------------------------------
-[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project foodplaza-frontend: Compilation failure: Compilation failure: 
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[10,23] package org.json.simple does not exist
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[11,23] package org.json.simple does not exist
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[12,30] package org.json.simple.parser does not exist
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[124,25] cannot find symbol
-[ERROR]   symbol: class JSONParser
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[124,49] cannot find symbol
-[ERROR]   symbol: class JSONParser
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[125,25] cannot find symbol
-[ERROR]   symbol: class JSONObject
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[125,50] cannot find symbol
-[ERROR]   symbol: class JSONObject
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[127,25] cannot find symbol
-[ERROR]   symbol: class JSONArray
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[127,45] cannot find symbol
-[ERROR]   symbol: class JSONArray
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[148,33] cannot find symbol
-[ERROR]   symbol: class JSONObject
-[ERROR] /home/poncho/Documents/Workspace/foodplaza-frontend/src/main/java/asedi/controllers/PlazasController.java:[148,53] cannot find symbol
-[ERROR]   symbol: class JSONObject
-[ERROR] -> [Help 1]
-[ERROR] 
-[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
-[ERROR] Re-run Maven using the -X switch to enable full debug logging.
-[ERROR] 
-[ERROR] For more information about the errors and possible solutions, please read the following articles:
-[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+Error al cargar la vista /views/usuario/dashboard.fxml: No se pudo encontrar el archivo: /views/usuario/dashboard.fxml
+java.io.IOException: No se pudo encontrar el archivo: /views/usuario/dashboard.fxml
+        at asedi.controllers.LoginController.loadView(LoginController.java:108)
+        at asedi.controllers.LoginController.redirigirSegunRol(LoginController.java:66)
+        at asedi.controllers.LoginController.handleLogin(LoginController.java:37)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:72)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at javafx.base@21.0.1/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:270)
+        at javafx.fxml@21.0.1/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1855)
+        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1726)
+        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+        at javafx.base@21.0.1/javafx.event.Event.fireEvent(Event.java:198)
+        at javafx.graphics@21.0.1/javafx.scene.Node.fireEvent(Node.java:8875)
+        at javafx.controls@21.0.1/javafx.scene.control.Button.fire(Button.java:203)
+        at javafx.controls@21.0.1/javafx.scene.control.skin.ButtonSkin.lambda$new$0(ButtonSkin.java:71)
+        at javafx.graphics@21.0.1/com.sun.javafx.scene.KeyboardShortcutsHandler.processAccelerators(KeyboardShortcutsHandler.java:383)
+        at javafx.graphics@21.0.1/com.sun.javafx.scene.KeyboardShortcutsHandler.dispatchBubblingEvent(KeyboardShortcutsHandler.java:163)
+        at javafx.base@21.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+        at javafx.base@21.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+        at javafx.base@21.0.1/javafx.event.Event.fireEvent(Event.java:198)
+        at javafx.graphics@21.0.1/javafx.scene.Scene.processKeyEvent(Scene.java:2194)
+        at javafx.graphics@21.0.1/javafx.scene.Scene$ScenePeerListener.keyEvent(Scene.java:2715)
+        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:218)
+        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:150)
+        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleKeyEvent$1(GlassViewEventHandler.java:250)
+        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+        at javafx.graphics@21.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleKeyEvent(GlassViewEventHandler.java:249)
+        at javafx.graphics@21.0.1/com.sun.glass.ui.View.handleKeyEvent(View.java:542)
+        at javafx.graphics@21.0.1/com.sun.glass.ui.View.notifyKey(View.java:966)
+        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
+        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$10(GtkApplication.java:263)
+        at java.base/java.lang.Thread.run(Thread.java:1583)
