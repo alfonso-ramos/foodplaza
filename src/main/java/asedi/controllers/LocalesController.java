@@ -224,6 +224,7 @@ public class LocalesController {
             }
         } catch (IOException e) {
             mostrarError("Error al abrir el formulario: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     
@@ -248,6 +249,7 @@ public class LocalesController {
             }
         } catch (IOException e) {
             mostrarError("Error al abrir el formulario de edición: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     

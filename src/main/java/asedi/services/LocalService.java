@@ -44,33 +44,28 @@ public class LocalService {
     /**
      * Guarda un nuevo local en el servidor
      * @param local El local a guardar
-     * @param imagenes Lista de imágenes a subir
+     * @param imagenArchivo Archivo de imagen a subir (opcional)
      * @return true si se guardó correctamente, false en caso contrario
      */
-    public boolean guardarLocal(Local local, List<File> imagenes) {
+    public boolean guardarLocal(Local local, File imagenArchivo) {
         try {
-            // 1. Guardar el local primero
-            Long localId = guardarLocalYDevolverId(local);
-            
-            if (localId == null) {
-                return false;
-            }
-            
-            // 2. Subir las imágenes si hay alguna
-            if (imagenes != null && !imagenes.isEmpty()) {
-                for (File imagen : imagenes) {
-                    try {
-                        subirImagenLocal(localId, imagen, local.getNombre());
-                    } catch (Exception e) {
-                        // Registrar el error pero continuar con el proceso
-                        System.err.println("Advertencia: No se pudo subir la imagen " + imagen.getName() + 
-                                       ". El local se guardó correctamente. Error: " + e.getMessage());
-                        // Opcional: Podrías agregar un logger aquí
+            // 1. Si hay una imagen para subir, la subimos primero
+            if (imagenArchivo != null && imagenArchivo.exists()) {
+                try {
+                    ImagenResponse respuesta = subirImagenLocal(null, imagenArchivo, local.getNombre());
+                    if (respuesta != null && respuesta.getUrl() != null) {
+                        local.setImagenUrl(respuesta.getUrl());
+                        local.setImagenPublicId(respuesta.getPublic_id());
                     }
+                } catch (Exception e) {
+                    System.err.println("Advertencia: No se pudo subir la imagen " + imagenArchivo.getName() + 
+                                   ". Error: " + e.getMessage());
+                    // Continuamos aun si falla la subida de la imagen
                 }
             }
             
-            return true;
+            // 2. Guardar el local con la URL de la imagen
+            return guardarLocalYDevolverId(local) != null;
         } catch (Exception e) {
             System.err.println("Error al guardar el local: " + e.getMessage());
             e.printStackTrace();
@@ -93,9 +88,17 @@ public class LocalService {
         requestBody.put("horario_apertura", local.getHorarioApertura());
         requestBody.put("horario_cierre", local.getHorarioCierre());
         requestBody.put("tipo_comercio", local.getTipoComercio());
-        requestBody.put("estado", local.getEstado());
+        requestBody.put("estado", local.getEstado() != null ? local.getEstado() : "activo");
         requestBody.put("plaza_id", local.getPlazaId());
         requestBody.put("id_gerente", local.getIdGerente()); // Puede ser null
+        
+        // Incluir la URL de la imagen si existe
+        if (local.getImagenUrl() != null && !local.getImagenUrl().isEmpty()) {
+            requestBody.put("imagen_url", local.getImagenUrl());
+        }
+        if (local.getImagenPublicId() != null && !local.getImagenPublicId().isEmpty()) {
+            requestBody.put("imagen_public_id", local.getImagenPublicId());
+        }
         
         // Realizar la petición POST
         HttpClientUtil.HttpResponseWrapper<String> response = 

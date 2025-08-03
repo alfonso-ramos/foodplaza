@@ -1,21 +1,36 @@
 package asedi.model;
 
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
 public class Local {
     private Long id;
+    
+    @SerializedName("plaza_id")
     private Long plazaId;
+    
     private String nombre;
     private String descripcion;
     private String direccion;
+    
+    @SerializedName("horario_apertura")
     private String horarioApertura;
+    
+    @SerializedName("horario_cierre")
     private String horarioCierre;
+    
+    @SerializedName("tipo_comercio")
     private String tipoComercio;
+    
     private String estado;
+    
+    @SerializedName("imagen_url")
     private String imagenUrl;
+    
+    @SerializedName("imagen_public_id")
     private String imagenPublicId;
+    
+    @SerializedName("id_gerente")
     private Long idGerente;
-    private List<String> imagenes;
     
     // Constructor vacío
     public Local() {
@@ -141,14 +156,6 @@ public class Local {
 
     public void setIdGerente(Long idGerente) {
         this.idGerente = idGerente;
-    }
-
-    public List<String> getImagenes() {
-        return imagenes;
-    }
-    
-    public void setImagenes(List<String> imagenes) {
-        this.imagenes = imagenes;
     }
     
     // Métodos adicionales para compatibilidad con el controlador

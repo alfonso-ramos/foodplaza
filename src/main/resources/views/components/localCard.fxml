@@ -1,21 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
 
-<VBox fx:id="root" styleClass="local-card" onMouseClicked="#handleClick" 
-      xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.LocalCardController">
-    <stylesheets>
-        <URL value="@/styles/locales.css" />
-    </stylesheets>
+<VBox fx:id="cardContainer" styleClass="local-card" 
+      xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="asedi.controllers.LocalCardController"
+      stylesheets="@/styles/locales.css"
+      maxWidth="300"
+      spacing="0"
+      onMouseClicked="#handleClick">
     
-    <ImageView fx:id="imagenLocal" fitWidth="200" fitHeight="150" 
-               style="-fx-background-color: #f0f0f0; -fx-cursor: hand;" />
+    <!-- Local Image Container with fixed aspect ratio -->
+    <StackPane styleClass="image-container" maxHeight="180">
+        <ImageView fx:id="imagenLocal" 
+                  fitWidth="280" 
+                  fitHeight="160" 
+                  preserveRatio="true" 
+                  style="-fx-background-color: #f5f5f5; -fx-background-radius: 4 4 0 0;" />
+    </StackPane>
     
-    <VBox style="-fx-padding: 10; -fx-spacing: 5;">
-        <Label fx:id="nombreLabel" style="-fx-font-weight: bold; -fx-font-size: 14;" />
-        <Label fx:id="tipoComercioLabel" styleClass="tipo-comercio" />
-        <Label fx:id="horarioLabel" styleClass="horario" />
+    <!-- Card Content -->
+    <VBox styleClass="content">
+        <VBox spacing="4">
+            <Label fx:id="nombreLabel" styleClass="title" />
+            <HBox alignment="CENTER_LEFT" spacing="4">
+                <Label fx:id="tipoComercioLabel" styleClass="tipo-comercio" />
+            </HBox>
+        </VBox>
+        
+        <Label fx:id="horarioLabel" styleClass="horario" wrapText="true" />
+        
+        <Label fx:id="descripcionLabel" styleClass="descripcion" wrapText="true" visible="false" />
+        
+        <!-- Optional: Add action buttons if needed -->
+        <!--
+        <HBox styleClass="button-container" spacing="8">
+            <Button text="Ver Detalles" onAction="#handleClick" styleClass="button button-details" />
+        </HBox>
+        -->
     </VBox>
 </VBox>

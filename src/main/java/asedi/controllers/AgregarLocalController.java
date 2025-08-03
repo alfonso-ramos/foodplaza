@@ -1,9 +1,6 @@
 package asedi.controllers;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -37,7 +34,7 @@ public class AgregarLocalController {
     @FXML private FlowPane thumbnailsContainer;
     @FXML private Label errorLabel;
     
-    private List<File> imagenesSeleccionadas = new ArrayList<>();
+    private File imagenSeleccionada = null;
     @FXML
     public void initialize() {
         // Configurar opciones del ComboBox de tipo de comercio
@@ -63,7 +60,7 @@ public class AgregarLocalController {
         configurarValidaciones();
     }
     
-    public void setPlazas(List<Plaza> plazas) {
+    public void setPlazas(java.util.List<Plaza> plazas) {
         plazaCombo.getItems().setAll(plazas);
         
         if (!plazas.isEmpty()) {
@@ -73,7 +70,7 @@ public class AgregarLocalController {
     
     private void configurarValidaciones() {
         // Validar formato de hora (HH:mm)
-        horaAperturaField.textProperty().addListener((observable, oldValue, newVal) -> {
+        horaAperturaField.textProperty().addListener((_, _, newVal) -> {
             if (!newVal.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")) {
                 horaAperturaField.setStyle("-fx-border-color: #d32f2f; -fx-border-width: 1px;");
             } else {
@@ -81,7 +78,7 @@ public class AgregarLocalController {
             }
         });
         
-        horaCierreField.textProperty().addListener((observable, oldValue, newVal) -> {
+        horaCierreField.textProperty().addListener((_, _, newVal) -> {
             if (!newVal.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")) {
                 horaCierreField.setStyle("-fx-border-color: #d32f2f; -fx-border-width: 1px;");
             } else {
@@ -91,32 +88,22 @@ public class AgregarLocalController {
     }
     
     @FXML
-    private void seleccionarImagenes() {
+    private void seleccionarImagen() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Seleccionar imágenes");
+        fileChooser.setTitle("Seleccionar imagen");
         fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("Imágenes", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
         
-        List<File> archivos = fileChooser.showOpenMultipleDialog(null);
+        File archivo = fileChooser.showOpenDialog(null);
         
-        if (archivos != null) {
-            for (File archivo : archivos) {
-                if (imagenesSeleccionadas.size() >= 5) {
-                    mostrarError("Solo puedes seleccionar un máximo de 5 imágenes");
-                    break;
-                }
-                
-                if (archivo.length() > 5 * 1024 * 1024) { // 5MB
-                    mostrarError("La imagen " + archivo.getName() + " excede el tamaño máximo de 5MB");
-                    continue;
-                }
-                
-                if (!imagenesSeleccionadas.contains(archivo)) {
-                    imagenesSeleccionadas.add(archivo);
-                }
+        if (archivo != null) {
+            if (archivo.length() > 5 * 1024 * 1024) { // 5MB
+                mostrarError("La imagen " + archivo.getName() + " excede el tamaño máximo de 5MB");
+                return;
             }
             
+            imagenSeleccionada = archivo;
             actualizarVistaPrevia();
         }
     }
@@ -124,11 +111,11 @@ public class AgregarLocalController {
     private void actualizarVistaPrevia() {
         thumbnailsContainer.getChildren().clear();
         
-        for (File imagen : imagenesSeleccionadas) {
+        if (imagenSeleccionada != null) {
             try {
-                ImageView imageView = new ImageView(new Image(imagen.toURI().toString()));
-                imageView.setFitWidth(100);
-                imageView.setFitHeight(100);
+                ImageView imageView = new ImageView(new Image(imagenSeleccionada.toURI().toString()));
+                imageView.setFitWidth(150);
+                imageView.setFitHeight(150);
                 imageView.setPreserveRatio(true);
                 
                 // Botón para eliminar la imagen
@@ -144,7 +131,7 @@ public class AgregarLocalController {
                 
                 // Configurar acción de eliminar
                 btnEliminar.setOnAction(event -> {
-                    imagenesSeleccionadas.remove(imagen);
+                    imagenSeleccionada = null;
                     actualizarVistaPrevia();
                 });
                 
@@ -152,12 +139,14 @@ public class AgregarLocalController {
                 
             } catch (Exception e) {
                 System.err.println("Error al cargar la imagen: " + e.getMessage());
+                imagenSeleccionada = null;
             }
         }
     }
     
     @FXML
-    private void guardarLocal() {
+    @SuppressWarnings("unused")
+    private void guardarLocal(javafx.event.ActionEvent event) {
         // Limpiar mensajes de error previos
         limpiarMensajesError();
         
@@ -188,11 +177,9 @@ public class AgregarLocalController {
             System.out.println("\n=== INTENTANDO GUARDAR LOCAL ===");
             System.out.println("Nombre: " + local.getNombre());
             System.out.println("Plaza ID: " + local.getPlazaId());
-            System.out.println("Número de imágenes: " + imagenesSeleccionadas.size());
-            
             // Llamar al servicio para guardar el local
             LocalService localService = new LocalService();
-            boolean exito = localService.guardarLocal(local, imagenesSeleccionadas);
+            boolean exito = localService.guardarLocal(local, imagenSeleccionada);
             
             if (exito) {
                 System.out.println("Local guardado exitosamente");
@@ -306,7 +293,7 @@ public class AgregarLocalController {
     }
     
     @FXML
-    private void cancelar() {
+    private void cancelar(javafx.event.ActionEvent event) {
         try {
             // Obtener el panel de contenido principal del dashboard
             Pane mainContentPane = (Pane) contentPane.getScene().lookup("#contenidoPane");
