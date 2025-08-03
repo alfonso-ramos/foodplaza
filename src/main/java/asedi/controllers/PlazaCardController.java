@@ -3,6 +3,8 @@ package asedi.controllers;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -69,29 +71,43 @@ public class PlazaCardController implements Initializable {
             return;
         }
 
-        // Normalizar la URL de la imagen
-        String normalizedUrl = imageUrl.startsWith("/") ? imageUrl : "/" + imageUrl;
+        // Configurar el ImageView para que la imagen se ajuste correctamente
+        imagenPlaza.setPreserveRatio(true);  // Mantener relación de aspecto
+        imagenPlaza.setSmooth(true);
+        imagenPlaza.setCache(true);
+        // Tamaño máximo para la imagen
+        imagenPlaza.setFitWidth(280);  // Reducir un poco el ancho para dar espacio al padding
+        imagenPlaza.setFitHeight(180); // Reducir un poco el alto para dar espacio al padding
         
-        System.out.println("Intentando cargar imagen: " + normalizedUrl);
+        // Asegurar que la imagen no se salga de su contenedor
+        imagenPlaza.setStyle(
+            "-fx-background-color: #f5f5f5;" +  // Fondo por si la imagen tiene transparencia
+            "-fx-padding: 0;" +                // Sin padding adicional
+            "-fx-border-radius: 4px;" +        // Bordes redondeados
+            "-fx-background-radius: 4px;"       // Bordes redondeados para el fondo
+        );
+        
+        // Verificar si es una URL remota (http/https)
+        if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+            loadRemoteImage(imageUrl);
+            return;
+        }
+
+        // Si no es una URL remota, tratar como recurso local
+        String normalizedUrl = imageUrl.startsWith("/") ? imageUrl : "/" + imageUrl;
         
         // 1. Intentar cargar como recurso interno (desde el JAR)
         try (InputStream is = getClass().getResourceAsStream(normalizedUrl)) {
             if (is != null) {
+                // Para recursos internos, cargamos primero sin escalar
                 Image image = new Image(is);
-                image.errorProperty().addListener((obs, wasError, isNowError) -> {
-                    if (isNowError) {
-                        System.err.println("Error al cargar la imagen como recurso: " + normalizedUrl);
-                        loadPlaceholderImage();
-                    }
-                });
-                
+                setupImageErrorHandling(image, "recurso: " + normalizedUrl);
                 if (!image.isError()) {
-                    System.out.println("Imagen cargada correctamente desde recursos: " + normalizedUrl);
                     imagenPlaza.setImage(image);
                     return;
                 }
             } else {
-                System.err.println("No se encontró el recurso: " + normalizedUrl);
+                System.err.println("No se encontró el recurso local: " + normalizedUrl);
             }
         } catch (Exception e) {
             System.err.println("Error al cargar la imagen como recurso (" + normalizedUrl + "): " + e.getMessage());
@@ -99,19 +115,10 @@ public class PlazaCardController implements Initializable {
         
         // 2. Si falla, intentar cargar desde el sistema de archivos (para desarrollo)
         try {
-            // Construir ruta relativa a la carpeta de recursos
             String filePath = "src/main/resources" + normalizedUrl;
-            Image fileImage = new Image("file:" + filePath, true);
-            
-            fileImage.errorProperty().addListener((obs, wasError, isNowError) -> {
-                if (isNowError) {
-                    System.err.println("Error al cargar la imagen desde archivo: " + filePath);
-                    loadPlaceholderImage();
-                }
-            });
-            
+            Image fileImage = new Image("file:" + filePath, false);
+            setupImageErrorHandling(fileImage, "archivo: " + filePath);
             if (!fileImage.isError()) {
-                System.out.println("Imagen cargada correctamente desde archivo: " + filePath);
                 imagenPlaza.setImage(fileImage);
                 return;
             }
@@ -120,8 +127,49 @@ public class PlazaCardController implements Initializable {
         }
         
         // 3. Si todo falla, cargar placeholder
-        System.err.println("No se pudo cargar la imagen, usando placeholder: " + normalizedUrl);
+        System.err.println("No se pudo cargar la imagen, usando placeholder: " + imageUrl);
         loadPlaceholderImage();
+    }
+    
+    private void loadRemoteImage(String imageUrl) {
+        try {
+            System.out.println("Cargando imagen remota: " + imageUrl);
+            // Cargar la imagen con carga en segundo plano
+            Image remoteImage = new Image(imageUrl, 280, 180, true, true, true);
+            
+            // Configurar el manejador de errores
+            remoteImage.errorProperty().addListener((_obs, _wasError, isNowError) -> {
+                if (isNowError) {
+                    System.err.println("Error al cargar la imagen remota: " + imageUrl);
+                    Platform.runLater(this::loadPlaceholderImage);
+                } else {
+                    System.out.println("Imagen remota cargada correctamente: " + imageUrl);
+                }
+            });
+            
+            // Si la imagen se cargó correctamente, mostrarla
+            if (!remoteImage.isError()) {
+                Platform.runLater(() -> {
+                    imagenPlaza.setImage(remoteImage);
+                    // Asegurar que la imagen mantenga su relación de aspecto
+                    imagenPlaza.setPreserveRatio(true);
+                });
+            }
+        } catch (Exception e) {
+            System.err.println("Error al cargar la imagen remota (" + imageUrl + "): " + e.getMessage());
+            Platform.runLater(this::loadPlaceholderImage);
+        }
+    }
+    
+    private void setupImageErrorHandling(Image image, String source) {
+        image.errorProperty().addListener((_obs, _wasError, isNowError) -> {
+            if (isNowError) {
+                System.err.println("Error al cargar la imagen " + source);
+                loadPlaceholderImage();
+            } else {
+                System.out.println("Imagen cargada correctamente desde " + source);
+            }
+        });
     }
     
     public void setPlazasController(PlazasController plazasController) {

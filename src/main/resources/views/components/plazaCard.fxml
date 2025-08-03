@@ -7,11 +7,14 @@
 
 <VBox fx:id="cardContainer" styleClass="plaza-card" xmlns:fx="http://javafx.com/fxml" 
       fx:controller="asedi.controllers.PlazaCardController"
-      stylesheets="@../../styles/plazaCard.css">
+      stylesheets="@../../styles/plazaCard.css"
+      maxWidth="300"
+      spacing="0">
     
-    <!-- Plaza Image Container -->
-    <StackPane styleClass="image-container">
-        <ImageView fx:id="imagenPlaza" fitWidth="360" fitHeight="180" preserveRatio="true" />
+    <!-- Plaza Image Container with fixed aspect ratio -->
+    <StackPane styleClass="image-container" maxHeight="180">
+        <ImageView fx:id="imagenPlaza" fitWidth="280" fitHeight="160" preserveRatio="true" 
+                   style="-fx-background-color: #f5f5f5; -fx-background-radius: 4 4 0 0;" />
     </StackPane>
     
     <!-- Card Content -->

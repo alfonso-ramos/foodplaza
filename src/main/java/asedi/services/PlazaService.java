@@ -35,7 +35,19 @@ public class PlazaService {
             if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
                 // Parsear la respuesta JSON a una lista de plazas
                 Type listType = new TypeToken<ArrayList<Plaza>>(){}.getType();
-                return gson.fromJson(response.getBody(), listType);
+                List<Plaza> plazas = gson.fromJson(response.getBody(), listType);
+                
+                // Asegurarse de que las URLs de las imágenes sean accesibles
+                if (plazas != null) {
+                    for (Plaza plaza : plazas) {
+                        // Si no hay imagen, establecer la imagen por defecto
+                        if (plaza.getImagenUrl() == null || plaza.getImagenUrl().trim().isEmpty()) {
+                            plaza.setImagenUrl("/images/plazas/plazadummy.jpg");
+                        }
+                    }
+                }
+                
+                return plazas != null ? plazas : new ArrayList<>();
             } else {
                 throw new IOException("Error al obtener las plazas: " + response.getBody());
             }

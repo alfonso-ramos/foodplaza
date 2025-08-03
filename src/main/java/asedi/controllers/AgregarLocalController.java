@@ -158,32 +158,80 @@ public class AgregarLocalController {
     
     @FXML
     private void guardarLocal() {
-        if (validarCampos()) {
-            try {
-                // Crear el objeto Local con los datos del formulario
-                Local local = new Local();
-                local.setPlazaId(plazaCombo.getValue().getId());
-                local.setNombre(nombreField.getText().trim());
-                local.setDescripcion(descripcionField.getText().trim());
-                local.setDireccion(direccionField.getText().trim());
-                local.setHorarioApertura(horaAperturaField.getText().trim());
-                local.setHorarioCierre(horaCierreField.getText().trim());
-                local.setTipoComercio(tipoComercioCombo.getValue());
+        // Limpiar mensajes de error previos
+        limpiarMensajesError();
+        
+        // Validar campos obligatorios
+        if (!validarCampos()) {
+            return;
+        }
+        
+        // Deshabilitar el botón de guardar para evitar múltiples clics
+        Button guardarBtn = (Button) nombreField.getScene().lookup("#guardarBtn");
+        if (guardarBtn != null) {
+            guardarBtn.setDisable(true);
+            guardarBtn.setText("Guardando...");
+        }
+        
+        try {
+            // Crear el objeto Local con los datos del formulario
+            Local local = new Local();
+            local.setPlazaId(plazaCombo.getValue().getId());
+            local.setNombre(nombreField.getText().trim());
+            local.setDescripcion(descripcionField.getText().trim());
+            local.setDireccion(direccionField.getText().trim());
+            local.setHorarioApertura(horaAperturaField.getText().trim());
+            local.setHorarioCierre(horaCierreField.getText().trim());
+            local.setTipoComercio(tipoComercioCombo.getValue());
+            local.setEstado(estadoCombo.getValue());
+            
+            System.out.println("\n=== INTENTANDO GUARDAR LOCAL ===");
+            System.out.println("Nombre: " + local.getNombre());
+            System.out.println("Plaza ID: " + local.getPlazaId());
+            System.out.println("Número de imágenes: " + imagenesSeleccionadas.size());
+            
+            // Llamar al servicio para guardar el local
+            LocalService localService = new LocalService();
+            boolean exito = localService.guardarLocal(local, imagenesSeleccionadas);
+            
+            if (exito) {
+                System.out.println("Local guardado exitosamente");
+                // Cerrar la ventana si se guardó correctamente
+                ((Stage) nombreField.getScene().getWindow()).close();
                 
-                // Llamar al servicio para guardar el local
-                LocalService localService = new LocalService();
-                boolean exito = localService.guardarLocal(local, imagenesSeleccionadas);
-                
-                if (exito) {
-                    // Cerrar la ventana si se guardó correctamente
-                    ((Stage) nombreField.getScene().getWindow()).close();
-                } else {
-                    mostrarError("Error al guardar el local. Por favor, inténtalo de nuevo.");
-                }
-                
-            } catch (Exception e) {
-                mostrarError("Error inesperado: " + e.getMessage());
-                e.printStackTrace();
+                // Mostrar mensaje de éxito (opcional)
+                mostrarMensaje("Éxito", "El local se ha guardado correctamente.", javafx.scene.control.Alert.AlertType.INFORMATION);
+            } else {
+                mostrarError("No se pudo guardar el local. Por favor, verifica los datos e inténtalo de nuevo.");
+            }
+            
+        } catch (Exception e) {
+            System.err.println("Error al guardar el local: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Manejar errores específicos de la API
+            String mensajeError = "Error al guardar el local: ";
+            String errorMessage = e.getMessage() != null ? e.getMessage() : "Error desconocido";
+            
+            if (errorMessage.contains("500")) {
+                mensajeError += "Error en el servidor. Por favor, inténtalo más tarde o contacta al administrador.";
+            } else if (errorMessage.contains("404")) {
+                mensajeError += "No se encontró el recurso solicitado.";
+            } else if (errorMessage.contains("400") || errorMessage.contains("422")) {
+                mensajeError += "Datos inválidos. Verifica que toda la información sea correcta.";
+            } else if (errorMessage.contains("tamaño máximo") || errorMessage.contains("tamaño del archivo")) {
+                mensajeError = errorMessage; // Usar el mensaje específico de tamaño de archivo
+            } else {
+                mensajeError += errorMessage;
+            }
+            
+            mostrarError(mensajeError);
+            
+        } finally {
+            // Re-habilitar el botón de guardar
+            if (guardarBtn != null) {
+                guardarBtn.setDisable(false);
+                guardarBtn.setText("Guardar");
             }
         }
     }
@@ -237,7 +285,24 @@ public class AgregarLocalController {
     
     private void mostrarError(String mensaje) {
         errorLabel.setText(mensaje);
-        errorLabel.setStyle("-fx-text-fill: #d32f2f; -fx-font-weight: bold;");
+        errorLabel.setStyle("-fx-text-fill: #d32f2f;");
+        errorLabel.setVisible(true);
+        
+        // Hacer scroll al mensaje de error si es necesario
+        errorLabel.requestFocus();
+    }
+    
+    private void mostrarMensaje(String titulo, String mensaje, javafx.scene.control.Alert.AlertType tipo) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+    
+    private void limpiarMensajesError() {
+        errorLabel.setText("");
+        errorLabel.setVisible(false);
     }
     
     @FXML

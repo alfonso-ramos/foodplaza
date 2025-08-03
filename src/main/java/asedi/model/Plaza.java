@@ -1,10 +1,18 @@
 package asedi.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Plaza {
     private Long id;
     private String nombre;
     private String direccion;
     private String estado;
+    
+    @SerializedName("imagen_url")
+    private String imagenUrl;
+    
+    @SerializedName("imagen_public_id")
+    private String imagenPublicId;
     
     // Constructor vacío
     public Plaza() {
@@ -49,6 +57,22 @@ public class Plaza {
     
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+    
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
+
+    public String getImagenPublicId() {
+        return imagenPublicId;
+    }
+
+    public void setImagenPublicId(String imagenPublicId) {
+        this.imagenPublicId = imagenPublicId;
     }
     
     @Override

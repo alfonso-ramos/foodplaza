@@ -11,15 +11,27 @@ public class Local {
     private String horarioApertura;
     private String horarioCierre;
     private String tipoComercio;
+    private String estado;
+    private String imagenUrl;
+    private String imagenPublicId;
+    private Long idGerente;
     private List<String> imagenes;
     
     // Constructor vacío
     public Local() {
     }
     
-    // Constructor con parámetros
+    // Constructor con parámetros básicos (para compatibilidad)
     public Local(Long id, Long plazaId, String nombre, String descripcion, String direccion, 
                 String horarioApertura, String horarioCierre, String tipoComercio) {
+        this(id, plazaId, nombre, descripcion, direccion, horarioApertura, horarioCierre, 
+             tipoComercio, "activo", null, null, null);
+    }
+    
+    // Constructor completo
+    public Local(Long id, Long plazaId, String nombre, String descripcion, String direccion, 
+                String horarioApertura, String horarioCierre, String tipoComercio, 
+                String estado, String imagenUrl, String imagenPublicId, Long idGerente) {
         this.id = id;
         this.plazaId = plazaId;
         this.nombre = nombre;
@@ -28,6 +40,10 @@ public class Local {
         this.horarioApertura = horarioApertura;
         this.horarioCierre = horarioCierre;
         this.tipoComercio = tipoComercio;
+        this.estado = estado != null ? estado : "activo";
+        this.imagenUrl = imagenUrl;
+        this.imagenPublicId = imagenPublicId;
+        this.idGerente = idGerente;
     }
     
     // Getters y Setters
@@ -95,6 +111,38 @@ public class Local {
         this.tipoComercio = tipoComercio;
     }
     
+    public String getEstado() {
+        return estado != null ? estado : "activo";
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado != null ? estado : "activo";
+    }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
+
+    public String getImagenPublicId() {
+        return imagenPublicId;
+    }
+
+    public void setImagenPublicId(String imagenPublicId) {
+        this.imagenPublicId = imagenPublicId;
+    }
+
+    public Long getIdGerente() {
+        return idGerente;
+    }
+
+    public void setIdGerente(Long idGerente) {
+        this.idGerente = idGerente;
+    }
+
     public List<String> getImagenes() {
         return imagenes;
     }
@@ -127,14 +175,7 @@ public class Local {
         setDireccion(ubicacion);
     }
     
-    public String getEstado() {
-        // Implementación por defecto, ajustar según sea necesario
-        return "Activo";
-    }
-    
-    public void setEstado(String estado) {
-        // Implementación por defecto, ajustar según sea necesario
-    }
+    // Estado methods are already implemented above
     
     @Override
     public String toString() {
