@@ -206,14 +206,74 @@ public class PlazaService {
      * @throws IOException Si hay un error de conexión
      */
     public boolean actualizarPlaza(Plaza plaza) throws IOException {
-        // TODO: Implementar lógica para actualizar la plaza
-        System.out.println("Actualizando plaza: " + plaza.getNombre());
-        return true;
+        try {
+            // Validar que la plaza tenga ID
+            if (plaza.getId() == null) {
+                throw new IllegalArgumentException("La plaza debe tener un ID para ser actualizada");
+            }
+
+            // Crear el cuerpo de la petición
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("nombre", plaza.getNombre());
+            requestBody.put("direccion", plaza.getDireccion());
+            requestBody.put("estado", plaza.getEstado());
+            requestBody.put("imagen_url", plaza.getImagenUrl());
+            requestBody.put("imagen_public_id", plaza.getImagenPublicId());
+
+            // Construir la URL con el ID de la plaza
+            String url = ENDPOINT + "/" + plaza.getId();
+
+            // Realizar la petición PUT
+            HttpClientUtil.HttpResponseWrapper<String> response = 
+                HttpClientUtil.put(url, requestBody, String.class);
+
+            // Verificar si la respuesta es exitosa (código 2xx)
+            if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+                return true;
+            } else {
+                System.err.println("Error al actualizar la plaza: " + response.getBody());
+                throw new IOException("Error al actualizar la plaza: " + response.getBody());
+            }
+        } catch (Exception e) {
+            System.err.println("Error en actualizarPlaza: " + e.getMessage());
+            throw e;
+        }
     }
     
-    public boolean eliminarPlaza(int id) {
-        // TODO: Implementar lógica para eliminar la plaza
-        System.out.println("Eliminando plaza con ID: " + id);
-        return true;
+    /**
+     * Elimina una plaza del servidor.
+     * @param id ID de la plaza a eliminar
+     * @return true si se eliminó correctamente, false en caso contrario
+     * @throws IOException Si hay un error de conexión
+     */
+    public boolean eliminarPlaza(int id) throws IOException {
+        try {
+            // Construir la URL con el ID de la plaza
+            String url = ENDPOINT + "/" + id;
+            System.out.println("URL de eliminación: " + url);
+
+            // Realizar la petición DELETE sin cuerpo
+            // Usamos Void.class ya que no esperamos un cuerpo de respuesta
+            HttpClientUtil.HttpResponseWrapper<Void> response = 
+                HttpClientUtil.delete(url, Void.class);
+
+            System.out.println("Respuesta del servidor - Código: " + response.getStatusCode());
+            
+            // Considerar exitosa cualquier respuesta en el rango 200-299
+            boolean success = response.getStatusCode() >= 200 && response.getStatusCode() < 300;
+            
+            if (!success) {
+                String errorMsg = "Error al eliminar la plaza. Código: " + response.getStatusCode();
+                System.err.println(errorMsg);
+                throw new IOException(errorMsg);
+            }
+            
+            return true;
+        } catch (Exception e) {
+            String errorMsg = "Error al intentar eliminar la plaza: " + e.getMessage();
+            System.err.println(errorMsg);
+            e.printStackTrace();
+            throw new IOException(errorMsg, e);
+        }
     }
 }

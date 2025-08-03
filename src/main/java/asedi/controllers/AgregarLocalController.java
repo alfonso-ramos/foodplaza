@@ -16,6 +16,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import asedi.model.Local;
 import asedi.model.Plaza;
+import asedi.utils.SuppressWarningsUtil;
 import asedi.services.LocalService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -145,8 +146,8 @@ public class AgregarLocalController {
     }
     
     @FXML
-    @SuppressWarnings("unused")
     private void guardarLocal(javafx.event.ActionEvent event) {
+        SuppressWarningsUtil.unused(event);
         // Limpiar mensajes de error previos
         limpiarMensajesError();
         

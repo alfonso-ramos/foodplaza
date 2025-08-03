@@ -307,7 +307,18 @@ public class HttpClientUtil {
             // Ejecutar la petición
             HttpResponse response = httpClient.execute(request);
             
-            // Procesar la respuesta
+            // Para peticiones DELETE, manejamos el caso especial de respuesta sin cuerpo
+            HttpEntity entity = response.getEntity();
+            int statusCode = response.getStatusLine().getStatusCode();
+            
+            // Si no hay entidad y es una respuesta exitosa, devolvemos una respuesta exitosa sin cuerpo
+            if ((entity == null || entity.getContentLength() == 0) && 
+                (statusCode >= 200 && statusCode < 300)) {
+                System.out.println("DELETE exitoso sin cuerpo de respuesta");
+                return new HttpResponseWrapper<>(statusCode, null);
+            }
+            
+            // Si hay una entidad o es un error, procesar normalmente
             return processResponse(response, responseType);
         }
     }

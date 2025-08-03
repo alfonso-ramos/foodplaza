@@ -1,8 +1,11 @@
 package asedi.controllers;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
+
+import asedi.utils.SuppressWarningsUtil;
 
 import asedi.model.Plaza;
 import asedi.services.PlazaService;
@@ -205,57 +208,139 @@ public class PlazasController {
     }
     
     public void modificarPlaza(int id) {
-        try {
-            // Primero intentar cargar el FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/editarPlaza.fxml"));
-            
-            // Verificar si el archivo FXML existe
-            if (loader.getLocation() == null) {
-                showInformation("Función en desarrollo", "La función de edición de plazas estará disponible pronto.");
-                return;
+        showLoading("Cargando datos de la plaza...");
+        System.out.println("Iniciando modificación de plaza con ID: " + id);
+        
+        // Crear una tarea en segundo plano para cargar los datos de la plaza
+        Task<Plaza> loadTask = new Task<Plaza>() {
+            @Override
+            protected Plaza call() throws Exception {
+                try {
+                    System.out.println("Obteniendo datos de la plaza con ID: " + id);
+                    Plaza plaza = plazaService.obtenerPlazaPorId((long) id);
+                    System.out.println("Datos de la plaza obtenidos: " + (plaza != null ? "Éxito" : "Plaza no encontrada"));
+                    return plaza;
+                } catch (Exception e) {
+                    System.err.println("Error al obtener la plaza: " + e.getMessage());
+                    e.printStackTrace();
+                    throw e;
+                }
             }
             
-            Parent root = loader.load();
-            
-            // Verificar si el controlador existe
-            Object controller = loader.getController();
-            if (controller == null) {
-                showInformation("Función en desarrollo", "La función de edición de plazas estará disponible pronto.");
-                return;
+            @Override
+            protected void succeeded() {
+                try {
+                    Plaza plaza = getValue();
+                    if (plaza != null) {
+                        System.out.println("Plaza a editar: " + plaza.getNombre() + " (ID: " + plaza.getId() + ")");
+                        
+                        // Cargar el formulario de edición en el hilo de la interfaz de usuario
+                        Platform.runLater(() -> {
+                            try {
+                                System.out.println("Cargando el formulario de edición...");
+                                
+                                // Verificar que la ruta del recurso sea correcta
+                                URL fxmlUrl = getClass().getResource("/views/editarPlaza.fxml");
+                                if (fxmlUrl == null) {
+                                    throw new IOException("No se pudo encontrar el archivo editarPlaza.fxml en la ruta especificada");
+                                }
+                                System.out.println("URL del archivo FXML: " + fxmlUrl);
+                                
+                                FXMLLoader loader = new FXMLLoader(fxmlUrl);
+                                System.out.println("Cargando el FXML...");
+                                Parent root = loader.load();
+                                
+                                // Obtener el controlador y establecer la plaza
+                                EditarPlazaController controller = loader.getController();
+                                System.out.println("Controlador cargado: " + controller.getClass().getName());
+                                
+                                controller.setPlaza(plaza);
+                                System.out.println("Plaza establecida en el controlador");
+                                
+                                // Configurar la ventana de edición
+                                Stage stage = new Stage();
+                                stage.setTitle("Editar Plaza");
+                                stage.initModality(Modality.APPLICATION_MODAL);
+                                stage.initStyle(StageStyle.DECORATED);
+                                stage.setScene(new Scene(root));
+                                System.out.println("Mostrando el formulario de edición...");
+                                stage.showAndWait();
+                                
+                                System.out.println("Formulario de edición cerrado");
+                                
+                                // Recargar las plazas después de cerrar el formulario
+                                cargarPlazas();
+                            } catch (Exception e) {
+                                String errorMsg = "Error al abrir el formulario de edición: " + e.getMessage();
+                                System.err.println(errorMsg);
+                                e.printStackTrace();
+                                showError(errorMsg);
+                            }
+                        });
+                    } else {
+                        String errorMsg = "No se encontró la plaza con ID: " + id;
+                        System.err.println(errorMsg);
+                        showError(errorMsg);
+                    }
+                } catch (Exception e) {
+                    String errorMsg = "Error al procesar la plaza: " + e.getMessage();
+                    System.err.println(errorMsg);
+                    e.printStackTrace();
+                    showError(errorMsg);
+                } finally {
+                    hideLoading();
+                }
             }
             
-            // Intentar establecer el ID de la plaza usando reflexión
-            try {
-                java.lang.reflect.Method setPlazaId = controller.getClass().getMethod("setPlazaId", int.class);
-                setPlazaId.invoke(controller, id);
-            } catch (Exception e) {
-                System.err.println("No se pudo establecer el ID de la plaza: " + e.getMessage());
+            @Override
+            protected void failed() {
+                try {
+                    Throwable exception = getException();
+                    String errorMsg = "Error al cargar los datos de la plaza: " + 
+                            (exception != null ? exception.getMessage() : "Error desconocido");
+                    System.err.println(errorMsg);
+                    if (exception != null) {
+                        exception.printStackTrace();
+                    }
+                    showError(errorMsg);
+                } finally {
+                    hideLoading();
+                }
             }
-            
-            Stage stage = new Stage();
-            stage.setTitle("Editar Plaza");
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initStyle(StageStyle.DECORATED);
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
-            
-            // Recargar las plazas después de cerrar el formulario
-            cargarPlazas();
-        } catch (Exception e) {
-            showError("No se pudo abrir el formulario de edición: " + e.getMessage());
-        }
+        };
+        
+        // Configurar manejo de excepciones no capturadas en el hilo
+        loadTask.exceptionProperty().addListener((obs, oldVal, newVal) -> {
+            SuppressWarningsUtil.unused(obs, oldVal);
+            if (newVal != null) {
+                System.err.println("Error en el hilo de carga de la plaza: " + newVal.getMessage());
+                newVal.printStackTrace();
+                Platform.runLater(() -> showError("Error inesperado: " + newVal.getMessage()));
+            }
+        });
+        
+        // Ejecutar la tarea en un hilo separado
+        Thread thread = new Thread(loadTask, "CargarPlazaThread-" + id);
+        thread.setUncaughtExceptionHandler((t, e) -> {
+            System.err.println("Excepción no capturada en el hilo " + t.getName() + ": " + e.getMessage());
+            e.printStackTrace();
+            Platform.runLater(() -> showError("Error en el hilo de carga: " + e.getMessage()));
+        });
+        thread.start();
     }
     
     public void eliminarPlaza(int id) {
+        // Mostrar diálogo de confirmación
         Alert confirmDialog = new Alert(AlertType.CONFIRMATION);
         confirmDialog.setTitle("Confirmar eliminación");
         confirmDialog.setHeaderText("¿Está seguro de que desea eliminar esta plaza?");
-        confirmDialog.setContentText("Esta acción no se puede deshacer.");
+        confirmDialog.setContentText("Esta acción no se puede deshacer. Se eliminarán todos los locales asociados a esta plaza.");
         
         Optional<ButtonType> result = confirmDialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             showLoading("Eliminando plaza...");
             
+            // Crear una tarea en segundo plano para eliminar la plaza
             Task<Boolean> deleteTask = new Task<>() {
                 @Override
                 protected Boolean call() throws Exception {
@@ -264,20 +349,30 @@ public class PlazasController {
                 
                 @Override
                 protected void succeeded() {
-                    if (getValue()) {
-                        showSuccess("Plaza eliminada correctamente");
-                        cargarPlazas();
-                    } else {
-                        showError("No se pudo eliminar la plaza");
+                    try {
+                        if (getValue()) {
+                            Platform.runLater(() -> {
+                                showSuccess("Plaza eliminada correctamente");
+                                cargarPlazas();
+                            });
+                        } else {
+                            Platform.runLater(() -> showError("No se pudo eliminar la plaza. Por favor, intente nuevamente."));
+                        }
+                    } finally {
+                        hideLoading();
                     }
                 }
                 
                 @Override
                 protected void failed() {
-                    showError("Error al eliminar la plaza: " + getException().getMessage());
+                    Platform.runLater(() -> {
+                        hideLoading();
+                        showError("Error al eliminar la plaza: " + getException().getMessage());
+                    });
                 }
             };
             
+            // Ejecutar la tarea en un hilo separado
             new Thread(deleteTask).start();
         }
     }
@@ -313,15 +408,7 @@ public class PlazasController {
         });
     }
     
-    private void showInformation(String title, String message) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle(title);
-            alert.setHeaderText(null);
-            alert.setContentText(message);
-            alert.showAndWait();
-        });
-    }
+
     
     private void showSuccess(String message) {
         Platform.runLater(() -> {

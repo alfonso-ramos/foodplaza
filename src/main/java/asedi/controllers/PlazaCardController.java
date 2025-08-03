@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import asedi.utils.SuppressWarningsUtil;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,8 +26,13 @@ public class PlazaCardController implements Initializable {
     private int plazaId;
     private PlazasController plazasController;
     
+    public PlazaCardController() {
+        // Constructor vacío requerido por JavaFX
+    }
+    
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL location, ResourceBundle resources) {
+        // Inicialización del controlador
         // Set default placeholder image
         loadPlaceholderImage();
         
@@ -138,7 +145,8 @@ public class PlazaCardController implements Initializable {
             Image remoteImage = new Image(imageUrl, 280, 180, true, true, true);
             
             // Configurar el manejador de errores
-            remoteImage.errorProperty().addListener((_obs, _wasError, isNowError) -> {
+            remoteImage.errorProperty().addListener((obs, wasError, isNowError) -> {
+                SuppressWarningsUtil.unused(obs, wasError);
                 if (isNowError) {
                     System.err.println("Error al cargar la imagen remota: " + imageUrl);
                     Platform.runLater(this::loadPlaceholderImage);
@@ -162,7 +170,8 @@ public class PlazaCardController implements Initializable {
     }
     
     private void setupImageErrorHandling(Image image, String source) {
-        image.errorProperty().addListener((_obs, _wasError, isNowError) -> {
+        image.errorProperty().addListener((obs, wasError, isNowError) -> {
+            SuppressWarningsUtil.unused(obs, wasError);
             if (isNowError) {
                 System.err.println("Error al cargar la imagen " + source);
                 loadPlaceholderImage();
