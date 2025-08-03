@@ -1,17 +1,28 @@
 package asedi.controllers;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import asedi.model.Local;
+import asedi.services.LocalService;
 
 public class LocalCardController implements Initializable {
     @FXML private VBox cardContainer;
@@ -22,6 +33,8 @@ public class LocalCardController implements Initializable {
     @FXML private Label descripcionLabel;
     
     private Local local;
+    private LocalesController parentController;
+    private final LocalService localService = new LocalService();
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -95,8 +108,75 @@ public class LocalCardController implements Initializable {
     }
     
     @FXML
-    private void handleClick() {
-        // TODO: Implementar navegación a la vista de detalles del local
-        System.out.println("Mostrando detalles del local: " + local.getNombre());
+    private void handleEdit() {
+        try {
+            // Cargar el FXML del formulario de edición
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/editarLocal.fxml"));
+            Parent root = loader.load();
+            
+            // Obtener el controlador y pasar el local a editar
+            EditarLocalController controller = loader.getController();
+            controller.setLocal(new Local(local)); // Usar una copia para no modificar el original directamente
+            controller.setLocalesController(parentController);
+            
+            // Configurar la ventana de diálogo
+            Stage dialog = new Stage();
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.setTitle("Editar Local");
+            dialog.setScene(new Scene(root));
+            dialog.showAndWait();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarError("Error al cargar el formulario de edición: " + e.getMessage());
+        }
+    }
+    
+    @FXML
+    private void handleDelete() {
+        // Mostrar confirmación antes de eliminar
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar eliminación");
+        alert.setHeaderText("¿Está seguro de que desea eliminar este local?");
+        alert.setContentText("Esta acción no se puede deshacer.");
+        
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                boolean exito = localService.eliminarLocal(local.getId());
+                if (exito) {
+                    mostrarMensaje("Éxito", "El local se ha eliminado correctamente.", AlertType.INFORMATION);
+                    // Notificar al controlador padre para que actualice la vista
+                    if (parentController != null) {
+                        parentController.recargarLocales();
+                    }
+                } else {
+                    mostrarError("No se pudo eliminar el local. Intente nuevamente.");
+                }
+            } catch (Exception e) {
+                mostrarError("Error al intentar eliminar el local: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    private void mostrarError(String mensaje) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+    
+    private void mostrarMensaje(String titulo, String mensaje, AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+    
+    public void setParentController(LocalesController controller) {
+        this.parentController = controller;
     }
 }

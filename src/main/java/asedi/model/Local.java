@@ -36,6 +36,24 @@ public class Local {
     public Local() {
     }
     
+    // Constructor de copia
+    public Local(Local otro) {
+        if (otro != null) {
+            this.id = otro.id;
+            this.plazaId = otro.plazaId;
+            this.nombre = otro.nombre;
+            this.descripcion = otro.descripcion;
+            this.direccion = otro.direccion;
+            this.horarioApertura = otro.horarioApertura;
+            this.horarioCierre = otro.horarioCierre;
+            this.tipoComercio = otro.tipoComercio;
+            this.estado = otro.estado;
+            this.imagenUrl = otro.imagenUrl;
+            this.imagenPublicId = otro.imagenPublicId;
+            this.idGerente = otro.idGerente;
+        }
+    }
+    
     // Constructor con parámetros básicos (para compatibilidad)
     public Local(Long id, Long plazaId, String nombre, String descripcion, String direccion, 
                 String horarioApertura, String horarioCierre, String tipoComercio) {

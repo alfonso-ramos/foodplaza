@@ -3,65 +3,155 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="500.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #f5f5f5;" xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.EditarLocalController">
+<VBox prefHeight="600.0" prefWidth="700.0" spacing="15.0" style="-fx-background-color: #f5f5f5;" 
+      xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="asedi.controllers.EditarLocalController">
+    
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+        <Insets bottom="20.0" left="25.0" right="25.0" top="25.0" />
     </padding>
     
-    <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;">
+    <!-- Título -->
+    <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333333;">
         Editar Local
     </Label>
     
-    <Separator />
+    <Separator style="-fx-padding: 5 0 10 0;" />
     
-    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background: #f5f5f5;">
-        <VBox spacing="15.0">
-            <!-- Nombre del Local -->
-            <VBox spacing="5.0">
-                <Label style="-fx-font-weight: bold;">Nombre del Local *</Label>
-                <TextField fx:id="txtNombre" promptText="Ingrese el nombre del local" style="-fx-pref-height: 35; -fx-font-size: 14;" />
-            </VBox>
+    <!-- Contenido principal con desplazamiento -->
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" 
+                style="-fx-background: transparent; -fx-background-color: transparent;">
+        <VBox spacing="20.0" style="-fx-padding: 0 5 20 0;">
             
-            <!-- Descripción -->
-            <VBox spacing="5.0">
-                <Label style="-fx-font-weight: bold;">Descripción</Label>
-                <TextArea fx:id="txtDescripcion" promptText="Ingrese una descripción" style="-fx-pref-height: 80; -fx-font-size: 14;" wrapText="true" />
-            </VBox>
-            
-            <HBox spacing="15.0">
-                <!-- Horario -->
-                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                    <Label style="-fx-font-weight: bold;">Horario</Label>
-                    <TextField fx:id="txtHorario" promptText="Ej: Lunes a Viernes 9:00-21:00" style="-fx-pref-height: 35; -fx-font-size: 14;" />
+            <!-- Sección de Información Básica -->
+            <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 20;">
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333; -fx-padding: 0 0 10 0;">
+                    Información Básica
+                </Label>
+                
+                <!-- Nombre del Local -->
+                <VBox spacing="5.0">
+                    <Label style="-fx-font-weight: bold; -fx-text-fill: #555555;" text="Nombre del Local"/>
+                    <Text fill="red" text="*"/>
+                    <TextField fx:id="txtNombre" promptText="Ingrese el nombre del local" 
+                             style="-fx-pref-height: 40; -fx-font-size: 14; -fx-background-radius: 4; -fx-border-color: #dddddd; -fx-border-radius: 4; -fx-padding: 0 10;" />
                 </VBox>
                 
-                <!-- Tipo de Comercio -->
-                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                    <Label style="-fx-font-weight: bold;">Tipo de Comercio *</Label>
-                    <TextField fx:id="txtTipoComercio" promptText="Ej: Restaurante, Tienda" style="-fx-pref-height: 35; -fx-font-size: 14;" />
+                <!-- Descripción -->
+                <VBox spacing="5.0">
+                    <Label style="-fx-font-weight: bold; -fx-text-fill: #555555;">Descripción</Label>
+                    <TextArea fx:id="txtDescripcion" promptText="Ingrese una descripción del local" 
+                             style="-fx-pref-height: 100; -fx-font-size: 14; -fx-background-radius: 4; -fx-border-color: #dddddd; -fx-border-radius: 4; -fx-padding: 10;" 
+                             wrapText="true" />
                 </VBox>
-            </HBox>
+            </VBox>
             
-            <HBox spacing="15.0">
-                <!-- Ubicación -->
-                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                    <Label style="-fx-font-weight: bold;">Ubicación *</Label>
-                    <TextField fx:id="txtUbicacion" promptText="Nivel y número de local" style="-fx-pref-height: 35; -fx-font-size: 14;" />
+            <!-- Sección de Detalles -->
+            <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 20;">
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333; -fx-padding: 0 0 10 0;">
+                    Detalles del Local
+                </Label>
+                
+                <GridPane hgap="15.0" vgap="15.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                    </columnConstraints>
+                    
+                    <!-- Fila 1 -->
+                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="5.0">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Label style="-fx-font-weight: bold; -fx-text-fill: #555555;" text="Horario"/>
+                            <Text fill="red" text="*"/>
+                        </HBox>
+                        <TextField fx:id="txtHorarioApertura" promptText="Apertura (ej: 09:00)" 
+                                 style="-fx-pref-height: 40; -fx-font-size: 14; -fx-background-radius: 4; -fx-border-color: #dddddd; -fx-border-radius: 4; -fx-padding: 0 10;" />
+                    </VBox>
+                    
+                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="5.0">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Label style="-fx-font-weight: bold; -fx-text-fill: #555555;" text="Cierre"/>
+                            <Text fill="red" text="*"/>
+                        </HBox>
+                        <TextField fx:id="txtHorarioCierre" promptText="Cierre (ej: 21:00)" 
+                                 style="-fx-pref-height: 40; -fx-font-size: 14; -fx-background-radius: 4; -fx-border-color: #dddddd; -fx-border-radius: 4; -fx-padding: 0 10;" />
+                    </VBox>
+                    
+                    <!-- Fila 2 -->
+                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="5.0">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Label style="-fx-font-weight: bold; -fx-text-fill: #555555;" text="Tipo de Comercio"/>
+                            <Text fill="red" text="*"/>
+                        </HBox>
+                        <ComboBox fx:id="cmbTipoComercio" promptText="Seleccione un tipo" 
+                                style="-fx-pref-height: 40; -fx-font-size: 14; -fx-background-radius: 4; -fx-border-color: #dddddd; -fx-border-radius: 4; -fx-padding: 0 5;" />
+                    </VBox>
+                    
+                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="1" spacing="5.0">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Label style="-fx-font-weight: bold; -fx-text-fill: #555555;" text="Estado"/>
+                            <Text fill="red" text="*"/>
+                        </HBox>
+                        <ComboBox fx:id="cmbEstado" promptText="Seleccione un estado" 
+                                style="-fx-pref-height: 40; -fx-font-size: 14; -fx-background-radius: 4; -fx-border-color: #dddddd; -fx-border-radius: 4; -fx-padding: 0 5;" />
+                    </VBox>
+                    
+                    <!-- Fila 3 -->
+                    <VBox GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2" spacing="5.0">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Label style="-fx-font-weight: bold; -fx-text-fill: #555555;" text="Dirección"/>
+                            <Text fill="red" text="*"/>
+                        </HBox>
+                        <TextField fx:id="txtDireccion" promptText="Ingrese la dirección completa" 
+                                 style="-fx-pref-height: 40; -fx-font-size: 14; -fx-background-radius: 4; -fx-border-color: #dddddd; -fx-border-radius: 4; -fx-padding: 0 10;" />
+                    </VBox>
+                </GridPane>
+            </VBox>
+            
+            <!-- Sección de Imagen -->
+            <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 20;">
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333; -fx-padding: 0 0 10 0;">
+                    Imagen del Local
+                </Label>
+                
+                <!-- Imagen actual -->
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #555555;">Imagen actual:</Label>
+                <VBox spacing="10">
+                    <ImageView fx:id="imagenActual" fitWidth="200" fitHeight="150" preserveRatio="true" 
+                             style="-fx-background-color: #f5f5f5; -fx-background-radius: 4;"/>
+                    <Label fx:id="sinImagenLabel" text="Sin imagen" visible="false"/>
                 </VBox>
                 
-                <!-- Estado -->
-                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                    <Label style="-fx-font-weight: bold;">Estado *</Label>
-                    <ComboBox fx:id="cmbEstado" style="-fx-pref-height: 35; -fx-font-size: 14;" />
+                <!-- Nueva imagen -->
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #555555; -fx-padding-top: 10;">Nueva imagen (opcional):</Label>
+                <VBox spacing="10">
+                    <Button fx:id="btnSeleccionarImagen" text="Seleccionar imagen" onAction="#seleccionarImagen" 
+                           style="-fx-pref-width: 150;"/>
+                    <Label fx:id="nombreArchivoLabel" text="Ningún archivo seleccionado" style="-fx-text-fill: #666;"/>
+                    
+                    <!-- Vista previa de la nueva imagen -->
+                    <VBox fx:id="vistaPreviaContainer" spacing="5" visible="false">
+                        <Label text="Vista previa:" style="-fx-font-weight: bold;"/>
+                        <ImageView fx:id="vistaPreviaImagen" fitWidth="200" fitHeight="150" preserveRatio="true"
+                                 style="-fx-background-color: #f5f5f5; -fx-background-radius: 4;"/>
+                        <Button fx:id="btnEliminarImagen" text="Eliminar imagen" onAction="#eliminarImagen" 
+                               style="-fx-text-fill: #d32f2f;"/>
+                    </VBox>
                 </VBox>
-            </HBox>
+            </VBox>
         </VBox>
     </ScrollPane>
     
-    <HBox alignment="CENTER_RIGHT" spacing="10.0" style="-fx-padding: 15 0 0 0;">
-        <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#cerrarVentana" style="-fx-background-color: #f0f0f0; -fx-text-fill: #333; -fx-pref-width: 100; -fx-pref-height: 35;" text="Cancelar" />
-        <Button fx:id="btnGuardar" mnemonicParsing="false" onAction="#guardarCambios" style="-fx-background-color: #00D561; -fx-text-fill: white; -fx-pref-width: 120; -fx-pref-height: 35; -fx-font-weight: bold;" text="Guardar Cambios" />
+    <!-- Pie de página con botones -->
+    <HBox alignment="CENTER_RIGHT" spacing="15.0" style="-fx-padding: 10 0 0 0;">
+        <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#cerrarVentana" 
+                style="-fx-background-color: #f0f0f0; -fx-text-fill: #333333; -fx-pref-width: 120; -fx-pref-height: 40; -fx-font-size: 14; -fx-background-radius: 4;" 
+                text="Cancelar" />
+        <Button fx:id="btnGuardar" mnemonicParsing="false" onAction="#guardarCambios" 
+                style="-fx-background-color: #00D561; -fx-text-fill: white; -fx-pref-width: 160; -fx-pref-height: 40; -fx-font-size: 14; -fx-font-weight: bold; -fx-background-radius: 4;" 
+                text="Guardar Cambios" />
     </HBox>
 </VBox>

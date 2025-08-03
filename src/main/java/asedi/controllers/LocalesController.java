@@ -178,6 +178,7 @@ public class LocalesController {
                 Parent card = loader.load();
                 LocalCardController controller = loader.getController();
                 controller.setLocal(local);
+                controller.setParentController(this); // Establecer el controlador padre
                 
                 // Configurar el evento de clic para editar el local
                 card.setOnMouseClicked(event -> {
@@ -250,6 +251,20 @@ public class LocalesController {
         } catch (IOException e) {
             mostrarError("Error al abrir el formulario de edición: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Recarga la lista de locales para la plaza actualmente seleccionada.
+     * Este método puede ser llamado desde otros controladores para actualizar la vista.
+     */
+    public void recargarLocales() {
+        if (plazasComboBox.getValue() != null) {
+            cargarLocales(plazasComboBox.getValue().getId());
+        } else if (!plazas.isEmpty()) {
+            plazasComboBox.getSelectionModel().selectFirst();
+        } else {
+            cargarPlazas();
         }
     }
     

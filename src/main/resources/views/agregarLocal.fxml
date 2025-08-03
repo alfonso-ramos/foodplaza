@@ -79,7 +79,7 @@
                         <!-- Instrucciones y botón de selección -->
                         <VBox spacing="5">
                             <HBox spacing="10" alignment="CENTER_LEFT">
-                                <Button text="Seleccionar Imágenes" onAction="#seleccionarImagenes" 
+                                <Button text="Seleccionar Imágenes" onAction="#seleccionarImagen" 
                                         styleClass="select-images-button" style="-fx-font-size: 14; -fx-padding: 8 16;" />
                                 <Label text="Máx. 5 imágenes (5MB c/u)" style="-fx-text-fill: #666; -fx-font-size: 12; -fx-padding: 5 0 0 0;" />
                             </HBox>

@@ -227,6 +227,7 @@ public class LocalService {
         requestBody.put("horario_cierre", local.getHorarioCierre());
         requestBody.put("tipo_comercio", local.getTipoComercio());
         requestBody.put("estado", local.getEstado());
+        requestBody.put("plaza_id", local.getPlazaId()); // Asegurarse de incluir el ID de la plaza
         
         // Realizar la petición PUT
         String url = ENDPOINT + "/" + local.getId();

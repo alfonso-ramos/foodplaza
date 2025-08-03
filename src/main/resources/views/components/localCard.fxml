@@ -5,13 +5,14 @@
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
 
+<?import javafx.scene.layout.VBox?>
+
 <VBox fx:id="cardContainer" styleClass="local-card" 
       xmlns:fx="http://javafx.com/fxml" 
       fx:controller="asedi.controllers.LocalCardController"
       stylesheets="@/styles/locales.css"
       maxWidth="300"
-      spacing="0"
-      onMouseClicked="#handleClick">
+      spacing="0">
     
     <!-- Local Image Container with fixed aspect ratio -->
     <StackPane styleClass="image-container" maxHeight="180">
@@ -35,11 +36,10 @@
         
         <Label fx:id="descripcionLabel" styleClass="descripcion" wrapText="true" visible="false" />
         
-        <!-- Optional: Add action buttons if needed -->
-        <!--
+        <!-- Action buttons -->
         <HBox styleClass="button-container" spacing="8">
-            <Button text="Ver Detalles" onAction="#handleClick" styleClass="button button-details" />
+            <Button text="Editar" onAction="#handleEdit" styleClass="button button-edit" />
+            <Button text="Eliminar" onAction="#handleDelete" styleClass="button button-delete" />
         </HBox>
-        -->
     </VBox>
 </VBox>

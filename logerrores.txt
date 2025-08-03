@@ -1,72 +1,17 @@
-javafx.fxml.LoadException: URL is not a valid type.
-/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/components/localCard.fxml:10
-
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2718)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.createElement(FXMLLoader.java:2920)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2850)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2649)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531)
-        at asedi.controllers.LocalesController.mostrarLocales(LocalesController.java:178)
-        at asedi.controllers.LocalesController.lambda$cargarLocales$8(LocalesController.java:152)
-        at javafx.graphics@21.0.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456)
-        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-        at javafx.graphics@21.0.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$10(GtkApplication.java:263)
-        at java.base/java.lang.Thread.run(Thread.java:1583)
-javafx.fxml.LoadException: URL is not a valid type.
-/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/components/localCard.fxml:10
-
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2718)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.createElement(FXMLLoader.java:2920)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2850)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2649)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531)
-        at asedi.controllers.LocalesController.mostrarLocales(LocalesController.java:178)
-        at asedi.controllers.LocalesController.lambda$cargarLocales$8(LocalesController.java:152)
-        at javafx.graphics@21.0.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456)
-        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-        at javafx.graphics@21.0.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$10(GtkApplication.java:263)
-        at java.base/java.lang.Thread.run(Thread.java:1583)
-javafx.fxml.LoadException: URL is not a valid type.
-/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/components/localCard.fxml:10
-
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2718)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.createElement(FXMLLoader.java:2920)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2850)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2649)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531)
-        at asedi.controllers.LocalesController.mostrarLocales(LocalesController.java:178)
-        at asedi.controllers.LocalesController.lambda$cargarLocales$8(LocalesController.java:152)
-        at javafx.graphics@21.0.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456)
-        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-        at javafx.graphics@21.0.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$10(GtkApplication.java:263)
-        at java.base/java.lang.Thread.run(Thread.java:1583)
-javafx.fxml.LoadException: URL is not a valid type.
-/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/components/localCard.fxml:10
-
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2718)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.createElement(FXMLLoader.java:2920)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2850)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2649)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
-        at javafx.fxml@21.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531)
-        at asedi.controllers.LocalesController.mostrarLocales(LocalesController.java:178)
-        at asedi.controllers.LocalesController.lambda$cargarLocales$8(LocalesController.java:152)
-        at javafx.graphics@21.0.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456)
-        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-        at javafx.graphics@21.0.1/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
-        at javafx.graphics@21.0.1/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$10(GtkApplication.java:263)
-        at java.base/java.lang.Thread.run(Thread.java:1583)
+Vista cargada exitosamente: /views/adminDashboard.fxml
+Aug 03, 2025 4:04:10 AM javafx.css.CssParser declaration
+WARNING: CSS Error parsing file:/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/styles/locales.css: expected series of <size> while parsing 'box-shadow' at [18,16]
+Aug 03, 2025 4:04:10 AM javafx.css.CssParser declaration
+WARNING: CSS Error parsing file:/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/styles/locales.css: expected series of <size> while parsing 'box-shadow' at [65,16]
+Aug 03, 2025 4:04:10 AM javafx.css.CssParser declaration
+WARNING: CSS Error parsing file:/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/styles/locales.css: Unexpected function 'translateY(' while parsing 'transform' at [66,15]
+Aug 03, 2025 4:04:10 AM javafx.css.CssParser declaration
+WARNING: CSS Error parsing file:/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/styles/locales.css: expected series of <size> while parsing 'box-shadow' at [107,16]
+Aug 03, 2025 4:04:10 AM javafx.css.CssParser declaration
+WARNING: CSS Error parsing file:/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/styles/locales.css: expected series of <size> while parsing 'box-shadow' at [119,16]
+Aug 03, 2025 4:04:10 AM javafx.css.CssParser declaration
+WARNING: CSS Error parsing file:/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/styles/locales.css: expected series of <size> while parsing 'border' at [132,12]
+Aug 03, 2025 4:04:10 AM javafx.css.CssParser declaration
+WARNING: CSS Error parsing file:/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/styles/locales.css: expected series of <size> while parsing 'box-shadow' at [191,16]
+Aug 03, 2025 4:04:10 AM javafx.css.CssParser declaration
+WARNING: CSS Error parsing file:/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/styles/locales.css: expected series of <size> while parsing 'box-shadow' at [198,16]
