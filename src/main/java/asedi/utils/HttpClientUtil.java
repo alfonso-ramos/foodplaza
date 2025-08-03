@@ -52,41 +52,54 @@ public class HttpClientUtil {
      * @throws IOException Si hay un error en la comunicación
      */
     @SuppressWarnings("unchecked")
+    private static CloseableHttpClient createHttpClient() {
+        return HttpClients.custom()
+                .setRedirectStrategy(new LaxRedirectStrategy())
+                .build();
+    }
+    
     public static <T> HttpResponseWrapper<T> get(String endpoint, Class<T> responseType) throws IOException {
-        // Configurar el cliente HTTP para seguir redirecciones
-        try (CloseableHttpClient httpClient = HttpClients.custom()
-                .setRedirectStrategy(new LaxRedirectStrategy()) // Sigue redirecciones 301, 302, 303, 307, 308
-                .build()) {
-            // Eliminar la barra inicial del endpoint si existe para evitar doble barra
+        CloseableHttpClient client = createHttpClient();
+        try {
+            // Remove any leading slashes to prevent double slashes in URL
             String cleanEndpoint = endpoint.startsWith("/") ? endpoint.substring(1) : endpoint;
             String fullUrl = API_BASE_URL + cleanEndpoint;
             
+            // Create and log the request
             org.apache.http.client.methods.HttpGet request = new org.apache.http.client.methods.HttpGet(fullUrl);
+            System.out.println("\n=== HTTP GET Request ===");
+            System.out.println("URL: " + request.getURI());
+            System.out.println("Method: " + request.getMethod());
+            System.out.println("Headers: " + java.util.Arrays.toString(request.getAllHeaders()));
             
-            // Configurar headers
+            // Add required headers
             request.setHeader("Accept", "application/json");
             
-            // Realizar la petición
-            HttpResponse response = httpClient.execute(request);
-            
-            // Obtener el cuerpo de la respuesta
-            String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-            
-            // Parsear la respuesta al tipo especificado
-            T responseObject = null;
-            if (responseType == String.class) {
-                responseObject = (T) responseBody;
-            } else {
-                responseObject = gson.fromJson(responseBody, responseType);
+            // Execute the request
+            try (org.apache.http.client.methods.CloseableHttpResponse response = client.execute(request)) {
+                String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+                
+                // Log response details
+                System.out.println("\n=== HTTP Response ===");
+                System.out.println("Status: " + response.getStatusLine());
+                System.out.println("Headers: " + java.util.Arrays.toString(response.getAllHeaders()));
+                System.out.println("Body: " + responseBody);
+                
+                // Parse response
+                T result = null;
+                if (responseType == String.class) {
+                    result = (T) responseBody;
+                } else {
+                    result = gson.fromJson(responseBody, responseType);
+                }
+                
+                return new HttpResponseWrapper<>(
+                    response.getStatusLine().getStatusCode(),
+                    result
+                );
             }
-            
-            return new HttpResponseWrapper<>(
-                response.getStatusLine().getStatusCode(),
-                responseObject
-            );
-        } catch (Exception e) {
-            System.err.println("Error en petición GET a " + endpoint + ": " + e.getMessage());
-            throw new IOException("Error en la petición: " + e.getMessage(), e);
+        } finally {
+            client.close();
         }
     }
     

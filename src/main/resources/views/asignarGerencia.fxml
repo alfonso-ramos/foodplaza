@@ -6,8 +6,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.ProgressIndicator?>
 
-<VBox alignment="TOP_CENTER" spacing="20" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane xmlns="http://javafx.com/javafx/11.0.1" 
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="asedi.controllers.AsignarGerenciaController">
+    <!-- Main Content -->
+    <VBox alignment="TOP_CENTER" spacing="20" style="-fx-padding: 20;">
     <Label text="Asignar Gerencia" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
     
     <!-- Búsqueda de Usuario -->
@@ -15,8 +20,8 @@
         <Label text="Buscar Usuario" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
         
         <HBox spacing="10" alignment="CENTER_LEFT">
-            <TextField fx:id="emailField" promptText="Correo electrónico del usuario" style="-fx-pref-width: 300;" />
-            <Button fx:id="buscarBtn" text="Buscar" style="-fx-background-color: #00D561; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            <TextField fx:id="emailField" promptText="Correo electrónico del usuario" style="-fx-pref-width: 300;" onAction="#onBuscarUsuario" />
+            <Button fx:id="buscarBtn" text="Buscar" style="-fx-background-color: #00D561; -fx-text-fill: white; -fx-font-weight: bold;" onAction="#onBuscarUsuario"/>
         </HBox>
     </VBox>
     
@@ -47,16 +52,25 @@
             </rowConstraints>
             
             <Label text="Plaza:" style="-fx-font-weight: bold;" />
-            <ComboBox fx:id="plazaCombo" promptText="Seleccione una plaza" GridPane.columnIndex="1" />
+            <ComboBox fx:id="plazaCombo" promptText="Seleccione una plaza" GridPane.columnIndex="1" onAction="#onPlazaSeleccionada" />
             
             <Label text="Local:" style="-fx-font-weight: bold;" GridPane.rowIndex="1" />
-            <ComboBox fx:id="localCombo" promptText="Seleccione un local" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ComboBox fx:id="localCombo" promptText="Seleccione un local" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#onLocalSeleccionado" />
         </GridPane>
     </VBox>
     
-    <!-- Botones de acción -->
-    <HBox spacing="15" alignment="CENTER_RIGHT">
-        <Button fx:id="cancelarBtn" text="Cancelar" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;" />
-        <Button fx:id="asignarBtn" text="Asignar Gerencia" style="-fx-background-color: #00D561; -fx-text-fill: white; -fx-font-weight: bold;" />
-    </HBox>
-</VBox>
+        <!-- Botones de acción -->
+        <HBox spacing="15" alignment="CENTER_RIGHT">
+            <Button fx:id="cancelarBtn" text="Cancelar" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;" onAction="#onCancelar" />
+            <Button fx:id="asignarBtn" text="Asignar Gerencia" style="-fx-background-color: #00D561; -fx-text-fill: white; -fx-font-weight: bold;" onAction="#onAsignarGerencia" disable="true" />
+        </HBox>
+    </VBox>
+    
+    <!-- Loading Overlay -->
+    <StackPane fx:id="loadingOverlay" style="-fx-background-color: rgba(0, 0, 0, 0.3);" visible="false">
+        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 5;">
+            <ProgressIndicator fx:id="progressIndicator" progress="-1" style="-fx-progress-color: #00D561;" />
+            <Text text="Procesando..." style="-fx-font-weight: bold;" />
+        </VBox>
+    </StackPane>
+</StackPane>

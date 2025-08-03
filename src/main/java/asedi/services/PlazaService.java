@@ -26,16 +26,23 @@ public class PlazaService {
      * @throws IOException Si hay un error de conexión
      */
     public List<Plaza> obtenerTodas() throws IOException {
+        System.out.println("Iniciando obtención de todas las plazas...");
         try {
+            System.out.println("Realizando petición GET a: " + ENDPOINT);
             // Realizar la petición GET a la API
             HttpClientUtil.HttpResponseWrapper<String> response = 
                 HttpClientUtil.get(ENDPOINT, String.class);
+            
+            System.out.println("Respuesta del servidor - Código: " + response.getStatusCode());
+            System.out.println("Cuerpo de la respuesta: " + response.getBody());
             
             // Verificar si la respuesta es exitosa
             if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
                 // Parsear la respuesta JSON a una lista de plazas
                 Type listType = new TypeToken<ArrayList<Plaza>>(){}.getType();
                 List<Plaza> plazas = gson.fromJson(response.getBody(), listType);
+                
+                System.out.println("Número de plazas obtenidas: " + (plazas != null ? plazas.size() : 0));
                 
                 // Asegurarse de que las URLs de las imágenes sean accesibles
                 if (plazas != null) {
@@ -44,16 +51,24 @@ public class PlazaService {
                         if (plaza.getImagenUrl() == null || plaza.getImagenUrl().trim().isEmpty()) {
                             plaza.setImagenUrl("/images/plazas/plazadummy.jpg");
                         }
+                        System.out.println("Plaza cargada: " + plaza.getNombre() + " (ID: " + plaza.getId() + ")");
                     }
+                } else {
+                    System.out.println("La respuesta de plazas es nula");
                 }
                 
                 return plazas != null ? plazas : new ArrayList<>();
             } else {
-                throw new IOException("Error al obtener las plazas: " + response.getBody());
+                String errorMsg = "Error al obtener las plazas. Código: " + response.getStatusCode() + 
+                                ", Respuesta: " + response.getBody();
+                System.err.println(errorMsg);
+                throw new IOException(errorMsg);
             }
         } catch (Exception e) {
-            System.err.println("Error en obtenerTodas: " + e.getMessage());
-            throw e;
+            String errorMsg = "Error en obtenerTodas: " + e.getClass().getName() + " - " + e.getMessage();
+            System.err.println(errorMsg);
+            e.printStackTrace();
+            throw new IOException(errorMsg, e);
         }
     }
     

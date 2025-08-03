@@ -2,21 +2,29 @@ package asedi.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
-import asedi.model.Plaza;
-import asedi.model.Usuario;
-import asedi.services.PlazaService;
-import asedi.services.UsuarioService;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.collections.FXCollections;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
+import asedi.model.Local;
+import asedi.model.Plaza;
+import asedi.model.Usuario;
+import asedi.services.LocalService;
+import asedi.services.PlazaService;
+import asedi.services.UsuarioService;
+import asedi.utils.ImageUtils;
+import java.util.List;
 
 public class AsignarGerenciaController implements Initializable {
     @FXML private TextField emailField;
@@ -27,35 +35,82 @@ public class AsignarGerenciaController implements Initializable {
     @FXML private Text userEmail;
     @FXML private Text userPhone;
     @FXML private ComboBox<Plaza> plazaCombo;
-    @FXML private ComboBox<String> localCombo;
+    @FXML private ComboBox<Local> localCombo;
+    @FXML private StackPane loadingOverlay;
+    @FXML private ProgressIndicator progressIndicator;
     @FXML private Button asignarBtn;
     @FXML private Button cancelarBtn;
     
     private Usuario usuarioSeleccionado;
     private final PlazaService plazaService = new PlazaService();
     private final UsuarioService usuarioService = new UsuarioService();
+    private final LocalService localService = new LocalService();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Configurar visibilidad inicial
+        // Configuración inicial del controlador
         userInfoBox.setVisible(false);
         plazaCombo.setDisable(true);
         localCombo.setDisable(true);
         asignarBtn.setDisable(true);
-        
-        // Cargar plazas
-        cargarPlazas();
+        loadingOverlay.setVisible(false);
         
         // Configurar listeners
         configurarEventos();
+        
+        // Cargar plazas en segundo plano
+        cargarPlazas();
+    }
+    
+    @FXML
+    private void onBuscarUsuario(javafx.event.ActionEvent event) {
+        buscarUsuario();
+    }
+    
+    @FXML
+    private void onPlazaSeleccionada(javafx.event.ActionEvent event) {
+        Plaza plazaSeleccionada = plazaCombo.getSelectionModel().getSelectedItem();
+        if (plazaSeleccionada != null) {
+            cargarLocalesPorPlaza(plazaSeleccionada.getId());
+            localCombo.setDisable(false);
+        } else {
+            localCombo.setDisable(true);
+            localCombo.getItems().clear();
+        }
+        actualizarEstadoBotonAsignar();
+    }
+    
+    @FXML
+    private void onLocalSeleccionado(javafx.event.ActionEvent event) {
+        actualizarEstadoBotonAsignar();
+    }
+    
+    @FXML
+    private void onAsignarGerencia(javafx.event.ActionEvent event) {
+        asignarGerencia();
+    }
+    
+    @FXML
+    private void onCancelar(javafx.event.ActionEvent event) {
+        cancelar();
     }
     
     private void cargarPlazas() {
-        try {
-            plazaCombo.setItems(FXCollections.observableArrayList(plazaService.obtenerTodas()));
-        } catch (Exception e) {
-            mostrarError("Error al cargar las plazas: " + e.getMessage());
-        }
+        mostrarCarga(true);
+        new Thread(() -> {
+            try {
+                List<Plaza> plazas = plazaService.obtenerTodas();
+                Platform.runLater(() -> {
+                    plazaCombo.setItems(FXCollections.observableArrayList(plazas));
+                    mostrarCarga(false);
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    mostrarError("Error al cargar las plazas: " + e.getMessage());
+                    mostrarCarga(false);
+                });
+            }
+        }).start();
     }
     
     private void configurarEventos() {
@@ -86,66 +141,171 @@ public class AsignarGerenciaController implements Initializable {
             return;
         }
         
-        try {
-            usuarioSeleccionado = usuarioService.buscarPorEmail(email);
-            if (usuarioSeleccionado != null) {
-                mostrarInfoUsuario(usuarioSeleccionado);
-                plazaCombo.setDisable(false);
-            } else {
-                mostrarError("No se encontró ningún usuario con ese correo electrónico");
-                userInfoBox.setVisible(false);
-                plazaCombo.setDisable(true);
-                localCombo.setDisable(true);
+        mostrarCarga(true);
+        System.out.println("Buscando usuario con email: " + email); // Debug log
+        
+        new Thread(() -> {
+            try {
+                System.out.println("Hilo de búsqueda iniciado"); // Debug log
+                usuarioSeleccionado = usuarioService.buscarPorEmail(email);
+                System.out.println("Respuesta del servicio: " + (usuarioSeleccionado != null ? "Usuario encontrado" : "Usuario no encontrado")); // Debug log
+                
+                Platform.runLater(() -> {
+                    try {
+                        if (usuarioSeleccionado != null) {
+                            System.out.println("Mostrando información del usuario: " + usuarioSeleccionado.getEmail()); // Debug log
+                            mostrarInfoUsuario(usuarioSeleccionado);
+                            plazaCombo.setDisable(false);
+                            // Limpiar selecciones previas
+                            plazaCombo.getSelectionModel().clearSelection();
+                            localCombo.getItems().clear();
+                            localCombo.setDisable(true);
+                            asignarBtn.setDisable(true);
+                        } else {
+                            System.out.println("No se encontró el usuario"); // Debug log
+                            mostrarError("No se encontró ningún usuario con el correo: " + email);
+                            userInfoBox.setVisible(false);
+                            plazaCombo.setDisable(true);
+                            localCombo.setDisable(true);
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Error en Platform.runLater: " + e.getMessage());
+                        e.printStackTrace();
+                        mostrarError("Error al procesar la respuesta del servidor");
+                    } finally {
+                        mostrarCarga(false);
+                    }
+                });
+            } catch (Exception e) {
+                System.err.println("Error en el hilo de búsqueda: " + e.getMessage());
+                e.printStackTrace();
+                
+                Platform.runLater(() -> {
+                    String errorMsg = "Error al buscar el usuario: ";
+                    if (e.getMessage() != null && e.getMessage().contains("ConnectException")) {
+                        errorMsg += "No se pudo conectar al servidor. Verifique su conexión a Internet.";
+                    } else if (e.getMessage() != null && e.getMessage().contains("UnknownHostException")) {
+                        errorMsg += "No se pudo resolver el host. Verifique su conexión a Internet o la URL del servidor.";
+                    } else {
+                        errorMsg += e.getMessage();
+                    }
+                    mostrarError(errorMsg);
+                    mostrarCarga(false);
+                });
             }
-        } catch (Exception e) {
-            mostrarError("Error al buscar el usuario: " + e.getMessage());
-        }
+        }, "BuscarUsuarioThread").start();
     }
     
     private void mostrarInfoUsuario(Usuario usuario) {
+        // Usar getNombreCompleto() en lugar de concatenar nombre y apellido
         userName.setText(usuario.getNombreCompleto());
         userEmail.setText(usuario.getEmail());
         userPhone.setText(usuario.getTelefono() != null ? usuario.getTelefono() : "No especificado");
-        // Aquí podrías cargar la imagen del usuario si está disponible
-        // userImage.setImage(...);
+        
+        // Cargar imagen de perfil si está disponible
+        if (usuario.getImagenUrl() != null && !usuario.getImagenUrl().isEmpty()) {
+            try {
+                Image img = new Image(usuario.getImagenUrl(), 80, 80, true, true);
+                userImage.setImage(img);
+            } catch (Exception e) {
+                // Usar imagen por defecto si hay error al cargar la imagen
+                userImage.setImage(ImageUtils.getDefaultUserImage(usuario.getNombreCompleto()));
+            }
+        } else {
+            userImage.setImage(ImageUtils.getDefaultUserImage(usuario.getNombreCompleto()));
+        }
+        
         userInfoBox.setVisible(true);
     }
     
     private void cargarLocalesPorPlaza(Long idPlaza) {
-        try {
-            // Aquí deberías implementar la lógica para cargar los locales de la plaza seleccionada
-            // Por ahora, lo dejamos con datos de ejemplo
-            localCombo.getItems().setAll("Local 1", "Local 2", "Local 3");
-            localCombo.getSelectionModel().clearSelection();
-        } catch (Exception e) {
-            mostrarError("Error al cargar los locales: " + e.getMessage());
+        if (idPlaza == null) {
+            localCombo.getItems().clear();
+            localCombo.setDisable(true);
+            return;
         }
+        
+        mostrarCarga(true);
+        new Thread(() -> {
+            try {
+                List<Local> locales = localService.obtenerLocalesPorPlaza(idPlaza);
+                Platform.runLater(() -> {
+                    localCombo.setItems(FXCollections.observableArrayList(locales));
+                    localCombo.getSelectionModel().clearSelection();
+                    localCombo.setDisable(locales.isEmpty());
+                    if (locales.isEmpty()) {
+                        mostrarError("No se encontraron locales para la plaza seleccionada");
+                    }
+                    mostrarCarga(false);
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    mostrarError("Error al cargar los locales: " + e.getMessage());
+                    localCombo.setDisable(true);
+                    mostrarCarga(false);
+                });
+            }
+        }).start();
     }
     
     private void actualizarEstadoBotonAsignar() {
-        asignarBtn.setDisable(
-            usuarioSeleccionado == null || 
-            plazaCombo.getSelectionModel().getSelectedItem() == null ||
-            localCombo.getSelectionModel().getSelectedItem() == null
-        );
+        boolean habilitar = usuarioSeleccionado != null && 
+                          plazaCombo.getSelectionModel().getSelectedItem() != null &&
+                          localCombo.getSelectionModel().getSelectedItem() != null;
+        asignarBtn.setDisable(!habilitar);
     }
     
     private void asignarGerencia() {
-        try {
-            // Aquí implementarías la lógica para asignar el rol de gerente
-            // y asociar el local al usuario
-            // Get the selected plaza and local (commented out as they're not used yet)
-            // Plaza plaza = plazaCombo.getSelectionModel().getSelectedItem();
-            // String localSeleccionado = localCombo.getSelectionModel().getSelectedItem();
-            
-            // Llamar al servicio para actualizar el usuario
-            // usuarioService.asignarRolGerente(usuarioSeleccionado.getId(), localSeleccionado);
-            
-            mostrarExito("Gerencia asignada exitosamente");
-            limpiarFormulario();
-        } catch (Exception e) {
-            mostrarError("Error al asignar la gerencia: " + e.getMessage());
+        if (usuarioSeleccionado == null) {
+            mostrarError("No se ha seleccionado ningún usuario");
+            return;
         }
+        
+        Local localSeleccionado = localCombo.getSelectionModel().getSelectedItem();
+        if (localSeleccionado == null) {
+            mostrarError("No se ha seleccionado ningún local");
+            return;
+        }
+        
+        // Confirmar con el usuario
+        Alert confirmacion = new Alert(AlertType.CONFIRMATION);
+        confirmacion.setTitle("Confirmar asignación");
+        confirmacion.setHeaderText(null);
+        confirmacion.setContentText(String.format(
+            "¿Está seguro de asignar a %s como gerente del local %s?",
+            usuarioSeleccionado.getNombreCompleto(),
+            localSeleccionado.getNombre()
+        ));
+        
+        confirmacion.showAndWait().ifPresent(response -> {
+            if (response == javafx.scene.control.ButtonType.OK) {
+                // Proceder con la asignación
+                mostrarCarga(true);
+                new Thread(() -> {
+                    try {
+                        // Primero asignamos el rol de gerente
+                        boolean exito = usuarioService.asignarRolGerente(usuarioSeleccionado.getId());
+                        
+                        Platform.runLater(() -> {
+                            mostrarCarga(false);
+                            if (exito) {
+                                // Aquí podrías agregar lógica adicional para asociar el local al gerente
+                                // si es necesario, con otra llamada a la API
+                                mostrarExito("Rol de gerente asignado exitosamente");
+                                limpiarFormulario();
+                            } else {
+                                mostrarError("No se pudo asignar el rol de gerente. Intente nuevamente.");
+                            }
+                        });
+                    } catch (Exception e) {
+                        Platform.runLater(() -> {
+                            mostrarCarga(false);
+                            mostrarError("Error al asignar la gerencia: " + e.getMessage());
+                        });
+                    }
+                }).start();
+            }
+        });
     }
     
     private void cancelar() {
@@ -164,18 +324,40 @@ public class AsignarGerenciaController implements Initializable {
     }
     
     private void mostrarError(String mensaje) {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText(mensaje);
+            alert.showAndWait();
+        });
     }
     
     private void mostrarExito(String mensaje) {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Éxito");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Éxito");
+            alert.setHeaderText(null);
+            alert.setContentText(mensaje);
+            alert.showAndWait();
+        });
+    }
+    
+    private void mostrarCarga(boolean mostrar) {
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisible(mostrar);
+        }
+        if (progressIndicator != null) {
+            progressIndicator.setVisible(mostrar);
+        }
+        
+        // Deshabilitar controles durante la carga
+        emailField.setDisable(mostrar);
+        buscarBtn.setDisable(mostrar);
+        plazaCombo.setDisable(mostrar || usuarioSeleccionado == null);
+        localCombo.setDisable(mostrar || plazaCombo.getSelectionModel().getSelectedItem() == null);
+        asignarBtn.setDisable(mostrar || !(usuarioSeleccionado != null && 
+                                         plazaCombo.getSelectionModel().getSelectedItem() != null && 
+                                         localCombo.getSelectionModel().getSelectedItem() != null));
     }
 }

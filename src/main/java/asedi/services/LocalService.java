@@ -24,21 +24,44 @@ public class LocalService {
      * @return Lista de locales
      */
     public List<Local> obtenerLocalesPorPlaza(Long plazaId) {
+        System.out.println("Iniciando obtención de locales para la plaza ID: " + plazaId);
         try {
             String url = ENDPOINT + "?plaza_id=" + plazaId;
+            System.out.println("URL de la petición: " + url);
+            
             HttpClientUtil.HttpResponseWrapper<String> response = 
                 HttpClientUtil.get(url, String.class);
                 
+            System.out.println("Respuesta del servidor - Código: " + response.getStatusCode());
+            System.out.println("Cuerpo de la respuesta: " + response.getBody());
+                
             if (response.getStatusCode() == 200) {
                 // Parsear la respuesta JSON a una lista de locales
-                return gson.fromJson(response.getBody(), 
+                List<Local> locales = gson.fromJson(response.getBody(), 
                     new com.google.gson.reflect.TypeToken<List<Local>>(){}.getType());
+                
+                System.out.println("Número de locales obtenidos: " + (locales != null ? locales.size() : 0));
+                if (locales != null) {
+                    for (Local local : locales) {
+                        System.out.println("Local cargado: " + local.getNombre() + " (ID: " + local.getId() + ")");
+                    }
+                } else {
+                    System.out.println("La respuesta de locales es nula");
+                }
+                
+                return locales != null ? locales : new ArrayList<>();
+            } else {
+                String errorMsg = "Error al obtener locales. Código: " + response.getStatusCode() + 
+                                ", Respuesta: " + response.getBody();
+                System.err.println(errorMsg);
+                return new ArrayList<>();
             }
         } catch (Exception e) {
-            System.err.println("Error al obtener locales por plaza: " + e.getMessage());
+            String errorMsg = "Error en obtenerLocalesPorPlaza: " + e.getClass().getName() + " - " + e.getMessage();
+            System.err.println(errorMsg);
             e.printStackTrace();
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
     
     /**
