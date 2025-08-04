@@ -1,24 +1,66 @@
-=== HTTP GET Request ===
-URL: https://foodplazaapi.ponchoramos.com/api/menus
-Method: GET
-Headers: []
-Solicitando menús desde: menus
+El usuario no tiene un local asignado
+Intentando cargar vista: /views/usuario/usuarioDashboard.fxml
+Error al cargar la vista /views/usuario/usuarioDashboard.fxml: Error resolving onAction='#cargarPlazas', either the event handler is not in the Namespace or there is an error in the script.
+/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/usuario/usuarioDashboard.fxml:26
 
-=== HTTP GET Request ===
-URL: https://foodplazaapi.ponchoramos.com/api/menus
-Method: GET
-Headers: []
+javafx.fxml.LoadException: Error resolving onAction='#cargarPlazas', either the event handler is not in the Namespace or there is an error in the script.
+/home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/usuario/usuarioDashboard.fxml:26
 
-=== HTTP Response ===
-Status: HTTP/1.1 405 Method Not Allowed
-Headers: [Server: nginx/1.24.0 (Ubuntu), Date: Mon, 04 Aug 2025 14:39:50 GMT, Content-Type: application/json, Content-Length: 31, Connection: keep-alive, allow: POST]
-Body: {"detail":"Method Not Allowed"}
-
-=== HTTP Response ===
-Status: HTTP/1.1 405 Method Not Allowed
-Headers: [Server: nginx/1.24.0 (Ubuntu), Date: Mon, 04 Aug 2025 14:39:50 GMT, Content-Type: application/json, Content-Length: 31, Connection: keep-alive, allow: POST]
-Body: {"detail":"Method Not Allowed"}
-Respuesta del servidor recibida. Estado: 405
-Respuesta del servidor recibida. Estado: 405
-Error al obtener la lista de menús: Error al obtener menús. Código: 405
-Error al obtener la lista de menús: Error al obtener menús. Código: 405
+        at javafx.fxml@21.0.2/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2718)
+        at javafx.fxml@21.0.2/javafx.fxml.FXMLLoader$Element.processEventHandlerAttributes(FXMLLoader.java:623)
+        at javafx.fxml@21.0.2/javafx.fxml.FXMLLoader$ValueElement.processEndElement(FXMLLoader.java:783)
+        at javafx.fxml@21.0.2/javafx.fxml.FXMLLoader.processEndElement(FXMLLoader.java:2969)
+        at javafx.fxml@21.0.2/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2654)
+        at javafx.fxml@21.0.2/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563)
+        at javafx.fxml@21.0.2/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531)
+        at asedi.controllers.LoginController.loadView(LoginController.java:122)
+        at asedi.controllers.LoginController.redirigirSegunRol(LoginController.java:75)
+        at asedi.controllers.LoginController.handleLogin(LoginController.java:46)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:72)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at javafx.base@21.0.2/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:270)
+        at javafx.fxml@21.0.2/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+        at javafx.fxml@21.0.2/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1855)
+        at javafx.fxml@21.0.2/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1726)
+        at javafx.base@21.0.2/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+        at javafx.base@21.0.2/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+        at javafx.base@21.0.2/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+        at javafx.base@21.0.2/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+        at javafx.base@21.0.2/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+        at javafx.base@21.0.2/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.2/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+        at javafx.base@21.0.2/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.2/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+        at javafx.base@21.0.2/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.2/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+        at javafx.base@21.0.2/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+        at javafx.base@21.0.2/javafx.event.Event.fireEvent(Event.java:198)
+        at javafx.graphics@21.0.2/javafx.scene.Node.fireEvent(Node.java:8875)
+        at javafx.controls@21.0.2/javafx.scene.control.Button.fire(Button.java:203)
+        at javafx.controls@21.0.2/javafx.scene.control.skin.ButtonSkin.lambda$new$0(ButtonSkin.java:71)
+        at javafx.graphics@21.0.2/com.sun.javafx.scene.KeyboardShortcutsHandler.processAccelerators(KeyboardShortcutsHandler.java:383)
+        at javafx.graphics@21.0.2/com.sun.javafx.scene.KeyboardShortcutsHandler.dispatchBubblingEvent(KeyboardShortcutsHandler.java:163)
+        at javafx.base@21.0.2/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+        at javafx.base@21.0.2/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+        at javafx.base@21.0.2/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.2/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+        at javafx.base@21.0.2/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+        at javafx.base@21.0.2/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+        at javafx.base@21.0.2/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+        at javafx.base@21.0.2/javafx.event.Event.fireEvent(Event.java:198)
+        at javafx.graphics@21.0.2/javafx.scene.Scene.processKeyEvent(Scene.java:2194)
+        at javafx.graphics@21.0.2/javafx.scene.Scene$ScenePeerListener.keyEvent(Scene.java:2715)
+        at javafx.graphics@21.0.2/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:218)
+        at javafx.graphics@21.0.2/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:150)
+        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+        at javafx.graphics@21.0.2/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleKeyEvent$1(GlassViewEventHandler.java:250)
+        at javafx.graphics@21.0.2/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+        at javafx.graphics@21.0.2/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleKeyEvent(GlassViewEventHandler.java:249)
+        at javafx.graphics@21.0.2/com.sun.glass.ui.View.handleKeyEvent(View.java:542)
+        at javafx.graphics@21.0.2/com.sun.glass.ui.View.notifyKey(View.java:966)
+        at javafx.graphics@21.0.2/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
+        at javafx.graphics@21.0.2/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$10(GtkApplication.java:263)
+        at java.base/java.lang.Thread.run(Thread.java:1583)

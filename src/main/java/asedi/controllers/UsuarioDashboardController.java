@@ -8,8 +8,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.geometry.Insets;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -32,20 +35,75 @@ public class UsuarioDashboardController {
         cargarPlazas();
     }
 
-    private void cargarPlazas() {
+    @FXML
+    public void cargarPlazas() {
         try {
+            // Limpiar el contenido actual
+            contenidoPane.getChildren().clear();
+            
+            // Crear un contenedor para las plazas
+            VBox mainContainer = new VBox(20);
+            mainContainer.setPadding(new Insets(20));
+            
+            // Agregar un título
+            Label titulo = new Label("Selecciona una Plaza");
+            titulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-padding: 0 0 20 0;");
+            mainContainer.getChildren().add(titulo);
+            
+            // Obtener las plazas
             List<Plaza> plazas = plazaService.obtenerTodas();
-            plazasContainer.getChildren().clear();
-            for (Plaza plaza : plazas) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/components/usuarioPlazaCard.fxml"));
-                Parent plazaCard = loader.load();
-                UsuarioPlazaCardController controller = loader.getController();
-                controller.setPlaza(plaza);
-                controller.setUsuarioDashboardController(this);
-                plazasContainer.getChildren().add(plazaCard);
+            
+            if (plazas.isEmpty()) {
+                Label mensaje = new Label("No hay plazas disponibles en este momento.");
+                mensaje.setStyle("-fx-font-size: 16px; -fx-text-fill: #666; -fx-padding: 20px;");
+                mainContainer.getChildren().add(mensaje);
+            } else {
+                // Crear un GridPane para organizar las tarjetas en un grid
+                GridPane grid = new GridPane();
+                grid.setHgap(20);
+                grid.setVgap(20);
+                grid.setPadding(new Insets(10));
+                
+                int column = 0;
+                int row = 0;
+                final int MAX_COLUMNS = 3;
+                
+                for (Plaza plaza : plazas) {
+                    try {
+                        // Cargar la tarjeta de plaza
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/components/usuarioPlazaCard.fxml"));
+                        VBox card = loader.load();
+                        
+                        // Configurar el controlador de la tarjeta
+                        UsuarioPlazaCardController cardController = loader.getController();
+                        cardController.setPlaza(plaza);
+                        cardController.setUsuarioDashboardController(this);
+                        
+                        // Agregar la tarjeta al grid
+                        grid.add(card, column, row);
+                        
+                        // Actualizar contadores de fila/columna
+                        column++;
+                        if (column >= MAX_COLUMNS) {
+                            column = 0;
+                            row++;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                
+                // Asegurarse de que el grid ocupe todo el ancho disponible
+                GridPane.setHgrow(grid, Priority.ALWAYS);
+                mainContainer.getChildren().add(grid);
             }
-        } catch (IOException e) {
+            
+            // Agregar el contenedor principal al contenido
+            contenidoPane.getChildren().add(mainContainer);
+            
+        } catch (Exception e) {
             e.printStackTrace();
+            mostrarMensaje("Error al cargar las plazas: " + e.getMessage());
         }
     }
 
@@ -71,21 +129,35 @@ public class UsuarioDashboardController {
         cargarPlazas();
     }
 
+
+    
     @FXML
-    public void cargarPerfil() {
-        mostrarMensaje("Perfil de Usuario\n(En desarrollo)");
+    private void cargarOrdenes() {
+        // Implementación para cargar las órdenes del usuario
+        System.out.println("Cargando órdenes...");
+        // TODO: Implementar la carga de órdenes
+        mostrarMensaje("Próximamente: Visualización de órdenes");
+    }
+    
+    @FXML
+    private void cargarPerfil() {
+        // Implementación para cargar el perfil del usuario
+        System.out.println("Cargando perfil...");
+        mostrarMensaje("Próximamente: Gestión de perfil");
+    }
+    
+    @FXML
+    private void cargarReservas() {
+        // Implementación para cargar las reservas
+        System.out.println("Cargando reservas...");
+        mostrarMensaje("Próximamente: Gestión de reservas");
     }
 
     @FXML
-    public void cargarReservas() {
-        mostrarMensaje("Mis Reservas\n(En desarrollo)");
-    }
-
-    @FXML
-    public void cargarCarrito() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/usuario/carrito.fxml"));
-        Parent root = loader.load();
-        contenidoPane.getChildren().setAll(root);
+    private void cargarCarrito() {
+        // Implementación para cargar el carrito
+        System.out.println("Cargando carrito...");
+        mostrarMensaje("Próximamente: Carrito de compras");
     }
 
     @FXML
@@ -95,16 +167,15 @@ public class UsuarioDashboardController {
             AuthService.getInstance().logout();
             
             // Cargar la vista de login
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
-            Parent root = loader.load();
-            
             Stage stage = (Stage) contenidoPane.getScene().getWindow();
-            stage.setScene(new javafx.scene.Scene(root));
+            Parent loginView = FXMLLoader.load(getClass().getResource("/views/login.fxml"));
+            stage.getScene().setRoot(loginView);
             stage.setTitle("Inicio de Sesión - FoodPlaza");
             stage.setMaximized(false);
             stage.centerOnScreen();
         } catch (IOException e) {
             e.printStackTrace();
+            mostrarMensaje("Error al cerrar sesión");
         }
     }
 

@@ -3,10 +3,30 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.UsuarioLocalCardController" spacing="10" styleClass="local-card" stylesheets="@../../styles/locales.css">
-    <ImageView fx:id="imagenLocal" fitHeight="150" fitWidth="200" preserveRatio="true"/>
-    <Label fx:id="nombreLabel" style="-fx-font-weight: bold;"/>
-    <Label fx:id="descripcionLabel"/>
-    <Button text="Ver productos" onAction="#verProductos"/>
+<VBox fx:id="cardContainer" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="asedi.controllers.UsuarioLocalCardController" 
+      styleClass="local-card" 
+      stylesheets="@../../styles/localCard.css"
+      maxWidth="250"
+      spacing="0">
+    
+    <!-- Imagen del local -->
+    <StackPane styleClass="image-container">
+        <ImageView fx:id="imagenLocal" fitWidth="250" fitHeight="150" preserveRatio="false" 
+                   style="-fx-background-color: #f5f5f5;">
+            <image>
+                <Image url="@/images/icons/store.png" />
+            </image>
+        </ImageView>
+        <StackPane styleClass="overlay"/>
+    </StackPane>
+    
+    <!-- Contenido de la tarjeta -->
+    <VBox styleClass="content" spacing="5">
+        <Label fx:id="nombreLabel" styleClass="title" />
+        <Label fx:id="descripcionLabel" styleClass="description" wrapText="true" />
+        <Button text="Ver productos" onAction="#verProductos" styleClass="action-button" />
+    </VBox>
 </VBox>

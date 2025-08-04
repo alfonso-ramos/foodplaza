@@ -1,0 +1,85 @@
+/* Estilos para las tarjetas de locales */
+.local-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+    -fx-padding: 0;
+    -fx-spacing: 0;
+    -fx-max-width: 250px;
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.local-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 12, 0, 0, 4);
+    -fx-translate-y: -3px;
+}
+
+/* Contenedor de imagen */
+.local-card .image-container {
+    -fx-background-color: #f5f5f5;
+    -fx-min-height: 150px;
+    -fx-max-height: 150px;
+    -fx-alignment: center;
+    -fx-padding: 0;
+    -fx-background-radius: 8px 8px 0 0;
+    -fx-clip: true;
+}
+
+.local-card .image-container .image-view {
+    -fx-fit-width: 250px;
+    -fx-fit-height: 150px;
+}
+
+/* Overlay para la imagen */
+.local-card .overlay {
+    -fx-background-color: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+    -fx-pref-width: 250px;
+    -fx-pref-height: 150px;
+    -fx-opacity: 0;
+    -fx-transition: opacity 0.3s ease;
+}
+
+.local-card:hover .overlay {
+    -fx-opacity: 1;
+}
+
+/* Contenido de la tarjeta */
+.local-card .content {
+    -fx-padding: 15px;
+    -fx-spacing: 10px;
+}
+
+.local-card .title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.local-card .description {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666666;
+    -fx-wrap-text: true;
+}
+
+/* Botón de acción */
+.local-card .action-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
+    -fx-transition: all 0.2s ease;
+}
+
+.local-card .action-button:hover {
+    -fx-background-color: #43A047;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 3);
+}
+
+.local-card .action-button:pressed {
+    -fx-translate-y: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}

@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.LocalesPorPlazaController" spacing="10" style="-fx-padding: 10;">
-    <Label fx:id="plazaNombreLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-    <ScrollPane fitToWidth="true" fitToHeight="true">
-        <VBox fx:id="localesContainer" spacing="10" style="-fx-padding: 10;"/>
-    </ScrollPane>
+<VBox fx:id="mainContainer" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="asedi.controllers.LocalesPorPlazaController" 
+      spacing="10" 
+      style="-fx-padding: 15;"
+      stylesheets="@/styles/localesPorPlaza.css">
+    
+    <!-- Encabezado con botón de regreso y título -->
+    <HBox fx:id="headerContainer" spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 0 0 10 0;">
+        <Button fx:id="backButton" text="← Volver" styleClass="back-button"/>
+        <Label fx:id="plazaNombreLabel" styleClass="title"/>
+    </HBox>
+    
+    <!-- Contenido principal -->
+    <VBox fx:id="contentContainer" VBox.vgrow="ALWAYS">
+        <!-- Grid para mostrar los locales -->
+        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER">
+            <GridPane fx:id="localesGrid" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+        </ScrollPane>
+    </VBox>
+    
+    <!-- Indicador de carga -->
+    <ProgressIndicator fx:id="loadingIndicator" styleClass="loading-indicator" visible="false"/>
+    
 </VBox>

@@ -1,0 +1,79 @@
+/* Estilos para la vista de locales por plaza */
+
+/* Estilos generales */
+.title {
+    -fx-font-size: 24px;
+    font-size: 24px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-text-fill: #333333;
+    color: #333333;
+}
+
+/* Estilos para el botón de regreso */
+.back-button {
+    -fx-background-color: transparent;
+    background-color: transparent;
+    -fx-text-fill: #4A90E2;
+    color: #4A90E2;
+    -fx-font-size: 14px;
+    font-size: 14px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-cursor: hand;
+    cursor: pointer;
+    -fx-padding: 5 10;
+    padding: 5px 10px;
+    -fx-border-radius: 4px;
+    border-radius: 4px;
+    -fx-border-color: transparent;
+    border-color: transparent;
+    -fx-background-radius: 4px;
+}
+
+.back-button:hover {
+    -fx-background-color: rgba(74, 144, 226, 0.1);
+    background-color: rgba(74, 144, 226, 0.1);
+}
+
+.back-button:pressed {
+    -fx-background-color: rgba(74, 144, 226, 0.2);
+    background-color: rgba(74, 144, 226, 0.2);
+}
+
+/* Estilos para el indicador de carga */
+.loading-indicator {
+    -fx-progress-color: #4A90E2;
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
+    width: 50px;
+    height: 50px;
+}
+
+/* Estilos para el grid de locales */
+#localesGrid {
+    -fx-padding: 10px;
+    padding: 10px;
+}
+
+/* Estilos para mensajes de error */
+.error-message {
+    -fx-text-fill: #d32f2f;
+    color: #d32f2f;
+    -fx-font-size: 14px;
+    font-size: 14px;
+    -fx-padding: 10px;
+    padding: 10px;
+    -fx-background-color: #ffebee;
+    background-color: #ffebee;
+    -fx-background-radius: 4px;
+    border-radius: 4px;
+    -fx-border-color: #ef9a9a;
+    border-color: #ef9a9a;
+    -fx-border-radius: 4px;
+    border-radius: 4px;
+    -fx-border-width: 1px;
+    border-width: 1px;
+    -fx-alignment: center;
+    text-align: center;
+}

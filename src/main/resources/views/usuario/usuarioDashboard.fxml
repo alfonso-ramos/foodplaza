@@ -18,14 +18,17 @@
             </VBox>
             
             <!-- Menú de navegación -->
-            <VBox style="-fx-padding: 0 20 20 20;" spacing="5">
+            <VBox style="-fx-padding: 0 20 20 20;" spacing="5" VBox.vgrow="ALWAYS">
                 <Label text="MENÚ PRINCIPAL" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 12px; -fx-padding: 10 0 5 15; -fx-text-transform: uppercase;"/>
                 <Button text="Inicio" onAction="#cargarInicio" styleClass="menu-btn"/>
                 
-                <Label text="MIS DATOS" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 12px; -fx-padding: 10 0 5 15; -fx-text-transform: uppercase;"/>
-                <Button text="Perfil" onAction="#cargarPerfil" styleClass="menu-btn"/>
-                <Button text="Reservas" onAction="#cargarReservas" styleClass="menu-btn"/>
-                <Button text="Carrito" onAction="#cargarCarrito" styleClass="menu-btn"/>
+                <Label text="SERVICIOS" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 12px; -fx-padding: 10 0 5 15; -fx-text-transform: uppercase;"/>
+                <Button text="Elegir Plaza" onAction="#cargarPlazas" styleClass="menu-btn"/>
+                <Button text="Ver Órdenes" onAction="#cargarOrdenes" styleClass="menu-btn"/>
+                
+                <VBox VBox.vgrow="ALWAYS">
+                    <!-- Espacio para expandir -->
+                </VBox>
                 
                 <VBox style="-fx-padding: 20 0 0 0;">
                     <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="logout-btn"/>
