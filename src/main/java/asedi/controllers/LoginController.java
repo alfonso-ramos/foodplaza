@@ -3,12 +3,15 @@ package asedi.controllers;
 import asedi.model.Usuario;
 import asedi.models.RespuestaLogin;
 import asedi.services.AuthService;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -18,6 +21,8 @@ import java.io.IOException;
 public class LoginController {
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
+    @FXML private Button loginButton;
+    @FXML private ProgressIndicator loginSpinner;
     
     private final AuthService authService = AuthService.getInstance();
 
@@ -30,26 +35,41 @@ public class LoginController {
             mostrarAlerta("Error", "Por favor ingrese su correo y contraseña", Alert.AlertType.ERROR);
             return;
         }
-
-        try {
-            RespuestaLogin respuesta = authService.login(email, password);
-            if (respuesta != null && respuesta.getUsuario() != null) {
-                // Obtener detalles completos del usuario incluyendo el local asignado
-                Usuario usuario = respuesta.getUsuario();
-                authService.setCurrentUser(usuario);
-                
-                // Si el usuario es gerente, ya deberíamos tener el local asignado
-                if (usuario.getLocal() != null) {
-                    authService.setLocalAsignado(usuario.getLocal());
+        
+        // Disable login button and show spinner
+        loginButton.setDisable(true);
+        loginSpinner.setVisible(true);
+        
+        // Run login in background thread to keep UI responsive
+        new Thread(() -> {
+            try {
+                RespuestaLogin respuesta = authService.login(email, password);
+                if (respuesta != null && respuesta.getUsuario() != null) {
+                    // Obtener detalles completos del usuario incluyendo el local asignado
+                    Usuario usuario = respuesta.getUsuario();
+                    authService.setCurrentUser(usuario);
+                    
+                    // Si el usuario es gerente, ya deberíamos tener el local asignado
+                    if (usuario.getLocal() != null) {
+                        authService.setLocalAsignado(usuario.getLocal());
+                    }
+                    
+                    Platform.runLater(() -> redirigirSegunRol(usuario));
+                } else {
+                    Platform.runLater(() -> {
+                        mostrarAlerta("Error", "Credenciales inválidas", Alert.AlertType.ERROR);
+                        loginButton.setDisable(false);
+                        loginSpinner.setVisible(false);
+                    });
                 }
-                
-                redirigirSegunRol(usuario);
-            } else {
-                mostrarAlerta("Error", "Credenciales inválidas", Alert.AlertType.ERROR);
+            } catch (IOException e) {
+                Platform.runLater(() -> {
+                    mostrarAlerta("Error", "Error al conectar con el servidor: " + e.getMessage(), Alert.AlertType.ERROR);
+                    loginButton.setDisable(false);
+                    loginSpinner.setVisible(false);
+                });
             }
-        } catch (IOException e) {
-            mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
-        }
+        }).start();
     }
 
     private void redirigirSegunRol(Usuario usuario) {

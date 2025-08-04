@@ -3,19 +3,49 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.effect.DropShadow?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="asedi.controllers.UsuarioProductoCardController" styleClass="producto-card">
-    <children>
-        <ImageView fx:id="imagenProducto" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
-        <Label fx:id="nombreLabel" styleClass="nombre-producto" />
-        <Label fx:id="descripcionLabel" styleClass="descripcion-producto" />
-        <HBox alignment="CENTER_LEFT" spacing="10">
-            <children>
-                <Label fx:id="precioLabel" styleClass="precio-producto" />
-                <Button onAction="#agregarAlCarrito" text="Agregar al Carrito" />
-            </children>
+<VBox xmlns="http://javafx.com/javafx/11.0.1" 
+      xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="asedi.controllers.UsuarioProductoCardController" 
+      styleClass="producto-card"
+      spacing="0"
+      alignment="TOP_CENTER"
+      style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+    
+    <!-- Imagen del producto -->
+    <StackPane style="-fx-background-color: #f8f9fa; -fx-background-radius: 12 12 0 0;" alignment="CENTER">
+        <ImageView fx:id="imagenProducto" 
+                 fitHeight="160" 
+                 fitWidth="240" 
+                 pickOnBounds="true" 
+                 preserveRatio="true"
+                 style="-fx-background-radius: 12 12 0 0;" />
+    </StackPane>
+    
+    <!-- Contenido de la tarjeta -->
+    <VBox spacing="8" style="-fx-padding: 16; -fx-background-radius: 0 0 12 12;">
+        <!-- Nombre del producto -->
+        <Label fx:id="nombreLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-wrap-text: true; -fx-max-width: 240;" />
+        
+        <!-- Descripción del producto -->
+        <Label fx:id="descripcionLabel" style="-fx-font-size: 13px; -fx-text-fill: #6c757d; -fx-wrap-text: true; -fx-max-width: 240; -fx-pref-height: 40;" />
+        
+        <!-- Fila de precio y botón -->
+        <HBox alignment="CENTER" spacing="12" style="-fx-padding: 8 0 0 0; -fx-alignment: CENTER_LEFT;">
+            <!-- Precio -->
+            <Label fx:id="precioLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #28a745;" />
+            
+            <!-- Botón de agregar al carrito -->
+            <Button onAction="#agregarAlCarrito" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-background-radius: 20; -fx-cursor: hand;">
+                Añadir
+            </Button>
         </HBox>
-    </children>
+    </VBox>
+    
+    <!-- Etiqueta de no disponible (inicialmente oculta) -->
+    <Label fx:id="disponibleLabel" style="-fx-text-fill: #dc3545; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 4 8; -fx-background-color: #f8d7da; -fx-background-radius: 4; -fx-border-radius: 4; -fx-border-color: #f5c6cb; -fx-border-width: 1; -fx-alignment: center;" visible="false" />
 </VBox>

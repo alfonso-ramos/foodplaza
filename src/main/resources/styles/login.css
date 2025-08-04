@@ -32,21 +32,46 @@
     -fx-background-color: #00C853;
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 10 40 10 40;
-    -fx-background-radius: 5;
+    -fx-padding: 12px 40px;
+    -fx-background-radius: 25px;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);
+    -fx-transition: all 0.2s;
+    -fx-min-width: 200px;
 }
 
 /* Efecto hover para el botón de login */
 .login-button:hover {
     -fx-background-color: #00B04A;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0, 1, 2);
 }
 
 /* Efecto presionado para el botón de login */
 .login-button:pressed {
     -fx-background-color: #00963D;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
+    -fx-translate-y: 1px;
+}
+
+/* Estilo cuando el botón está deshabilitado */
+.login-button:disabled {
+    -fx-opacity: 0.7;
+    -fx-cursor: default;
+}
+
+/* Estilos para el spinner de carga */
+.login-spinner {
+    -fx-progress-color: white;
+    -fx-pref-width: 24px;
+    -fx-pref-height: 24px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+}
+
+/* Contenedor del botón */
+.stack-pane {
+    -fx-alignment: center;
+    -fx-padding: 10px 0;
+    -fx-min-height: 50px;
 }
 
 /* Estilos para los campos de texto y contraseña */

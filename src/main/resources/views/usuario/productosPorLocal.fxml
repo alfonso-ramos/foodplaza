@@ -2,15 +2,38 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="asedi.controllers.ProductosPorLocalController">
-    <children>
-        <Label fx:id="localNombreLabel" styleClass="header-label" />
-        <ScrollPane fitToWidth="true">
-            <content>
-                <VBox fx:id="productosContainer" spacing="10" />
-            </content>
-        </ScrollPane>
-    </children>
+<VBox xmlns="http://javafx.com/javafx/11.0.1" 
+      xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="asedi.controllers.ProductosPorLocalController"
+      style="-fx-background-color: #f5f7fa; -fx-padding: 0;">
+    
+    <!-- Encabezado con el nombre del local -->
+    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);">
+        <Label fx:id="localNombreLabel" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+    </VBox>
+    
+    <!-- Contenido principal -->
+    <VBox style="-fx-padding: 20; -fx-spacing: 20;">
+        <!-- Contenedor principal con StackPane para superponer el loading -->
+        <StackPane style="-fx-padding: 0;">
+            <!-- Contenido principal con GridPane para los productos -->
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background: transparent; -fx-background-color: transparent; -fx-padding: 10; -fx-hbar-policy: never;">
+                <content>
+                    <FlowPane fx:id="productosContainer" hgap="20" vgap="20" style="-fx-background-color: transparent; -fx-alignment: center;" />
+                </content>
+            </ScrollPane>
+            
+            <!-- Contenedor de carga -->
+            <StackPane fx:id="loadingContainer" alignment="CENTER" visible="false">
+                <VBox alignment="CENTER" spacing="15" style="-fx-padding: 40; -fx-background-color: rgba(255, 255, 255, 0.95); -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                    <ProgressIndicator style="-fx-progress-color: #28a745; -fx-scale-x: 1.5; -fx-scale-y: 1.5;" />
+                    <Label text="Cargando productos..." style="-fx-text-fill: #2c3e50; -fx-font-size: 16; -fx-font-weight: 500;" />
+                </VBox>
+            </StackPane>
+        </StackPane>
+    </VBox>
 </VBox>
