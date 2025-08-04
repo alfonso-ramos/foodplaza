@@ -50,7 +50,7 @@ public class LocalService {
     public List<Local> obtenerLocalesPorPlaza(Long plazaId) {
         System.out.println("Iniciando obtención de locales para la plaza ID: " + plazaId);
         try {
-            String url = ENDPOINT + "?plaza_id=" + plazaId;
+String url = ENDPOINT + "/?plaza_id=" + plazaId;
             System.out.println("URL de la petición: " + url);
             
             HttpClientUtil.HttpResponseWrapper<String> response = 

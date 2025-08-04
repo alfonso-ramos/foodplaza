@@ -57,24 +57,59 @@ public class ProductoService {
      */
     @SuppressWarnings("unchecked")
     public List<Producto> obtenerProductosPorLocal(Long localId) {
+        List<Producto> productos = new ArrayList<>();
         try {
-            String url = String.format("%s/por-local/%d", ENDPOINT, localId);
-            // Usamos String.class para obtener la respuesta como JSON y luego la parseamos
-            HttpClientUtil.HttpResponseWrapper<String> response = 
-                HttpClientUtil.get(url, String.class);
+            // First, get all menus for the local
+            String menusUrl = String.format("menus/local/%d", localId);
+            System.out.println("Obteniendo menús para el local " + localId + " desde: " + menusUrl);
             
-            if (response.getStatusCode() == 200) {
-                Type listType = new TypeToken<List<Producto>>(){}.getType();
-                return gson.fromJson(response.getBody(), listType);
+            HttpClientUtil.HttpResponseWrapper<String> menusResponse = 
+                HttpClientUtil.get(menusUrl, String.class);
+            
+            if (menusResponse.getStatusCode() == 200) {
+                Type menuListType = new TypeToken<List<Menu>>(){}.getType();
+                List<Menu> menus = gson.fromJson(menusResponse.getBody(), menuListType);
+                
+                if (menus != null && !menus.isEmpty()) {
+                    System.out.println("Se encontraron " + menus.size() + " menús para el local " + localId);
+                    
+                    // For each menu, get its products
+                    for (Menu menu : menus) {
+                        String productosUrl = String.format("productos/menu/%d", menu.getId());
+                        System.out.println("Obteniendo productos del menú " + menu.getId() + " desde: " + productosUrl);
+                        
+                        HttpClientUtil.HttpResponseWrapper<String> productosResponse = 
+                            HttpClientUtil.get(productosUrl, String.class);
+                        
+                        if (productosResponse.getStatusCode() == 200) {
+                            Type productoListType = new TypeToken<List<Producto>>(){}.getType();
+                            List<Producto> productosDelMenu = gson.fromJson(
+                                productosResponse.getBody(), productoListType);
+                            
+                            if (productosDelMenu != null) {
+                                System.out.println("Se encontraron " + productosDelMenu.size() + " productos en el menú " + menu.getId());
+                                productos.addAll(productosDelMenu);
+                            }
+                        } else {
+                            System.err.println("Error al obtener productos del menú " + menu.getId() + 
+                                             ". Código: " + productosResponse.getStatusCode() + 
+                                             ", Respuesta: " + productosResponse.getBody());
+                        }
+                    }
+                } else {
+                    System.out.println("No se encontraron menús para el local con ID: " + localId);
+                }
             } else {
-                System.err.println("Error al obtener productos del local. Código: " + response.getStatusCode());
-                return new ArrayList<>();
+                System.err.println("Error al obtener menús del local. Código: " + menusResponse.getStatusCode() + 
+                                 ", Respuesta: " + menusResponse.getBody());
             }
         } catch (Exception e) {
             System.err.println("Error al obtener productos del local: " + e.getMessage());
             e.printStackTrace();
-            return new ArrayList<>();
         }
+        
+        System.out.println("Total de productos encontrados para el local " + localId + ": " + productos.size());
+        return productos;
     }
     
     public List<Producto> obtenerTodosLosProductos() {

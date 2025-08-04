@@ -17,7 +17,7 @@
         <ImageView fx:id="imagenLocal" fitWidth="250" fitHeight="150" preserveRatio="false" 
                    style="-fx-background-color: #f5f5f5;">
             <image>
-                <Image url="@/images/icons/store.png" />
+                <Image url="@/images/locales/localDummy.png" />
             </image>
         </ImageView>
         <StackPane styleClass="overlay"/>

@@ -9,7 +9,9 @@
       fx:controller="asedi.controllers.UsuarioPlazaCardController"
       stylesheets="@../../styles/plazaCard.css"
       maxWidth="300"
-      spacing="0">
+      spacing="0"
+      onMouseClicked="#onPlazaClicked"
+      style="-fx-cursor: hand;">
     
     <!-- Plaza Image Container with fixed aspect ratio -->
     <StackPane styleClass="image-container" maxHeight="180">
