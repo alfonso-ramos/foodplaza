@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,7 +56,7 @@ public class MenuService {
                 url = String.format("menus/local/%d", idLocal);
             } else {
                 // Si no hay ID de local, obtener todos los menús
-                url = BASE_ENDPOINT;
+                url = "menus";
             }
             
             System.out.println("Solicitando menús desde: " + url);
@@ -87,6 +88,7 @@ public class MenuService {
                 List<Menu> menus = gson.fromJson(responseBody, listType);
                 
                 if (menus != null) {
+                    
                     // Actualizar caché completa si no es una consulta filtrada
                     if (idLocal == null) {
                         allMenusCache = new ArrayList<>(menus);
@@ -236,8 +238,18 @@ public class MenuService {
         
         try {
             String url = String.format("%s/%d", BASE_ENDPOINT, menu.getId());
-            String json = gson.toJson(menu);
-            HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.put(url, json, String.class);
+            
+            // Create a map with the exact field names expected by the API
+            Map<String, Object> menuMap = new HashMap<>();
+            menuMap.put("id", menu.getId());
+            menuMap.put("nombre_menu", menu.getNombre());
+            menuMap.put("descripcion", menu.getDescripcion());
+            menuMap.put("id_local", menu.getIdLocal());
+            menuMap.put("disponible", menu.isDisponible());
+            menuMap.put("productos", new ArrayList<>());
+            
+            // The HttpClientUtil will handle the JSON serialization
+            HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.put(url, menuMap, String.class);
             
             if (response.getStatusCode() == 200) {
                 // Actualizar caché

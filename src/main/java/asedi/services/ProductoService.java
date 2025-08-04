@@ -45,6 +45,38 @@ public class ProductoService {
      * @return Lista de todos los productos disponibles
      * @deprecated Usar obtenerTodos() en su lugar
      */
+    /**
+     * Obtiene todos los productos de un local específico.
+     * @param localId ID del local
+     * @return Lista de productos del local
+     */
+    /**
+     * Obtiene todos los productos de un local específico.
+     * @param localId ID del local
+     * @return Lista de productos del local
+     */
+    @SuppressWarnings("unchecked")
+    public List<Producto> obtenerProductosPorLocal(Long localId) {
+        try {
+            String url = String.format("%s/por-local/%d", ENDPOINT, localId);
+            // Usamos String.class para obtener la respuesta como JSON y luego la parseamos
+            HttpClientUtil.HttpResponseWrapper<String> response = 
+                HttpClientUtil.get(url, String.class);
+            
+            if (response.getStatusCode() == 200) {
+                Type listType = new TypeToken<List<Producto>>(){}.getType();
+                return gson.fromJson(response.getBody(), listType);
+            } else {
+                System.err.println("Error al obtener productos del local. Código: " + response.getStatusCode());
+                return new ArrayList<>();
+            }
+        } catch (Exception e) {
+            System.err.println("Error al obtener productos del local: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    
     public List<Producto> obtenerTodosLosProductos() {
         // Primero necesitamos obtener la lista de menús disponibles
         MenuService menuService = new MenuService();

@@ -163,7 +163,12 @@ public class MenuFormController {
                         // Actualizar menú existente (devuelve boolean)
                         boolean actualizado = menuService.actualizar(menu);
                         if (actualizado) {
-                            return menu; // Devolvemos el menú actualizado
+                            // Forzar recarga del menú actualizado desde el servidor
+                            Menu menuActualizado = menuService.obtenerPorId(menu.getId());
+                            if (menuActualizado != null) {
+                                return menuActualizado;
+                            }
+                            return menu; // Si no se puede obtener el actualizado, devolvemos el que tenemos
                         }
                         throw new Exception("No se pudo actualizar el menú");
                     }
