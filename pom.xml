@@ -14,9 +14,15 @@
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.parameters>true</maven.compiler.parameters>
-        <javafx.version>21.0.1</javafx.version>
+        <javafx.version>21.0.2</javafx.version>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
+        <maven.assembly.plugin.version>3.5.0</maven.assembly.plugin.version>
+        <maven.shade.plugin.version>3.4.1</maven.shade.plugin.version>
         <checkstyle.version>3.2.1</checkstyle.version>
+        <main.class>asedi.Main</main.class>
+        <app.name>FoodPlaza</app.name>
+        <app.version>1.0.0</app.version>
+        <app.vendor>TuEmpresa</app.vendor>
     </properties>
     <dependencies>
         <!-- JavaFX modules -->
@@ -94,7 +100,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>21.0.1</version>
+            <version>${javafx.version}</version>
         </dependency>
     </dependencies>
 
@@ -171,12 +177,17 @@
                     <noManPages>true</noManPages>
                     <stripDebug>true</stripDebug>
                     <noHeaderFiles>true</noHeaderFiles>
+                    <executable>java</executable>
+                    <commandlineArgs>--enable-preview -Xms512m -Xmx1024m -XX:MaxMetaspaceSize=256m -XX:+UseG1GC -XX:+UseStringDeduplication</commandlineArgs>
                     <options>
                         <option>--enable-preview</option>
                         <option>--add-exports</option>
                         <option>javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED</option>
                         <option>--add-opens</option>
                         <option>javafx.graphics/javafx.scene=ALL-UNNAMED</option>
+                        <option>-Xms512m</option>
+                        <option>-Xmx1024m</option>
+                        <option>-XX:MaxMetaspaceSize=256m</option>
                     </options>
                     <compilerArgs>
                         <arg>--enable-preview</arg>
@@ -191,10 +202,84 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>asedi.Main</mainClass>
+                    <mainClass>${main.class}</mainClass>
                     <commandlineArgs>--enable-preview</commandlineArgs>
                     <cleanupDaemonThreads>false</cleanupDaemonThreads>
                 </configuration>
+            </plugin>
+            
+            <!-- Plugin para crear un JAR con dependencias -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven.assembly.plugin.version}</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>${main.class}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Plugin para empaquetar con jpackage -->
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <configuration>
+                    <input>${project.build.directory}</input>
+                    <modulePath>${project.build.directory}/modules</modulePath>
+                    <name>${app.name}</name>
+                    <appVersion>${app.version}</appVersion>
+                    <vendor>${app.vendor}</vendor>
+                    <mainJar>foodplaza-frontend-${project.version}-jar-with-dependencies.jar</mainJar>
+                    <imageType>APP_IMAGE</imageType>
+                    <mainClass>${main.class}</mainClass>
+                    <runtimeImage>${java.home}</runtimeImage>
+                    <destination>${project.build.directory}/jpackage</destination>
+                    <javaOptions>
+                        <option>--enable-preview</option>
+                        <option>-Dfile.encoding=UTF-8</option>
+                    </javaOptions>
+                    <jlinkOptions>
+                        <option>--strip-native-commands</option>
+                        <option>--no-header-files</option>
+                        <option>--no-man-pages</option>
+                        <option>--strip-debug</option>
+                        <option>--compress=2</option>
+                    </jlinkOptions>
+                    <jpackageArgs>
+                        <jpackageArg>--type</jpackageArg>
+                        <jpackageArg>app-image</jpackageArg>
+                        <jpackageArg>--icon</jpackageArg>
+                        <jpackageArg>${project.basedir}/src/main/resources/images/logo.png</jpackageArg>
+                        <jpackageArg>--win-console</jpackageArg>
+                        <jpackageArg>--input</jpackageArg>
+                        <jpackageArg>${project.build.directory}</jpackageArg>
+                    </jpackageArgs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jpackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -102,6 +102,24 @@ public class ProductoCardController extends VBox {
         this.onEliminarAction = action;
     }
     
+    /**
+     * Establece la imagen del producto directamente
+     * @param imagen La imagen a mostrar
+     */
+    public void setImagenProducto(Image imagen) {
+        if (imagen != null) {
+            imgProducto.setImage(imagen);
+        } else {
+            // Set a default image if no image is provided
+            try {
+                Image defaultImage = new Image("/images/default-product.png");
+                imgProducto.setImage(defaultImage);
+            } catch (Exception ex) {
+                // Ignore if default image fails to load
+            }
+        }
+    }
+    
     @FXML
     private void editarProducto() {
         if (onEditarAction != null) {

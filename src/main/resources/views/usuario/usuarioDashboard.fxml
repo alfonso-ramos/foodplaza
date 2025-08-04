@@ -25,6 +25,7 @@
                 <Label text="MIS DATOS" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 12px; -fx-padding: 10 0 5 15; -fx-text-transform: uppercase;"/>
                 <Button text="Perfil" onAction="#cargarPerfil" styleClass="menu-btn"/>
                 <Button text="Reservas" onAction="#cargarReservas" styleClass="menu-btn"/>
+                <Button text="Carrito" onAction="#cargarCarrito" styleClass="menu-btn"/>
                 
                 <VBox style="-fx-padding: 20 0 0 0;">
                     <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="logout-btn"/>
@@ -36,10 +37,7 @@
     <!-- Área de contenido principal -->
     <center>
         <StackPane fx:id="contenidoPane" style="-fx-padding: 20;">
-            <VBox alignment="CENTER" spacing="20">
-                <Text text="Bienvenido a FoodPlaza" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-fill: #333;"/>
-                <Text text="¡Gracias por usar nuestra plataforma!" style="-fx-font-size: 16px; -fx-fill: #666;"/>
-            </VBox>
+            <VBox fx:id="plazasContainer" spacing="10" style="-fx-padding: 10;"/>
         </StackPane>
     </center>
     

@@ -130,9 +130,13 @@ public class MenuController implements Initializable {
      * Actualiza la visibilidad de la tabla y el mensaje de "no hay menús"
      */
     private void actualizarVisibilidadTabla() {
-        boolean hayMenus = !tablaMenus.getItems().isEmpty();
-        tablaMenus.setVisible(hayMenus);
-        lblNoMenus.setVisible(!hayMenus);
+        boolean hayMenus = tablaMenus != null && !tablaMenus.getItems().isEmpty();
+        if (tablaMenus != null) {
+            tablaMenus.setVisible(hayMenus);
+        }
+        if (lblNoMenus != null) {
+            lblNoMenus.setVisible(!hayMenus);
+        }
     }
     
     /**

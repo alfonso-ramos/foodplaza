@@ -1,18 +1,25 @@
 package asedi.controllers;
 
+import asedi.model.Plaza;
 import asedi.services.AuthService;
+import asedi.services.PlazaService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class UsuarioDashboardController {
     @FXML private Label userNameLabel;
     @FXML private StackPane contenidoPane;
+    @FXML private VBox plazasContainer;
+
+    private final PlazaService plazaService = new PlazaService();
 
     @FXML
     public void initialize() {
@@ -21,12 +28,37 @@ public class UsuarioDashboardController {
         if (authService.getCurrentUser() != null) {
             userNameLabel.setText(authService.getCurrentUser().getNombre());
         }
+        cargarPlazas();
+    }
+
+    private void cargarPlazas() {
+        try {
+            List<Plaza> plazas = plazaService.obtenerTodas();
+            plazasContainer.getChildren().clear();
+            for (Plaza plaza : plazas) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/components/usuarioPlazaCard.fxml"));
+                Parent plazaCard = loader.load();
+                UsuarioPlazaCardController controller = loader.getController();
+                controller.setPlaza(plaza);
+                controller.setUsuarioDashboardController(this);
+                plazasContainer.getChildren().add(plazaCard);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void mostrarLocalesDePlaza(Plaza plaza) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/usuario/localesPorPlaza.fxml"));
+        Parent root = loader.load();
+        LocalesPorPlazaController controller = loader.getController();
+        controller.setPlaza(plaza);
+        contenidoPane.getChildren().setAll(root);
     }
 
     @FXML
     public void cargarInicio() {
-        // Mostrar mensaje de bienvenida
-        mostrarMensaje("Bienvenido a FoodPlaza");
+        cargarPlazas();
     }
 
     @FXML
@@ -37,6 +69,13 @@ public class UsuarioDashboardController {
     @FXML
     public void cargarReservas() {
         mostrarMensaje("Mis Reservas\n(En desarrollo)");
+    }
+
+    @FXML
+    public void cargarCarrito() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/usuario/carrito.fxml"));
+        Parent root = loader.load();
+        contenidoPane.getChildren().setAll(root);
     }
 
     @FXML

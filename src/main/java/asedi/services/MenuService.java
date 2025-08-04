@@ -27,34 +27,112 @@ public class MenuService {
      * @throws IOException Si hay un error de conexión
      */
     public List<Menu> obtenerTodos() throws IOException {
+        return obtenerPorLocal(null);
+    }
+    
+    /**
+     * Obtiene los menús de un local específico.
+     * @param idLocal ID del local (opcional, si es null obtiene todos los menús)
+     * @return Lista de menús del local especificado
+     * @throws IOException Si hay un error de conexión
+     */
+    public List<Menu> obtenerPorLocal(Long idLocal) throws IOException {
         long currentTime = System.currentTimeMillis();
         
-        // Return cached data if it's still fresh
-        if (allMenusCache != null && (currentTime - lastCacheUpdate) < CACHE_DURATION_MS) {
-            return new ArrayList<>(allMenusCache);
+        // Si se solicita un local específico, verificar la caché
+        if (idLocal != null && allMenusCache != null && (currentTime - lastCacheUpdate) < CACHE_DURATION_MS) {
+            List<Menu> filteredMenus = new ArrayList<>();
+            for (Menu menu : allMenusCache) {
+                if (menu != null && menu.getIdLocal() != null && menu.getIdLocal().equals(idLocal)) {
+                    filteredMenus.add(menu);
+                }
+            }
+            if (!filteredMenus.isEmpty()) {
+                return new ArrayList<>(filteredMenus);
+            }
         }
         
         try {
-            String response = HttpClientUtil.get(ENDPOINT, String.class).getBody();
-            Type listType = new TypeToken<ArrayList<Menu>>() {}.getType();
-            List<Menu> menus = gson.fromJson(response, listType);
+            // Construir la URL con el formato correcto: menus/local/{local_id}
+            String url = ENDPOINT;
+            if (idLocal != null) {
+                url = String.format("%s/local/%d", ENDPOINT, idLocal);
+            }
             
-            // Update cache
-            allMenusCache = menus;
-            lastCacheUpdate = currentTime;
+            System.out.println("Solicitando menús desde: " + url);
             
-            // Update individual item cache
-            cache.clear();
-            if (menus != null) {
-                for (Menu menu : menus) {
-                    cache.put(menu.getId(), menu);
+            // Obtener la respuesta del servidor
+            HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.get(url, String.class);
+            
+            System.out.println("Respuesta del servidor recibida. Estado: " + response.getStatusCode());
+            
+            // Verificar si la respuesta es exitosa (código 200)
+            if (response.getStatusCode() != 200) {
+                throw new IOException("Error al obtener menús. Código: " + response.getStatusCode());
+            }
+            
+            // Obtener el cuerpo de la respuesta
+            String responseBody = response.getBody();
+            
+            // Verificar si la respuesta está vacía
+            if (responseBody == null || responseBody.trim().isEmpty()) {
+                System.out.println("La respuesta del servidor está vacía");
+                return new ArrayList<>();
+            }
+            
+            // Intentar parsear la respuesta como un array de menús
+            try {
+                Type listType = new TypeToken<ArrayList<Menu>>() {}.getType();
+                List<Menu> menus = gson.fromJson(responseBody, listType);
+                
+                if (menus != null) {
+                    // Actualizar caché completa si no es una consulta filtrada
+                    if (idLocal == null) {
+                        allMenusCache = new ArrayList<>(menus);
+                        lastCacheUpdate = currentTime;
+                        
+                        // Actualizar caché individual
+                        cache.clear();
+                        for (Menu menu : menus) {
+                            if (menu != null && menu.getId() != null) {
+                                cache.put(menu.getId(), menu);
+                            }
+                        }
+                    }
+                    
+                    return new ArrayList<>(menus);
+                }
+                
+                return new ArrayList<>();
+                
+            } catch (com.google.gson.JsonSyntaxException e) {
+                // Si falla el parseo como array, intentar como objeto único
+                try {
+                    Menu menu = gson.fromJson(responseBody, Menu.class);
+                    List<Menu> menus = new ArrayList<>();
+                    if (menu != null) {
+                        menus.add(menu);
+                        
+                        // Actualizar caché si no es una consulta filtrada
+                        if (idLocal == null) {
+                            allMenusCache = new ArrayList<>(menus);
+                            lastCacheUpdate = currentTime;
+                            
+                            if (menu.getId() != null) {
+                                cache.put(menu.getId(), menu);
+                            }
+                        }
+                    }
+                    return menus;
+                } catch (Exception e2) {
+                    System.err.println("Error al analizar la respuesta del servidor: " + e2.getMessage());
+                    throw new IOException("Formato de respuesta del servidor no reconocido", e2);
                 }
             }
             
-            return menus != null ? new ArrayList<>(menus) : new ArrayList<>();
         } catch (Exception e) {
             System.err.println("Error al obtener la lista de menús: " + e.getMessage());
-            throw new IOException("No se pudo obtener la lista de menús", e);
+            throw new IOException("No se pudo obtener la lista de menús: " + e.getMessage(), e);
         }
     }
     
@@ -189,27 +267,7 @@ public class MenuService {
         }
     }
     
-    /**
-     * Obtiene todos los menús de un local específico.
-     * @param idLocal ID del local
-     * @return Lista de menús del local
-     * @throws IOException Si hay un error de conexión
-     */
-    public List<Menu> obtenerPorLocal(Long idLocal) throws IOException {
-        if (idLocal == null) {
-            throw new IllegalArgumentException("El ID del local no puede ser nulo");
-        }
-        
-        try {
-            String url = String.format("%s/local/%d", ENDPOINT, idLocal);
-            String response = HttpClientUtil.get(url, String.class).getBody();
-            Type listType = new TypeToken<ArrayList<Menu>>() {}.getType();
-            return gson.fromJson(response, listType);
-        } catch (Exception e) {
-            System.err.println("Error al obtener menús por local: " + e.getMessage());
-            throw new IOException("No se pudieron obtener los menús del local", e);
-        }
-    }
+
     
     /**
      * Agrega un producto a un menú.

@@ -17,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ProductoService {
     private static final String ENDPOINT = "productos";
-    private static final String UPLOAD_ENDPOINT = "upload";
     private final Gson gson = new Gson();
     
     // Caches
@@ -28,27 +27,211 @@ public class ProductoService {
     private static final long CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutes
 
     /**
-     * Obtiene todos los productos disponibles.
+     * Obtiene todos los productos del sistema, agrupados por menú.
+     * @return Lista de todos los productos disponibles
+     * @throws IOException Si hay un error de conexión
      */
-    public List<Producto> obtenerTodos() throws IOException {
+    /**
+     * Obtiene todos los productos del sistema.
+     * @return Lista de todos los productos
+     */
+    public List<Producto> obtenerTodos() {
+        return obtenerTodosLosProductos();
+    }
+    
+    /**
+     * Obtiene todos los productos del sistema, agrupados por menú.
+     * @return Lista de todos los productos disponibles
+     * @deprecated Usar obtenerTodos() en su lugar
+     */
+    public List<Producto> obtenerTodosLosProductos() {
+        // Primero necesitamos obtener la lista de menús disponibles
+        MenuService menuService = new MenuService();
+        List<asedi.model.Menu> menus;
+        List<Producto> todosLosProductos = new ArrayList<>();
+        
+        try {
+            // Obtener todos los menús disponibles
+            menus = menuService.obtenerTodos();
+            
+            if (menus == null || menus.isEmpty()) {
+                System.out.println("No se encontraron menús disponibles");
+                return todosLosProductos;
+            }
+            
+            // Obtener productos de cada menú
+            for (asedi.model.Menu menu : menus) {
+                try {
+                    List<Producto> productosDelMenu = obtenerTodos(menu.getId());
+                    if (productosDelMenu != null && !productosDelMenu.isEmpty()) {
+                        // Agregar los productos del menú actual a la lista total
+                        todosLosProductos.addAll(productosDelMenu);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error al obtener productos del menú " + menu.getId() + ": " + e.getMessage());
+                    // Continuar con el siguiente menú en caso de error
+                }
+            }
+            
+            System.out.println("Total de productos obtenidos de todos los menús: " + todosLosProductos.size());
+        } catch (Exception e) {
+            System.err.println("Error al obtener la lista de menús: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return todosLosProductos;
+    }
+    
+    /**
+     * Obtiene todos los productos de un menú específico.
+     * @param menuId ID del menú del que se desean obtener los productos
+     * @return Lista de productos del menú especificado
+     * @throws IOException Si hay un error de conexión
+     */
+    public List<Producto> obtenerTodos(Long menuId) throws IOException {
+        if (menuId == null) {
+            throw new IllegalArgumentException("El ID del menú no puede ser nulo");
+        }
+        
         long currentTime = System.currentTimeMillis();
         
-        if (allProductosCache != null && (currentTime - lastCacheUpdate) < CACHE_DURATION_MS) {
-            return new ArrayList<>(allProductosCache);
+        // Verificar caché para este menú específico
+        if (productosPorMenuCache.containsKey(menuId) && (currentTime - lastCacheUpdate) < CACHE_DURATION_MS) {
+            System.out.println("Obteniendo productos del menú " + menuId + " desde caché");
+            return new ArrayList<>(productosPorMenuCache.get(menuId));
         }
         
         try {
-            String response = HttpClientUtil.get(ENDPOINT, String.class).getBody();
-            Type listType = new TypeToken<ArrayList<Producto>>() {}.getType();
-            List<Producto> productos = gson.fromJson(response, listType);
+            // Construir la URL para obtener productos por menú
+            String url = String.format("%s/menu/%d", ENDPOINT, menuId);
             
-            // Actualizar cachés
-            allProductosCache = productos;
-            lastCacheUpdate = currentTime;
-            cache.clear();
-            productosPorMenuCache.clear();
+            System.out.println("Solicitando productos desde: " + url);
             
-            for (Producto producto : productos) {
+            // Realizar la petición GET
+            HttpClientUtil.HttpResponseWrapper<String> httpResponse = HttpClientUtil.get(url, String.class);
+            String responseBody = httpResponse.getBody();
+            
+            System.out.println("Respuesta del servidor recibida. Estado: " + httpResponse.getStatusCode());
+            System.out.println("Tamaño de la respuesta: " + (responseBody != null ? responseBody.length() : 0) + " caracteres");
+            
+            // Verificar si la respuesta es exitosa (código 200)
+            if (httpResponse.getStatusCode() != 200) {
+                throw new IOException("Error al obtener productos. Código: " + httpResponse.getStatusCode());
+            }
+            
+            // Verificar si la respuesta está vacía
+            if (responseBody == null || responseBody.trim().isEmpty()) {
+                System.out.println("La respuesta del servidor está vacía");
+                return new ArrayList<>();
+            }
+            
+            // Intentar parsear como array directo
+            try {
+                Type listType = new TypeToken<ArrayList<Producto>>() {}.getType();
+                List<Producto> productos = gson.fromJson(responseBody, listType);
+                
+                if (productos != null) {
+                    System.out.println("Se obtuvieron " + productos.size() + " productos para el menú " + menuId);
+                    
+                    // Actualizar cachés
+                    productosPorMenuCache.put(menuId, new ArrayList<>(productos));
+                    lastCacheUpdate = currentTime;
+                    
+                    // Actualizar caché individual
+                    for (Producto producto : productos) {
+                        if (producto != null && producto.getId() != null) {
+                            cache.put(producto.getId(), producto);
+                        }
+                    }
+                    
+                    return new ArrayList<>(productos);
+                }
+            } catch (com.google.gson.JsonSyntaxException e) {
+                System.out.println("Error al analizar como array directo: " + e.getMessage());
+                
+                // Si falla el parseo como array, intentar como objeto con campo 'data'
+                try {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> responseMap = gson.fromJson(responseBody, Map.class);
+                    
+                    if (responseMap != null) {
+                        System.out.println("Respuesta del servidor (formato objeto): " + responseMap.keySet());
+                        
+                        if (responseMap.containsKey("data")) {
+                            Type listType = new TypeToken<ArrayList<Producto>>() {}.getType();
+                            List<Producto> productos = gson.fromJson(gson.toJson(responseMap.get("data")), listType);
+                            
+                            if (productos != null) {
+                                System.out.println("Se obtuvieron " + productos.size() + " productos desde el campo 'data'");
+                                
+                                // Actualizar cachés
+                                productosPorMenuCache.put(menuId, new ArrayList<>(productos));
+                                lastCacheUpdate = currentTime;
+                                
+                                // Actualizar caché individual
+                                for (Producto producto : productos) {
+                                    if (producto != null && producto.getId() != null) {
+                                        cache.put(producto.getId(), producto);
+                                    }
+                                }
+                                
+                                return new ArrayList<>(productos);
+                            }
+                        } else {
+                            // Si no hay campo 'data', intentar parsear como un solo producto
+                            try {
+                                Producto producto = gson.fromJson(responseBody, Producto.class);
+                                if (producto != null) {
+                                    List<Producto> productos = new ArrayList<>();
+                                    productos.add(producto);
+                                    
+                                    // Actualizar cachés
+                                    productosPorMenuCache.put(menuId, new ArrayList<>(productos));
+                                    lastCacheUpdate = currentTime;
+                                    
+                                    if (producto.getId() != null) {
+                                        cache.put(producto.getId(), producto);
+                                    }
+                                    
+                                    return productos;
+                                }
+                            } catch (Exception e2) {
+                                System.err.println("Error al analizar como objeto único: " + e2.getMessage());
+                            }
+                        }
+                    }
+                } catch (Exception e2) {
+                    System.err.println("Error al analizar la respuesta del servidor: " + e2.getMessage());
+                    throw new IOException("Formato de respuesta del servidor no reconocido", e2);
+                }
+            }
+            
+            // Si llegamos aquí, no se pudo parsear la respuesta de ninguna manera
+            System.err.println("No se pudo interpretar la respuesta del servidor: " + responseBody);
+            return new ArrayList<>();
+            
+        } catch (Exception e) {
+            System.err.println("Error al obtener la lista de productos: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Si hay datos en caché, devolverlos como respaldo
+            if (allProductosCache != null) {
+                System.err.println("Usando datos en caché debido al error");
+                return new ArrayList<>(allProductosCache);
+            }
+            
+            throw new IOException("No se pudo obtener la lista de productos: " + e.getMessage(), e);
+        }
+    }
+    
+    private void updateCaches(List<Producto> productos, long currentTime) {
+        allProductosCache = productos;
+        lastCacheUpdate = currentTime;
+        cache.clear();
+        productosPorMenuCache.clear();
+        
+        for (Producto producto : productos) {
+            if (producto != null) {
                 cache.put(producto.getId(), producto);
                 // Actualizar caché por menú
                 if (producto.getIdMenu() != null) {
@@ -57,11 +240,6 @@ public class ProductoService {
                         .add(producto);
                 }
             }
-            
-            return new ArrayList<>(productos);
-        } catch (Exception e) {
-            System.err.println("Error al obtener la lista de productos: " + e.getMessage());
-            throw new IOException("No se pudo obtener la lista de productos", e);
         }
     }
     
@@ -96,6 +274,60 @@ public class ProductoService {
     }
     
     /**
+     * Obtiene una página de productos con paginación.
+     * @param inicio Índice del primer elemento a recuperar (0-based)
+     * @param cantidad Cantidad de elementos a recuperar
+     * @return Lista de productos para la página solicitada
+     */
+    public List<Producto> obtenerPaginados(int inicio, int cantidad) throws IOException {
+        if (inicio < 0 || cantidad <= 0) {
+            throw new IllegalArgumentException("Parámetros de paginación inválidos");
+        }
+
+        try {
+            // Si tenemos una caché reciente, usarla para la paginación
+            if (allProductosCache != null && !allProductosCache.isEmpty()) {
+                int end = Math.min(inicio + cantidad, allProductosCache.size());
+                if (inicio >= allProductosCache.size()) {
+                    return new ArrayList<>();
+                }
+                return new ArrayList<>(allProductosCache.subList(inicio, end));
+            }
+
+            // Si no hay caché, hacer una petición al servidor
+            Map<String, String> params = new HashMap<>();
+            params.put("inicio", String.valueOf(inicio));
+            params.put("cantidad", String.valueOf(cantidad));
+            
+            String response = HttpClientUtil.getWithParams(ENDPOINT + "/paginados", params, String.class).getBody();
+            Type listType = new TypeToken<ArrayList<Producto>>() {}.getType();
+            return gson.fromJson(response, listType);
+        } catch (Exception e) {
+            System.err.println("Error al obtener productos paginados: " + e.getMessage());
+            throw new IOException("No se pudieron obtener los productos", e);
+        }
+    }
+
+    /**
+     * Obtiene el número total de productos.
+     */
+    public int contarTotal() throws IOException {
+        try {
+            // Si tenemos una caché reciente, usarla
+            if (allProductosCache != null) {
+                return allProductosCache.size();
+            }
+            
+            // Si no, hacer una petición al servidor
+            String response = HttpClientUtil.get(ENDPOINT + "/total", String.class).getBody();
+            return Integer.parseInt(response);
+        } catch (Exception e) {
+            System.err.println("Error al contar productos: " + e.getMessage());
+            throw new IOException("No se pudo obtener el conteo de productos", e);
+        }
+    }
+    
+    /**
      * Obtiene los productos de un menú específico.
      */
     public List<Producto> obtenerPorMenu(Long idMenu) throws IOException {
@@ -109,15 +341,17 @@ public class ProductoService {
         }
         
         try {
-            String response = HttpClientUtil.get(ENDPOINT + "?id_menu=" + idMenu, String.class).getBody();
+            String response = HttpClientUtil.get(ENDPOINT + "/menu/" + idMenu, String.class).getBody();
             Type listType = new TypeToken<ArrayList<Producto>>() {}.getType();
             List<Producto> productos = gson.fromJson(response, listType);
             
             // Actualizar cachés
-            productosPorMenuCache.put(idMenu, new ArrayList<>(productos));
-            productos.forEach(p -> cache.put(p.getId(), p));
+            if (productos != null) {
+                productosPorMenuCache.put(idMenu, new ArrayList<>(productos));
+                productos.forEach(p -> cache.put(p.getId(), p));
+            }
             
-            return new ArrayList<>(productos);
+            return new ArrayList<>(productos != null ? productos : new ArrayList<>());
         } catch (Exception e) {
             System.err.println("Error al obtener productos del menú " + idMenu + ": " + e.getMessage());
             throw new IOException("No se pudieron obtener los productos del menú", e);
@@ -133,9 +367,8 @@ public class ProductoService {
         }
         
         try {
-            String jsonProducto = gson.toJson(producto);
-            String response = HttpClientUtil.post(ENDPOINT, jsonProducto, String.class).getBody();
-            Producto productoCreado = gson.fromJson(response, Producto.class);
+            // No serializamos a JSON manualmente, HttpClientUtil lo hará
+            Producto productoCreado = HttpClientUtil.post(ENDPOINT, producto, Producto.class).getBody();
             
             // Invalidar cachés
             invalidarCache();
@@ -143,7 +376,7 @@ public class ProductoService {
             return productoCreado;
         } catch (Exception e) {
             System.err.println("Error al crear el producto: " + e.getMessage());
-            throw new IOException("No se pudo crear el producto", e);
+            throw new IOException("No se pudo crear el producto: " + e.getMessage(), e);
         }
     }
     
@@ -156,21 +389,64 @@ public class ProductoService {
         }
         
         try {
-            String jsonProducto = gson.toJson(producto);
-            HttpClientUtil.HttpResponseWrapper<String> response = 
-                HttpClientUtil.put(ENDPOINT + "/" + producto.getId(), jsonProducto, String.class);
+            // No serializamos a JSON manualmente
+            HttpClientUtil.HttpResponseWrapper<Producto> response = 
+                HttpClientUtil.put(ENDPOINT + "/" + producto.getId(), producto, Producto.class);
             
-            // Invalidar cachés
-            cache.remove(producto.getId());
-            if (producto.getIdMenu() != null) {
-                productosPorMenuCache.remove(producto.getIdMenu());
+            // Actualizar cachés
+            if (response.getStatusCode() == 200 || response.getStatusCode() == 204) {
+                cache.remove(producto.getId());
+                if (producto.getIdMenu() != null) {
+                    productosPorMenuCache.remove(producto.getIdMenu());
+                }
+                allProductosCache = null;
+                return true;
             }
-            allProductosCache = null;
+            return false;
+        } catch (Exception e) {
+            System.err.println("Error al actualizar el producto: " + e.getMessage());
+            throw new IOException("No se pudo actualizar el producto: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Sube una imagen para un producto.
+     * @param productoId ID del producto
+     * @param imagen Archivo de imagen a subir
+     * @param descripcion Descripción de la imagen
+     * @return true si la operación fue exitosa
+     */
+    public boolean subirImagen(Long productoId, File imagen, String descripcion) throws IOException {
+        if (productoId == null || imagen == null || !imagen.exists()) {
+            throw new IllegalArgumentException("Datos de imagen no válidos");
+        }
+        
+        try {
+            // Crear un mapa para los parámetros de la solicitud
+            Map<String, Object> params = new HashMap<>();
+            params.put("file", imagen);
+            
+            // Crear un mapa para los headers
+            Map<String, String> headers = new HashMap<>();
+            headers.put("description", descripcion != null ? descripcion : "");
+            
+            // Realizar la petición POST con el archivo
+            HttpClientUtil.HttpResponseWrapper<String> response = 
+                HttpClientUtil.uploadFile(
+                    ENDPOINT + "/" + productoId + "/imagen", 
+                    "file", 
+                    imagen, 
+                    headers, 
+                    String.class
+                );
+            
+            // Invalidar caché del producto
+            cache.remove(productoId);
             
             return response.getStatusCode() == 200 || response.getStatusCode() == 204;
         } catch (Exception e) {
-            System.err.println("Error al actualizar el producto: " + e.getMessage());
-            throw new IOException("No se pudo actualizar el producto", e);
+            System.err.println("Error al subir la imagen: " + e.getMessage());
+            throw new IOException("No se pudo subir la imagen: " + e.getMessage(), e);
         }
     }
     
@@ -190,12 +466,14 @@ public class ProductoService {
                 HttpClientUtil.delete(ENDPOINT + "/" + id, String.class);
             
             // Actualizar cachés
-            if (producto != null) {
-                cache.remove(id);
-                if (producto.getIdMenu() != null) {
-                    List<Producto> productosDelMenu = productosPorMenuCache.get(producto.getIdMenu());
-                    if (productosDelMenu != null) {
-                        productosDelMenu.removeIf(p -> p.getId().equals(id));
+            if (response.getStatusCode() == 200 || response.getStatusCode() == 204) {
+                if (producto != null) {
+                    cache.remove(id);
+                    if (producto.getIdMenu() != null) {
+                        List<Producto> productosDelMenu = productosPorMenuCache.get(producto.getIdMenu());
+                        if (productosDelMenu != null) {
+                            productosDelMenu.removeIf(p -> p.getId().equals(id));
+                        }
                     }
                 }
                 allProductosCache = null;
@@ -210,6 +488,9 @@ public class ProductoService {
     
     /**
      * Sube una imagen para un producto.
+     * @param imagen Archivo de imagen a subir
+     * @return URL de la imagen subida o null si falla
+     * @throws IOException Si hay un error al subir la imagen
      */
     public String subirImagen(File imagen) throws IOException {
         if (imagen == null || !imagen.exists()) {
@@ -217,10 +498,17 @@ public class ProductoService {
         }
         
         try {
+            // Usar el endpoint de la API para subir imágenes
+            String endpoint = "upload"; // Este será relativo a la URL base de la API
             Map<String, String> formFields = new HashMap<>();
+            
+            // Agregar descripción vacía para mantener compatibilidad
+            formFields.put("description", "");
+            
+            // Usar el método de subida de archivos con el endpoint correcto
             HttpResponseWrapper<ImagenResponse> response = HttpClientUtil.uploadFile(
-                UPLOAD_ENDPOINT, 
-                "image", 
+                endpoint, 
+                "file", 
                 imagen, 
                 formFields, 
                 ImagenResponse.class
@@ -230,7 +518,7 @@ public class ProductoService {
             return imagenResponse != null ? imagenResponse.getUrl() : null;
         } catch (Exception e) {
             System.err.println("Error al subir la imagen: " + e.getMessage());
-            throw new IOException("No se pudo subir la imagen", e);
+            throw new IOException("No se pudo subir la imagen: " + e.getMessage(), e);
         }
     }
     
@@ -243,15 +531,15 @@ public class ProductoService {
         }
         
         try {
-            // Este endpoint debería ser implementado en el backend
-            String endpoint = String.format("%s/delete-image?public_id=%s", ENDPOINT, publicId);
+            // Construir el endpoint correctamente sin duplicar /api
+            String endpoint = String.format("upload/delete?public_id=%s", publicId);
             HttpClientUtil.HttpResponseWrapper<String> response = 
                 HttpClientUtil.delete(endpoint, String.class);
                 
             return response.getStatusCode() == 200;
         } catch (Exception e) {
             System.err.println("Error al eliminar la imagen: " + e.getMessage());
-            throw new IOException("No se pudo eliminar la imagen", e);
+            throw new IOException("No se pudo eliminar la imagen: " + e.getMessage(), e);
         }
     }
     

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.UsuarioLocalCardController" spacing="10" styleClass="local-card" stylesheets="@../../styles/locales.css">
+    <ImageView fx:id="imagenLocal" fitHeight="150" fitWidth="200" preserveRatio="true"/>
+    <Label fx:id="nombreLabel" style="-fx-font-weight: bold;"/>
+    <Label fx:id="descripcionLabel"/>
+    <Button text="Ver productos" onAction="#verProductos"/>
+</VBox>

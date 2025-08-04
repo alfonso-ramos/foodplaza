@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="asedi.controllers.gerencia.ProductoController"
+            stylesheets="@/styles/adminDashboard/adminDashboard.css">
+    
+    <top>
+        <VBox style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+            <HBox style="-fx-padding: 20;" spacing="10">
+                <VBox alignment="CENTER_LEFT" spacing="5">
+                    <Label text="Gestión de Productos" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                    <Label text="Administra los productos del menú" style="-fx-text-fill: #666666;"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Nuevo Producto" onAction="#nuevoProducto" style="-fx-background-color: #00D561; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16;">
+                    <graphic>
+                        <Text style="-fx-font-family: 'Arial'; -fx-font-size: 16;" text="+"/>
+                    </graphic>
+                </Button>
+            </HBox>
+            
+            <!-- Filtros -->
+            <HBox style="-fx-padding: 0 20 20 20;" spacing="15">
+                <TextField fx:id="txtBuscar" promptText="Buscar productos..." style="-fx-pref-width: 300; -fx-padding: 8 12; -fx-background-radius: 5; -fx-border-radius: 5;">
+                    <padding>
+                        <Insets top="5" right="5" bottom="5" left="5"/>
+                    </padding>
+                </TextField>
+                
+                <ComboBox fx:id="cmbFiltroCategoria" promptText="Todas las categorías" style="-fx-pref-width: 200; -fx-padding: 5;">
+                    <padding>
+                        <Insets top="5" right="5" bottom="5" left="5"/>
+                    </padding>
+                </ComboBox>
+                
+                <ComboBox fx:id="cmbFiltroDisponibilidad" style="-fx-pref-width: 180; -fx-padding: 5;">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Todos"/>
+                            <String fx:value="Disponibles"/>
+                            <String fx:value="No disponibles"/>
+                        </FXCollections>
+                    </items>
+                    <value>
+                        <String>Disponibles</String>
+                    </value>
+                </ComboBox>
+                
+                <Button text="Aplicar Filtros" onAction="#buscarProductos" style="-fx-background-color: #4A90E2; -fx-text-fill: white; -fx-font-weight: bold;">
+                    <graphic>
+                        <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/icons/filter.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <VBox style="-fx-padding: 20;" spacing="20">
+            <!-- Tarjetas de productos -->
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 0 10 20 10;">
+                <GridPane fx:id="gridProductos" hgap="20" vgap="20" style="-fx-padding: 10;">
+                    <padding>
+                        <Insets bottom="20"/>
+                    </padding>
+                </GridPane>
+            </ScrollPane>
+            
+            <!-- Indicador de carga -->
+            <StackPane fx:id="loadingPane" visible="false" alignment="CENTER" style="-fx-padding: 40;">
+                <ProgressIndicator fx:id="loadingIndicator" progress="-1" style="-fx-pref-width: 50; -fx-pref-height: 50;"/>
+            </StackPane>
+            
+            <!-- Mensaje cuando no hay productos -->
+            <VBox fx:id="sinProductosPane" alignment="CENTER" visible="false" style="-fx-padding: 40; -fx-spacing: 20;">
+                <ImageView fitWidth="80" fitHeight="80" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/icons/no-products.png"/>
+                    </image>
+                </ImageView>
+                <Label text="No se encontraron productos" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
+                <Button text="Crear Nuevo Producto" onAction="#nuevoProducto" style="-fx-background-color: #00D561; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16;">
+                    <graphic>
+                        <Text style="-fx-font-family: 'Arial'; -fx-font-size: 16;" text="+"/>
+                    </graphic>
+                </Button>
+            </VBox>
+            
+            <!-- Controles de paginación -->
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="Anterior" onAction="#paginaAnterior"/>
+                    <Label text="Página 1"/>
+                    <Button text="Siguiente" onAction="#paginaSiguiente"/>
+                </HBox>
+            </VBox>
+            
+            <!-- Panel derecho: Vista previa -->
+            <VBox style="-fx-padding: 20; -fx-alignment: TOP_CENTER;" spacing="20">
+                <Label text="Vista Previa" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <ImageView fx:id="imgPreview" fitWidth="250" fitHeight="250" preserveRatio="true" smooth="true">
+                    <image>
+                        <Image url="@../images/placeholder.png"/>
+                    </image>
+                </ImageView>
+                <VBox style="-fx-padding: 10; -fx-background-color: #f9f9f9; -fx-background-radius: 5;" spacing="5">
+                    <Label text="Nombre:" style="-fx-font-weight: bold;">
+                        <labelFor/>
+                        <Label fx:id="lblNombre" style="-fx-font-weight: normal;"/>
+                    </Label>
+                    <Label text="Descripción:" style="-fx-font-weight: bold;">
+                        <labelFor/>
+                        <Label fx:id="lblDescripcion" wrapText="true" style="-fx-font-weight: normal;"/>
+                    </Label>
+                    <Label text="Precio:" style="-fx-font-weight: bold;">
+                        <labelFor/>
+                        <Label fx:id="lblPrecio" style="-fx-font-weight: normal;"/>
+                    </Label>
+                    <Label text="Categoría:" style="-fx-font-weight: bold;">
+                        <labelFor/>
+                        <Label fx:id="lblCategoria" style="-fx-font-weight: normal;"/>
+                    </Label>
+                    <Label text="Disponible:" style="-fx-font-weight: bold;">
+                        <labelFor/>
+                        <Label fx:id="lblDisponible" style="-fx-font-weight: normal;"/>
+                    </Label>
+                </VBox>
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="Editar" onAction="#editarSeleccionado" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                    <Button text="Eliminar" onAction="#eliminarSeleccionado" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+                </HBox>
+            </VBox>
+        </SplitPane>
+    </center>
+    
+</BorderPane>

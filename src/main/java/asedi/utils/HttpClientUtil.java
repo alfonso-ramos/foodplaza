@@ -57,6 +57,49 @@ public class HttpClientUtil {
                 .build();
     }
     
+    /**
+     * Realiza una petición GET con parámetros de consulta a la API.
+     * @param endpoint El endpoint de la API (sin la URL base)
+     * @param params Mapa de parámetros de consulta (clave-valor)
+     * @param responseType La clase del tipo de respuesta esperada
+     * @param <T> El tipo de la respuesta
+     * @return Un HttpResponseWrapper con la respuesta
+     * @throws IOException Si hay un error en la comunicación
+     */
+    public static <T> HttpResponseWrapper<T> getWithParams(String endpoint, Map<String, String> params, Class<T> responseType) throws IOException {
+        if (params == null || params.isEmpty()) {
+            return get(endpoint, responseType);
+        }
+        
+        // Construir la cadena de consulta
+        StringBuilder queryString = new StringBuilder();
+        boolean first = true;
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            if (entry.getKey() != null && entry.getValue() != null) {
+                if (first) {
+                    queryString.append("?");
+                    first = false;
+                } else {
+                    queryString.append("&");
+                }
+                queryString.append(entry.getKey())
+                         .append("=")
+                         .append(java.net.URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
+            }
+        }
+        
+        // Llamar al método get normal con el endpoint completo
+        return get(endpoint + queryString.toString(), responseType);
+    }
+    
+    /**
+     * Realiza una petición GET a la API.
+     * @param endpoint El endpoint de la API (sin la URL base)
+     * @param responseType La clase del tipo de respuesta esperada
+     * @param <T> El tipo de la respuesta
+     * @return Un HttpResponseWrapper con la respuesta
+     * @throws IOException Si hay un error en la comunicación
+     */
     public static <T> HttpResponseWrapper<T> get(String endpoint, Class<T> responseType) throws IOException {
         CloseableHttpClient client = createHttpClient();
         try {
@@ -101,11 +144,21 @@ public class HttpClientUtil {
     }
     
     /**
-     * Realiza una petición POST a la API.
      * @param endpoint El endpoint de la API (sin la URL base)
      * @param requestBody El cuerpo de la petición
      * @param responseType La clase del tipo de respuesta esperada
      * @param <T> El tipo de la respuesta
+     * @return Un HttpResponseWrapper con la respuesta
+     * @throws IOException Si hay un error en la comunicación
+     */
+    /**
+     * Sube un archivo a través de una petición multipart/form-data
+     * @param <T> El tipo de la respuesta
+     * @param endpoint El endpoint de la API (sin la URL base)
+     * @param fileFieldName Nombre del campo del archivo en el formulario
+     * @param file Archivo a subir
+     * @param formFields Mapa de campos adicionales del formulario
+     * @param responseType Clase del tipo de respuesta esperada
      * @return Un HttpResponseWrapper con la respuesta
      * @throws IOException Si hay un error en la comunicación
      */

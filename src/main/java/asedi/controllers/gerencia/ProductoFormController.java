@@ -1,18 +1,24 @@
 package asedi.controllers.gerencia;
 
 import asedi.model.Producto;
+import asedi.services.ProductoService;
 import asedi.utils.AlertUtils;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.event.ActionEvent;
 
 import java.io.File;
+import java.io.IOException;
+
 
 public class ProductoFormController {
     @FXML private TextField txtNombre;
@@ -21,10 +27,16 @@ public class ProductoFormController {
     @FXML private ComboBox<String> cmbCategoria;
     @FXML private CheckBox chkDisponible;
     @FXML private ImageView imgPreview;
+    @FXML private Text txtTitulo;
     
     private Producto producto;
-    private boolean guardado = false;
+    private ProductoService productoService;
     private File archivoImagen;
+    private final BooleanProperty formularioValido = new SimpleBooleanProperty(false);
+    
+    public void setProductoService(ProductoService productoService) {
+        this.productoService = productoService;
+    }
     
     @FXML
     public void initialize() {
@@ -38,12 +50,23 @@ public class ProductoFormController {
             if (!newValue.matches("\\d*\\.?\\d*")) {
                 txtPrecio.setText(oldValue);
             }
+            actualizarValidezFormulario();
         });
+        
+        // Agregar listeners a los campos para validar el formulario
+        txtNombre.textProperty().addListener((_, _, _) -> actualizarValidezFormulario());
+        cmbCategoria.valueProperty().addListener((_, _, _) -> actualizarValidezFormulario());
     }
     
     public void setProducto(Producto producto) {
         this.producto = producto;
-        if (producto != null) {
+        
+        // Establecer el título del formulario
+        if (producto == null || producto.getId() == null) {
+            txtTitulo.setText("Nuevo Producto");
+            this.producto = new Producto();
+        } else {
+            txtTitulo.setText("Editar Producto");
             // Cargar los datos del producto en el formulario
             txtNombre.setText(producto.getNombre());
             txtDescripcion.setText(producto.getDescripcion());
@@ -85,7 +108,43 @@ public class ProductoFormController {
         return producto;
     }
     
+    private void actualizarValidezFormulario() {
+        boolean valido = true;
+        
+        if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
+            valido = false;
+        }
+        
+        if (cmbCategoria.getValue() == null || cmbCategoria.getValue().isEmpty()) {
+            valido = false;
+        }
+        
+        try {
+            if (txtPrecio.getText() == null || txtPrecio.getText().trim().isEmpty()) {
+                valido = false;
+            } else {
+                Double.parseDouble(txtPrecio.getText());
+            }
+        } catch (NumberFormatException e) {
+            valido = false;
+        }
+        
+        formularioValido.set(valido);
+    }
+    
+    public BooleanProperty getFormularioValidoProperty() {
+        return formularioValido;
+    }
+    
     public boolean validarFormulario() {
+        actualizarValidezFormulario();
+        
+        if (!formularioValido.get()) {
+            AlertUtils.mostrarError("Error de validación", 
+                "Por favor complete todos los campos obligatorios correctamente.");
+            return false;
+        }
+        
         StringBuilder errores = new StringBuilder();
         
         if (txtNombre.getText().trim().isEmpty()) {
@@ -132,13 +191,8 @@ public class ProductoFormController {
         if (archivoImagen != null) {
             try {
                 // Cargar la imagen para previsualización
-                Image imagen = new Image(archivoImagen.toURI().toString());
+                Image imagen = new Image(archivoImagen.toURI().toString(), 150, 150, true, true);
                 imgPreview.setImage(imagen);
-                
-                // Aquí podrías subir la imagen al servidor si es necesario
-                // y guardar la URL en el producto
-                // producto.setImagenUrl(urlDeLaImagenSubida);
-                
             } catch (Exception e) {
                 AlertUtils.mostrarError("Error", "No se pudo cargar la imagen: " + e.getMessage());
             }
@@ -156,24 +210,79 @@ public class ProductoFormController {
     }
     
     public boolean isGuardado() {
-        return guardado;
+        return producto != null && producto.getId() != null;
     }
     
     @FXML
-    private void guardar() {
+    public void guardar() {
         if (validarFormulario()) {
-            guardado = true;
-            // Cerrar el diálogo
-            Stage stage = (Stage) txtNombre.getScene().getWindow();
-            stage.close();
+            try {
+                // Obtener los datos del formulario
+                Producto producto = getProducto();
+                
+                // Subir imagen si se seleccionó una
+                if (archivoImagen != null) {
+                    try {
+                        String urlImagen = productoService.subirImagen(archivoImagen);
+                        producto.setImagenUrl(urlImagen);
+                    } catch (IOException e) {
+                        AlertUtils.mostrarError("Error", "No se pudo subir la imagen: " + e.getMessage());
+                        return;
+                    }
+                }
+                
+                // Guardar el producto
+                if (producto.getId() == null) {
+                    // Crear nuevo producto
+                    productoService.crear(producto);
+                } else {
+                    // Actualizar producto existente
+                    productoService.actualizar(producto);
+                }
+                
+                // Cerrar el diálogo
+                Stage stage = (Stage) txtNombre.getScene().getWindow();
+                stage.close();
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                AlertUtils.mostrarError("Error", "No se pudo guardar el producto: " + e.getMessage());
+            }
         }
     }
     
     @FXML
     private void cancelar() {
-        guardado = false;
-        // Cerrar el diálogo
-        Stage stage = (Stage) txtNombre.getScene().getWindow();
-        stage.close();
+        // Mostrar confirmación si hay cambios sin guardar
+        if (hayCambiosSinGuardar()) {
+            boolean confirmado = AlertUtils.mostrarConfirmacion(
+                "Confirmar cancelación",
+                "¿Está seguro de que desea salir? Se perderán los cambios no guardados."
+            );
+            
+            if (confirmado) {
+                // Cerrar el diálogo
+                Stage stage = (Stage) txtNombre.getScene().getWindow();
+                stage.close();
+            }
+        } else {
+            // Cerrar el diálogo directamente si no hay cambios
+            Stage stage = (Stage) txtNombre.getScene().getWindow();
+            stage.close();
+        }
+    }
+    
+    private boolean hayCambiosSinGuardar() {
+        // Verificar si hay cambios en los campos del formulario
+        if (producto == null) return false;
+        
+        boolean nombreCambiado = !txtNombre.getText().equals(producto.getNombre() != null ? producto.getNombre() : "");
+        boolean descripcionCambiada = !txtDescripcion.getText().equals(producto.getDescripcion() != null ? producto.getDescripcion() : "");
+        boolean precioCambiado = !txtPrecio.getText().equals(String.valueOf(producto.getPrecio() != null ? producto.getPrecio() : ""));
+        boolean categoriaCambiada = !cmbCategoria.getValue().equals(producto.getCategoria() != null ? producto.getCategoria() : "");
+        boolean disponibleCambiado = chkDisponible.isSelected() != (producto.getDisponible() != null && producto.getDisponible());
+        
+        return nombreCambiado || descripcionCambiada || precioCambiado || categoriaCambiada || 
+               disponibleCambiado || archivoImagen != null;
     }
 }

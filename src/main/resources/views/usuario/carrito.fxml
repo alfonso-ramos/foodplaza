@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.CarritoController" spacing="10" style="-fx-padding: 10;">
+    <Label text="Carrito de Compras" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <ScrollPane fitToWidth="true" fitToHeight="true">
+        <VBox fx:id="carritoContainer" spacing="10" style="-fx-padding: 10;"/>
+    </ScrollPane>
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Label fx:id="totalLabel"/>
+        <Button text="Realizar Pedido" onAction="#realizarPedido"/>
+    </HBox>
+</VBox>

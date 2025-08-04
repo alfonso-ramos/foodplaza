@@ -84,24 +84,43 @@ public class MenuProductosController implements Initializable {
     
     private void cargarDatos() {
         if (menu != null) {
-            // Cargar los productos del menú
-            productos.setAll(menu.getProductos());
-            tblProductos.setItems(productos);
-            
-            // Configurar el estado del checkbox de disponibilidad
-            chkDisponible.setSelected(menu.isDisponible());
-            
-            // Actualizar el estado del botón de quitar producto
-            btnQuitar.setDisable(!menu.tieneProductos());
+            try {
+                // Cargar los productos del menú usando el servicio
+                List<Producto> productosMenu = productoService.obtenerTodos(menu.getId());
+                productos.setAll(productosMenu);
+                tblProductos.setItems(productos);
+                
+                // Configurar el estado del checkbox de disponibilidad
+                chkDisponible.setSelected(menu.isDisponible());
+                
+                // Actualizar el estado del botón de quitar producto
+                btnQuitar.setDisable(productos.isEmpty());
+                
+                System.out.println("Se cargaron " + productosMenu.size() + " productos para el menú " + menu.getNombre());
+            } catch (Exception e) {
+                System.err.println("Error al cargar los productos del menú: " + e.getMessage());
+                e.printStackTrace();
+                mostrarError("Error", "No se pudieron cargar los productos del menú: " + e.getMessage());
+                productos.clear();
+            }
         }
     }
     
     @FXML
     private void agregarProducto() {
         try {
-            // Obtener productos que aún no están en el menú
-            List<Producto> productosDisponibles = productoService.obtenerTodos()
-                .stream()
+            // Obtener todos los productos del sistema
+            // Nota: Necesitamos un método en el servicio para obtener todos los productos
+            // independientemente del menú
+            List<Producto> todosLosProductos = productoService.obtenerTodosLosProductos();
+            
+            if (todosLosProductos == null || todosLosProductos.isEmpty()) {
+                mostrarMensaje("Información", "No hay productos disponibles en el sistema.");
+                return;
+            }
+            
+            // Filtrar los productos que ya están en el menú
+            List<Producto> productosDisponibles = todosLosProductos.stream()
                 .filter(p -> !menu.contieneProducto(p.getId()))
                 .collect(Collectors.toList());
                 

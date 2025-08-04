@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.UsuarioProductoCardController" spacing="10" styleClass="producto-card" stylesheets="@../../styles/productos/producto-card.css">
+    <ImageView fx:id="imagenProducto" fitHeight="100" fitWidth="100" preserveRatio="true"/>
+    <VBox spacing="5">
+        <Label fx:id="nombreLabel" style="-fx-font-weight: bold;"/>
+        <Label fx:id="descripcionLabel"/>
+        <Label fx:id="precioLabel"/>
+    </VBox>
+    <Button text="Agregar al carrito" onAction="#agregarAlCarrito"/>
+</HBox>

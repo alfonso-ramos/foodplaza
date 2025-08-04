@@ -2,18 +2,22 @@ package asedi.controllers;
 
 import asedi.model.Usuario;
 import asedi.services.AuthService;
+import asedi.controllers.gerencia.ProductoControllerFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import java.util.function.Function;
 
 import java.io.IOException;
 
 public class GerenteDashboardController {
     @FXML private Label userNameLabel;
     @FXML private StackPane contenidoPane;
+    
+    private ProductoControllerFactory productoControllerFactory;
 
     @FXML
     public void initialize() {
@@ -81,7 +85,20 @@ public class GerenteDashboardController {
 
     @FXML
     public void cargarProductos() {
-        cargarVista("gerencia/productos/listado_productos");
+        // Inicializar la fábrica de controladores si no está inicializada
+        if (productoControllerFactory == null) {
+            productoControllerFactory = new ProductoControllerFactory(menuId -> {
+                // Este callback se ejecutará cuando se establezca el ID del menú
+                System.out.println("Menú seleccionado: " + menuId);
+                return null;
+            });
+        }
+        
+        // Cargar la vista con la fábrica de controladores
+        cargarVista("gerencia/productos/listado_productos", loader -> {
+            loader.setControllerFactory(productoControllerFactory);
+            return null;
+        });
     }
 
     @FXML
@@ -115,6 +132,10 @@ public class GerenteDashboardController {
     }
 
     private void cargarVista(String vista) {
+        cargarVista(vista, null);
+    }
+    
+    private void cargarVista(String vista, Function<FXMLLoader, Void> configuracionLoader) {
         try {
             // Limpiar el contenido actual
             contenidoPane.getChildren().clear();
@@ -122,6 +143,12 @@ public class GerenteDashboardController {
             // Cargar la vista FXML
             String rutaFxml = "/views/" + vista + ".fxml";
             FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFxml));
+            
+            // Aplicar configuración personalizada al loader si se proporciona
+            if (configuracionLoader != null) {
+                configuracionLoader.apply(loader);
+            }
+            
             Parent vistaCargada = loader.load();
             
             // Agregar la vista al panel de contenido
