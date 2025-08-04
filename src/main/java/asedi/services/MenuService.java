@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class MenuService {
-    private static final String ENDPOINT = "menus";
+    private static final String BASE_ENDPOINT = "menus";
     private final Gson gson = new Gson();
     
     // Simple in-memory cache
@@ -37,26 +38,24 @@ public class MenuService {
      * @throws IOException Si hay un error de conexión
      */
     public List<Menu> obtenerPorLocal(Long idLocal) throws IOException {
-        long currentTime = System.currentTimeMillis();
-        
-        // Si se solicita un local específico, verificar la caché
-        if (idLocal != null && allMenusCache != null && (currentTime - lastCacheUpdate) < CACHE_DURATION_MS) {
-            List<Menu> filteredMenus = new ArrayList<>();
-            for (Menu menu : allMenusCache) {
-                if (menu != null && menu.getIdLocal() != null && menu.getIdLocal().equals(idLocal)) {
-                    filteredMenus.add(menu);
-                }
+        // Verificar caché primero
+        if (allMenusCache != null && (System.currentTimeMillis() - lastCacheUpdate) < CACHE_DURATION_MS) {
+            if (idLocal == null) {
+                return new ArrayList<>(allMenusCache);
             }
-            if (!filteredMenus.isEmpty()) {
-                return new ArrayList<>(filteredMenus);
-            }
+            return allMenusCache.stream()
+                    .filter(menu -> menu.getIdLocal() != null && menu.getIdLocal().equals(idLocal))
+                    .collect(Collectors.toList());
         }
         
         try {
-            // Construir la URL con el formato correcto: menus/local/{local_id}
-            String url = ENDPOINT;
+            // Construir la URL con el formato correcto: /api/menus/local/{local_id}
+            String url;
             if (idLocal != null) {
-                url = String.format("%s/local/%d", ENDPOINT, idLocal);
+                url = String.format("menus/local/%d", idLocal);
+            } else {
+                // Si no hay ID de local, obtener todos los menús
+                url = BASE_ENDPOINT;
             }
             
             System.out.println("Solicitando menús desde: " + url);
@@ -79,6 +78,8 @@ public class MenuService {
                 System.out.println("La respuesta del servidor está vacía");
                 return new ArrayList<>();
             }
+            
+            long currentTime = System.currentTimeMillis();
             
             // Intentar parsear la respuesta como un array de menús
             try {
@@ -153,11 +154,22 @@ public class MenuService {
         }
         
         try {
-            String response = HttpClientUtil.get(ENDPOINT + "/" + id, String.class).getBody();
-            return gson.fromJson(response, Menu.class);
+            String url = String.format("%s/%d", BASE_ENDPOINT, id);
+            HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.get(url, String.class);
+            
+            if (response.getStatusCode() == 200) {
+                Menu menu = gson.fromJson(response.getBody(), Menu.class);
+                if (menu != null) {
+                    cache.put(menu.getId(), menu);
+                }
+                return menu;
+            } else if (response.getStatusCode() == 404) {
+                return null; // Menú no encontrado
+            } else {
+                throw new IOException("Error al obtener el menú. Código: " + response.getStatusCode());
+            }
         } catch (Exception e) {
-            System.err.println("Error al obtener el menú con ID " + id + ": " + e.getMessage());
-            throw new IOException("No se pudo obtener el menú", e);
+            throw new IOException("Error al obtener el menú: " + e.getMessage(), e);
         }
     }
     
@@ -181,21 +193,25 @@ public class MenuService {
         }
         
         try {
-            // Pass the Menu object directly - HttpClientUtil will handle the JSON serialization
-            Menu menuCreado = HttpClientUtil.post(ENDPOINT, menu, Menu.class).getBody();
+            String url = BASE_ENDPOINT;
+            String json = gson.toJson(menu);
+            HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.post(url, json, String.class);
             
-            // Update cache
-            if (menuCreado != null) {
-                cache.put(menuCreado.getId(), menuCreado);
-                if (allMenusCache != null) {
-                    allMenusCache.add(menuCreado);
+            if (response.getStatusCode() == 201) {
+                Menu menuCreado = gson.fromJson(response.getBody(), Menu.class);
+                if (menuCreado != null) {
+                    // Actualizar caché
+                    if (allMenusCache != null) {
+                        allMenusCache.add(menuCreado);
+                    }
+                    cache.put(menuCreado.getId(), menuCreado);
                 }
+                return menuCreado;
+            } else {
+                throw new IOException("Error al crear el menú. Código: " + response.getStatusCode());
             }
-            
-            return menuCreado;
         } catch (Exception e) {
-            System.err.println("Error al crear el menú: " + e.getMessage());
-            throw new IOException("No se pudo crear el menú: " + e.getMessage(), e);
+            throw new IOException("Error al crear el menú: " + e.getMessage(), e);
         }
     }
     
@@ -219,22 +235,23 @@ public class MenuService {
         }
         
         try {
-            // Pasar el objeto Menu directamente - HttpClientUtil manejará la serialización JSON
-            Menu menuActualizado = HttpClientUtil.put(ENDPOINT + "/" + menu.getId(), menu, Menu.class).getBody();
+            String url = String.format("%s/%d", BASE_ENDPOINT, menu.getId());
+            String json = gson.toJson(menu);
+            HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.put(url, json, String.class);
             
-            // Actualizar caché
-            if (menuActualizado != null) {
-                cache.put(menuActualizado.getId(), menuActualizado);
+            if (response.getStatusCode() == 200) {
+                // Actualizar caché
+                cache.put(menu.getId(), menu);
                 if (allMenusCache != null) {
-                    allMenusCache.removeIf(m -> m.getId().equals(menuActualizado.getId()));
-                    allMenusCache.add(menuActualizado);
+                    allMenusCache.removeIf(m -> m.getId().equals(menu.getId()));
+                    allMenusCache.add(menu);
                 }
                 return true;
+            } else {
+                throw new IOException("Error al actualizar el menú. Código: " + response.getStatusCode());
             }
-            return false;
         } catch (Exception e) {
-            System.err.println("Error al actualizar el menú " + menu.getId() + ": " + e.getMessage());
-            throw new IOException("No se pudo actualizar el menú", e);
+            throw new IOException("Error al actualizar el menú: " + e.getMessage(), e);
         }
     }
     
@@ -251,7 +268,7 @@ public class MenuService {
         
         try {
             HttpClientUtil.HttpResponseWrapper<String> response = 
-                HttpClientUtil.delete(ENDPOINT + "/" + id, String.class);
+                HttpClientUtil.delete(String.format("%s/%d", BASE_ENDPOINT, id), String.class);
             
             // Invalidate caches
             cache.remove(id);
@@ -278,9 +295,20 @@ public class MenuService {
      */
     public boolean agregarProductoAMenu(Long idMenu, Long idProducto) throws IOException {
         try {
-            String url = String.format("%s/%d/productos/%d", ENDPOINT, idMenu, idProducto);
-            HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.post(url, "", String.class);
-            return response.getStatusCode() == 200 || response.getStatusCode() == 204;
+            // Primero obtenemos el producto
+            String getProductoUrl = String.format("productos/%d", idProducto);
+            HttpClientUtil.HttpResponseWrapper<String> getResponse = HttpClientUtil.get(getProductoUrl, String.class);
+            
+            if (getResponse.getStatusCode() == 200) {
+                // Actualizamos el producto con el id_menu
+                String updateUrl = String.format("productos/%d", idProducto);
+                String requestBody = String.format("{\"id_menu\":%d}", idMenu);
+                HttpClientUtil.HttpResponseWrapper<String> updateResponse = 
+                    HttpClientUtil.put(updateUrl, requestBody, String.class);
+                    
+                return updateResponse.getStatusCode() == 200 || updateResponse.getStatusCode() == 204;
+            }
+            return false;
         } catch (Exception e) {
             System.err.println("Error al agregar producto al menú: " + e.getMessage());
             throw new IOException("No se pudo agregar el producto al menú", e);
@@ -296,8 +324,12 @@ public class MenuService {
      */
     public boolean eliminarProductoDeMenu(Long idMenu, Long idProducto) throws IOException {
         try {
-            String url = String.format("%s/%d/productos/%d", ENDPOINT, idMenu, idProducto);
-            HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.delete(url, String.class);
+            // Actualizamos el producto estableciendo id_menu a null
+            String updateUrl = String.format("productos/%d", idProducto);
+            String requestBody = "{\"id_menu\":null}";
+            HttpClientUtil.HttpResponseWrapper<String> response = 
+                HttpClientUtil.put(updateUrl, requestBody, String.class);
+                
             return response.getStatusCode() == 200 || response.getStatusCode() == 204;
         } catch (Exception e) {
             System.err.println("Error al eliminar producto del menú: " + e.getMessage());
@@ -314,7 +346,7 @@ public class MenuService {
      */
     public boolean actualizarDisponibilidad(Long idMenu, boolean disponible) throws IOException {
         try {
-            String url = String.format("%s/%d/disponibilidad", ENDPOINT, idMenu);
+            String url = String.format("%s/%d/disponibilidad", BASE_ENDPOINT, idMenu);
             String body = String.format("{\"disponible\":%b}", disponible);
             HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.put(url, body, String.class);
             return response.getStatusCode() == 200 || response.getStatusCode() == 204;

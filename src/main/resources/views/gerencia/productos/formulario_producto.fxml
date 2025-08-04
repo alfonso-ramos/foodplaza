@@ -55,13 +55,12 @@
             <Label text="Precio:" GridPane.columnIndex="0" GridPane.rowIndex="3" 
                    style="-fx-font-weight: bold;"/>
             <HBox GridPane.columnIndex="1" GridPane.rowIndex="3" spacing="5">
-                <TextField fx:id="txtPrecio" promptText="0.00" 
-                         styleClass="precio-input">
+                <TextField fx:id="txtPrecio" promptText="0.00">
                     <GridPane.margin>
                         <Insets right="5"/>
                     </GridPane.margin>
                 </TextField>
-                <Label text="$" styleClass="precio-simbolo"/>
+                <Label text="$" style="-fx-text-fill: #666; -fx-font-weight: bold;"/>
             </HBox>
             
             <Label text="Categoría:" GridPane.columnIndex="0" GridPane.rowIndex="4" 

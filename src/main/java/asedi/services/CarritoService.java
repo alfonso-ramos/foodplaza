@@ -24,10 +24,18 @@ public class CarritoService {
     }
 
     public List<Producto> getProductos() {
-        return productos;
+        return new ArrayList<>(productos);
+    }
+
+    public void removerProducto(Producto producto) {
+        productos.remove(producto);
     }
 
     public void limpiarCarrito() {
         productos.clear();
+    }
+
+    public double getTotal() {
+        return productos.stream().mapToDouble(Producto::getPrecio).sum();
     }
 }

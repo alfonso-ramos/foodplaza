@@ -1,5 +1,6 @@
 package asedi.controllers;
 
+import asedi.model.Local;
 import asedi.model.Plaza;
 import asedi.services.AuthService;
 import asedi.services.PlazaService;
@@ -53,6 +54,15 @@ public class UsuarioDashboardController {
         Parent root = loader.load();
         LocalesPorPlazaController controller = loader.getController();
         controller.setPlaza(plaza);
+        controller.setUsuarioDashboardController(this);
+        contenidoPane.getChildren().setAll(root);
+    }
+
+    public void mostrarProductosDeLocal(Local local) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/usuario/productosPorLocal.fxml"));
+        Parent root = loader.load();
+        ProductosPorLocalController controller = loader.getController();
+        controller.setLocal(local);
         contenidoPane.getChildren().setAll(root);
     }
 

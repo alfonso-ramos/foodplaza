@@ -20,6 +20,8 @@ public class UsuarioLocalCardController {
     private Label descripcionLabel;
 
     private Local local;
+    private UsuarioDashboardController usuarioDashboardController;
+
 
     public void setLocal(Local local) {
         this.local = local;
@@ -30,8 +32,14 @@ public class UsuarioLocalCardController {
         }
     }
 
+    public void setUsuarioDashboardController(UsuarioDashboardController usuarioDashboardController) {
+        this.usuarioDashboardController = usuarioDashboardController;
+    }
+
     @FXML
     void verProductos() throws IOException {
-        // TODO: Implementar la navegación a la vista de productos
+        if (usuarioDashboardController != null) {
+            usuarioDashboardController.mostrarProductosDeLocal(local);
+        }
     }
 }

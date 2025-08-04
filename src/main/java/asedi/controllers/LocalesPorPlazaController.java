@@ -21,6 +21,7 @@ public class LocalesPorPlazaController {
     private VBox localesContainer;
 
     private Plaza plaza;
+    private UsuarioDashboardController usuarioDashboardController;
 
     private final LocalService localService = new LocalService();
 
@@ -28,6 +29,10 @@ public class LocalesPorPlazaController {
         this.plaza = plaza;
         plazaNombreLabel.setText("Locales en " + plaza.getNombre());
         cargarLocales();
+    }
+
+    public void setUsuarioDashboardController(UsuarioDashboardController usuarioDashboardController) {
+        this.usuarioDashboardController = usuarioDashboardController;
     }
 
     private void cargarLocales() {
@@ -39,6 +44,7 @@ public class LocalesPorPlazaController {
                 Parent localCard = loader.load();
                 UsuarioLocalCardController controller = loader.getController();
                 controller.setLocal(local);
+                controller.setUsuarioDashboardController(usuarioDashboardController);
                 localesContainer.getChildren().add(localCard);
             }
         } catch (Exception e) {

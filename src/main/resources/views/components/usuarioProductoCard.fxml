@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.UsuarioProductoCardController" spacing="10" styleClass="producto-card" stylesheets="@../../styles/productos/producto-card.css">
-    <ImageView fx:id="imagenProducto" fitHeight="100" fitWidth="100" preserveRatio="true"/>
-    <VBox spacing="5">
-        <Label fx:id="nombreLabel" style="-fx-font-weight: bold;"/>
-        <Label fx:id="descripcionLabel"/>
-        <Label fx:id="precioLabel"/>
-    </VBox>
-    <Button text="Agregar al carrito" onAction="#agregarAlCarrito"/>
-</HBox>
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="asedi.controllers.UsuarioProductoCardController" styleClass="producto-card">
+    <children>
+        <ImageView fx:id="imagenProducto" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+        <Label fx:id="nombreLabel" styleClass="nombre-producto" />
+        <Label fx:id="descripcionLabel" styleClass="descripcion-producto" />
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <children>
+                <Label fx:id="precioLabel" styleClass="precio-producto" />
+                <Button onAction="#agregarAlCarrito" text="Agregar al Carrito" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

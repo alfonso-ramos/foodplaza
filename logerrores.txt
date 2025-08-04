@@ -1,18 +1,18 @@
 === HTTP GET Request ===
-URL: https://foodplazaapi.ponchoramos.com/api/https://foodplazaapi.ponchoramos.com/api/menus
+URL: https://foodplazaapi.ponchoramos.com/api/menus
 Method: GET
 Headers: []
 
 === HTTP Response ===
-Status: HTTP/1.1 404 Not Found
-Headers: [Server: nginx/1.24.0 (Ubuntu), Date: Mon, 04 Aug 2025 12:12:18 GMT, Content-Type: application/json, Content-Length: 22, Connection: keep-alive]
-Body: {"detail":"Not Found"}
-Respuesta del servidor recibida. Estado: 404
-Error al obtener la lista de menús: Error al obtener menús. Código: 404
-Error al obtener la lista de menús: No se pudo obtener la lista de menús: Error al obtener menús. Código: 404
-java.io.IOException: No se pudo obtener la lista de menús: Error al obtener menús. Código: 404
-        at asedi.services.MenuService.obtenerPorLocal(MenuService.java:136)
-        at asedi.services.MenuService.obtenerTodos(MenuService.java:31)
+Status: HTTP/1.1 405 Method Not Allowed
+Headers: [Server: nginx/1.24.0 (Ubuntu), Date: Mon, 04 Aug 2025 12:35:58 GMT, Content-Type: application/json, Content-Length: 31, Connection: keep-alive, allow: POST]
+Body: {"detail":"Method Not Allowed"}
+Respuesta del servidor recibida. Estado: 405
+Error al obtener la lista de menús: Error al obtener menús. Código: 405
+Error al obtener la lista de menús: No se pudo obtener la lista de menús: Error al obtener menús. Código: 405
+java.io.IOException: No se pudo obtener la lista de menús: Error al obtener menús. Código: 405
+        at asedi.services.MenuService.obtenerPorLocal(MenuService.java:138)
+        at asedi.services.MenuService.obtenerTodos(MenuService.java:30)
         at asedi.services.ProductoService.obtenerTodosLosProductos(ProductoService.java:55)
         at asedi.services.ProductoService.obtenerTodos(ProductoService.java:39)
         at asedi.controllers.gerencia.ProductoController$5.call(ProductoController.java:373)
@@ -20,8 +20,8 @@ java.io.IOException: No se pudo obtener la lista de menús: Error al obtener men
         at javafx.graphics@21.0.2/javafx.concurrent.Task$TaskCallable.call(Task.java:1399)
         at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
         at java.base/java.lang.Thread.run(Thread.java:1583)
-Caused by: java.io.IOException: Error al obtener menús. Código: 404
-        at asedi.services.MenuService.obtenerPorLocal(MenuService.java:72)
+Caused by: java.io.IOException: Error al obtener menús. Código: 405
+        at asedi.services.MenuService.obtenerPorLocal(MenuService.java:74)
         ... 8 more
 javafx.fxml.LoadException: Missing expression.
 /home/poncho/Documents/Workspace/foodplaza-frontend/target/classes/views/gerencia/productos/formulario_producto.fxml:64

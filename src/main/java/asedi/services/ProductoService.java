@@ -2,6 +2,7 @@ package asedi.services;
 
 import asedi.model.ImagenResponse;
 import asedi.model.Producto;
+import asedi.model.Menu;
 import asedi.utils.HttpClientUtil;
 import asedi.utils.HttpClientUtil.HttpResponseWrapper;
 import com.google.gson.Gson;
@@ -336,25 +337,63 @@ public class ProductoService {
         }
         
         // Verificar caché primero
-        if (productosPorMenuCache.containsKey(idMenu)) {
+        if (productosPorMenuCache.containsKey(idMenu) && 
+            (System.currentTimeMillis() - lastCacheUpdate) < CACHE_DURATION_MS) {
             return new ArrayList<>(productosPorMenuCache.get(idMenu));
         }
         
         try {
-            String response = HttpClientUtil.get(ENDPOINT + "/menu/" + idMenu, String.class).getBody();
-            Type listType = new TypeToken<ArrayList<Producto>>() {}.getType();
-            List<Producto> productos = gson.fromJson(response, listType);
+            // Usar el endpoint correcto: /api/menus/local/{id_local}
+            String url = String.format("menus/local/%d", idMenu);
+            System.out.println("Solicitando productos del menú desde: " + url);
             
-            // Actualizar cachés
-            if (productos != null) {
-                productosPorMenuCache.put(idMenu, new ArrayList<>(productos));
-                productos.forEach(p -> cache.put(p.getId(), p));
+            HttpClientUtil.HttpResponseWrapper<String> response = 
+                HttpClientUtil.get(url, String.class);
+                
+            System.out.println("Respuesta del servidor recibida. Estado: " + response.getStatusCode());
+            
+            if (response.getStatusCode() != 200) {
+                throw new IOException("Error al obtener productos. Código: " + response.getStatusCode());
             }
             
-            return new ArrayList<>(productos != null ? productos : new ArrayList<>());
+            String responseBody = response.getBody();
+            if (responseBody == null || responseBody.trim().isEmpty()) {
+                System.out.println("La respuesta del servidor está vacía");
+                return new ArrayList<>();
+            }
+            
+            // El endpoint devuelve un array de menús, necesitamos extraer los productos
+            Type listType = new TypeToken<ArrayList<Menu>>() {}.getType();
+            List<Menu> menus = gson.fromJson(responseBody, listType);
+            
+            // Extraer productos de los menús
+            List<Producto> productos = new ArrayList<>();
+            if (menus != null && !menus.isEmpty()) {
+                for (Menu menu : menus) {
+                    if (menu != null && menu.getProductos() != null) {
+                        for (Producto producto : menu.getProductos()) {
+                            if (producto != null) {
+                                // Asegurarse de que el ID del menú esté establecido
+                                producto.setIdMenu(menu.getId());
+                                productos.add(producto);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Actualizar cachés
+            if (!productos.isEmpty()) {
+                productosPorMenuCache.put(idMenu, new ArrayList<>(productos));
+                productos.forEach(p -> cache.put(p.getId(), p));
+                lastCacheUpdate = System.currentTimeMillis();
+            }
+            
+            return new ArrayList<>(productos);
         } catch (Exception e) {
             System.err.println("Error al obtener productos del menú " + idMenu + ": " + e.getMessage());
-            throw new IOException("No se pudieron obtener los productos del menú", e);
+            e.printStackTrace();
+            throw new IOException("No se pudieron obtener los productos del menú: " + e.getMessage(), e);
         }
     }
     

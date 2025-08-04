@@ -23,6 +23,8 @@ public class UsuarioProductoCardController {
 
     private Producto producto;
 
+    private final CarritoService carritoService = CarritoService.getInstance();
+
     public void setProducto(Producto producto) {
         this.producto = producto;
         nombreLabel.setText(producto.getNombre());
@@ -35,6 +37,7 @@ public class UsuarioProductoCardController {
 
     @FXML
     void agregarAlCarrito() {
-        CarritoService.getInstance().agregarProducto(producto);
+        carritoService.agregarProducto(producto);
+        // Opcional: mostrar una confirmación al usuario
     }
 }

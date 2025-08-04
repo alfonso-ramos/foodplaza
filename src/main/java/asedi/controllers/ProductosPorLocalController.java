@@ -1,9 +1,7 @@
 package asedi.controllers;
 
 import asedi.model.Local;
-import asedi.model.Menu;
 import asedi.model.Producto;
-import asedi.services.MenuService;
 import asedi.services.ProductoService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +22,6 @@ public class ProductosPorLocalController {
 
     private Local local;
 
-    private final MenuService menuService = new MenuService();
     private final ProductoService productoService = new ProductoService();
 
     public void setLocal(Local local) {
@@ -35,19 +32,16 @@ public class ProductosPorLocalController {
 
     private void cargarProductos() {
         try {
-            List<Menu> menus = menuService.obtenerPorLocal(local.getId());
+            List<Producto> productos = productoService.obtenerProductosPorLocal(local.getId());
             productosContainer.getChildren().clear();
-            for (Menu menu : menus) {
-                List<Producto> productos = productoService.obtenerTodos(menu.getId());
-                for (Producto producto : productos) {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/components/usuarioProductoCard.fxml"));
-                    Parent productoCard = loader.load();
-                    UsuarioProductoCardController controller = loader.getController();
-                    controller.setProducto(producto);
-                    productosContainer.getChildren().add(productoCard);
-                }
+            for (Producto producto : productos) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/components/usuarioProductoCard.fxml"));
+                Parent productoCard = loader.load();
+                UsuarioProductoCardController controller = loader.getController();
+                controller.setProducto(producto);
+                productosContainer.getChildren().add(productoCard);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
