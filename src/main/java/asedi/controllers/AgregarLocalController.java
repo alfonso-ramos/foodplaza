@@ -146,7 +146,7 @@ public class AgregarLocalController {
     }
     
     @FXML
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // Event parameter is required by JavaFX but not used
     private void guardarLocal(javafx.event.ActionEvent event) {
         // Limpiar mensajes de error previos
         limpiarMensajesError();

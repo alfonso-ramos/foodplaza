@@ -51,7 +51,6 @@ public class HttpClientUtil {
      * @return Un HttpResponseWrapper con la respuesta
      * @throws IOException Si hay un error en la comunicación
      */
-    @SuppressWarnings("unchecked")
     private static CloseableHttpClient createHttpClient() {
         return HttpClients.custom()
                 .setRedirectStrategy(new LaxRedirectStrategy())
@@ -86,12 +85,10 @@ public class HttpClientUtil {
                 System.out.println("Body: " + responseBody);
                 
                 // Parse response
-                T result = null;
-                if (responseType == String.class) {
-                    result = (T) responseBody;
-                } else {
-                    result = gson.fromJson(responseBody, responseType);
-                }
+                @SuppressWarnings("unchecked") // Safe cast when responseType is String.class
+                T result = responseType == String.class ? 
+                    (T) responseBody : 
+                    gson.fromJson(responseBody, responseType);
                 
                 return new HttpResponseWrapper<>(
                     response.getStatusLine().getStatusCode(),

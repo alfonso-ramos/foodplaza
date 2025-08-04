@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="asedi.controllers.gerencia.ProductoController"
+            stylesheets="@/styles/gerente.css">
+
+    <top>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Gestión de Productos" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Nuevo Producto" onAction="#nuevoProducto" styleClass="btn-primary" />
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBuscar" promptText="Buscar productos..." style="-fx-pref-width: 300;" />
+                <Button text="Buscar" onAction="#buscarProductos" />
+                <Button text="Limpiar" onAction="#limpiarBusqueda" styleClass="btn-secondary" />
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding: 0 20 20 20;">
+            <TableView fx:id="tblProductos" style="-fx-background-color: transparent;" 
+                     styleClass="custom-table">
+                <columns>
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200" />
+                    <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="300" />
+                    <TableColumn fx:id="colPrecio" text="Precio" prefWidth="100" />
+                    <TableColumn fx:id="colDisponible" text="Disponible" prefWidth="100" />
+                    <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="200" />
+                </columns>
+            </TableView>
+            
+            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10 20 0 0;">
+                <Button text="Anterior" onAction="#paginaAnterior" styleClass="btn-secondary" />
+                <Label fx:id="lblPagina" text="Página 1" style="-fx-padding: 0 10;" />
+                <Button text="Siguiente" onAction="#paginaSiguiente" styleClass="btn-secondary" />
+            </HBox>
+        </VBox>
+    </center>
+    
+    <bottom>
+        <StackPane fx:id="loadingPane" visible="false" style="-fx-background-color: rgba(0,0,0,0.5);">
+            <ProgressIndicator progress="-1" style="-fx-progress-color: white;" />
+        </StackPane>
+    </bottom>
+    
+</BorderPane>

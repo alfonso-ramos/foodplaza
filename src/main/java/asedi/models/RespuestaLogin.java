@@ -1,5 +1,7 @@
 package asedi.models;
 
+import asedi.model.Usuario;
+
 public class RespuestaLogin {
     private String mensaje;
     private Usuario usuario;

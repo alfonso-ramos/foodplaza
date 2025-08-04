@@ -1,6 +1,45 @@
 package asedi.model;
 
 public class Usuario {
+    // Clase interna Local para la relación con el local asignado
+    public static class Local {
+        private Long id;
+        private String nombre;
+        private String direccion;
+
+        public Local() {}
+
+        public Local(Long id, String nombre, String direccion) {
+            this.id = id;
+            this.nombre = nombre;
+            this.direccion = direccion;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public void setNombre(String nombre) {
+            this.nombre = nombre;
+        }
+
+        public String getDireccion() {
+            return direccion;
+        }
+
+        public void setDireccion(String direccion) {
+            this.direccion = direccion;
+        }
+    }
+
     private Long id;
     private String nombre;
     private String apellido;
@@ -9,7 +48,8 @@ public class Usuario {
     private String telefono;
     private String rol;
     private String imagenUrl;
-    private Long idLocalAsignado; // ID del local asignado como gerente
+    private Long idLocalAsignado; // Mantenido para compatibilidad
+    private Local local; // Referencia al objeto Local asignado
     private Long plazaId; // ID de la plaza asignada
 
     // Constructor vacío
@@ -105,11 +145,29 @@ public class Usuario {
     }
 
     public Long getIdLocalAsignado() {
-        return idLocalAsignado;
+        return local != null ? local.getId() : idLocalAsignado;
     }
 
     public void setIdLocalAsignado(Long idLocalAsignado) {
         this.idLocalAsignado = idLocalAsignado;
+        if (local == null) {
+            local = new Local();
+        }
+        local.setId(idLocalAsignado);
+    }
+    
+    public Local getLocal() {
+        if (local == null && idLocalAsignado != null) {
+            local = new Local(idLocalAsignado, null, null);
+        }
+        return local;
+    }
+    
+    public void setLocal(Local local) {
+        this.local = local;
+        if (local != null) {
+            this.idLocalAsignado = local.getId();
+        }
     }
     
     public Long getPlazaId() {

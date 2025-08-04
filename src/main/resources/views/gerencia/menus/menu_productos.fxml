@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="asedi.controllers.gerencia.MenuProductosController">
+    <top>
+        <ToolBar>
+            <Button fx:id="btnAgregar" text="Agregar Producto" onAction="#agregarProducto" />
+            <Button fx:id="btnQuitar" text="Quitar Seleccionado" onAction="#quitarProducto" disable="true" />
+            <Button fx:id="btnGuardar" text="Guardar Cambios" onAction="#guardarCambios" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" />
+            <CheckBox fx:id="chkDisponible" text="Menú Disponible" selected="true" />
+        </ToolBar>
+    </top>
+    <center>
+        <VBox spacing="10.0" style="-fx-padding: 10;">
+            <Label text="Productos en el Menú" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+            <TableView fx:id="tblProductos" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200" />
+                    <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="300" />
+                    <TableColumn fx:id="colPrecio" text="Precio" prefWidth="100" />
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" style="-fx-padding: 10;">
+            <Button text="Cerrar" onAction="#cerrar" style="-fx-pref-width: 100;" />
+        </HBox>
+    </bottom>
+</BorderPane>

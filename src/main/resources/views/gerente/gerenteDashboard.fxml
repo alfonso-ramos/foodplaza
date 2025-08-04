@@ -23,8 +23,8 @@
                 <Button text="Panel Principal" onAction="#cargarPanelPrincipal" styleClass="menu-btn"/>
                 
                 <Label text="GESTIÓN" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 12px; -fx-padding: 10 0 5 15; -fx-text-transform: uppercase;"/>
-                <Button text="Locales" onAction="#cargarLocales" styleClass="menu-btn"/>
-                <Button text="Reportes" onAction="#cargarReportes" styleClass="menu-btn"/>
+                <Button text="Menús" onAction="#cargarMenus" styleClass="menu-btn"/>
+                <Button text="Productos" onAction="#cargarProductos" styleClass="menu-btn"/>
                 
                 <VBox style="-fx-padding: 20 0 0 0;">
                     <Button text="Cerrar Sesión" onAction="#cerrarSesion" styleClass="logout-btn"/>

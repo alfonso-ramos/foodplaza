@@ -92,7 +92,7 @@ public class AsignarGerenciaController implements Initializable {
     
     @FXML
     private void onCancelar(javafx.event.ActionEvent event) {
-        cancelar();
+        limpiarFormulario();
     }
     
     private void cargarPlazas() {
@@ -131,7 +131,7 @@ public class AsignarGerenciaController implements Initializable {
         );
         
         asignarBtn.setOnAction(_ -> asignarGerencia());
-        cancelarBtn.setOnAction(_ -> cancelar());
+        cancelarBtn.setOnAction(_ -> limpiarFormulario());
     }
     
     private void buscarUsuario() {
@@ -276,40 +276,56 @@ public class AsignarGerenciaController implements Initializable {
             usuarioSeleccionado.getNombreCompleto(),
             localSeleccionado.getNombre()
         ));
-        
         confirmacion.showAndWait().ifPresent(response -> {
             if (response == javafx.scene.control.ButtonType.OK) {
                 // Proceder con la asignación
                 mostrarCarga(true);
-                new Thread(() -> {
-                    try {
-                        // Primero asignamos el rol de gerente
-                        boolean exito = usuarioService.asignarRolGerente(usuarioSeleccionado.getId());
-                        
-                        Platform.runLater(() -> {
-                            mostrarCarga(false);
-                            if (exito) {
-                                // Aquí podrías agregar lógica adicional para asociar el local al gerente
-                                // si es necesario, con otra llamada a la API
-                                mostrarExito("Rol de gerente asignado exitosamente");
-                                limpiarFormulario();
+                
+                // Crear un nuevo hilo para realizar las operaciones en segundo plano
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            // Primero asignamos el rol de gerente
+                            boolean exitoRol = usuarioService.asignarRolGerente(usuarioSeleccionado.getId());
+                            
+                            if (exitoRol) {
+                                // Actualizar el local con el ID del gerente
+                                Local local = localCombo.getSelectionModel().getSelectedItem();
+                                local.setIdGerente(usuarioSeleccionado.getId());
+                                
+                                // Actualizar el local en el servidor
+                                boolean exitoActualizacion = localService.actualizarLocal(local, null);
+                                
+                                Platform.runLater(() -> {
+                                    mostrarCarga(false);
+                                    if (exitoActualizacion) {
+                                        mostrarExito("Gerente asignado exitosamente al local");
+                                        limpiarFormulario();
+                                    } else {
+                                        mostrarError("Se asignó el rol de gerente, pero hubo un error al actualizar el local. Por favor, intente nuevamente.");
+                                    }
+                                });
                             } else {
-                                mostrarError("No se pudo asignar el rol de gerente. Intente nuevamente.");
+                                Platform.runLater(() -> {
+                                    mostrarCarga(false);
+                                    mostrarError("No se pudo asignar el rol de gerente. Intente nuevamente.");
+                                });
                             }
-                        });
-                    } catch (Exception e) {
-                        Platform.runLater(() -> {
-                            mostrarCarga(false);
-                            mostrarError("Error al asignar la gerencia: " + e.getMessage());
-                        });
+                        } catch (Exception e) {
+                            Platform.runLater(() -> {
+                                mostrarCarga(false);
+                                mostrarError("Error al asignar la gerencia: " + e.getMessage());
+                            });
+                            e.printStackTrace();
+                        }
                     }
-                }).start();
+                });
+                
+                // Iniciar el hilo
+                t.start();
             }
         });
-    }
-    
-    private void cancelar() {
-        limpiarFormulario();
     }
     
     private void limpiarFormulario() {

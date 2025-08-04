@@ -1,0 +1,124 @@
+/* Main styles */
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-base: #f5f5f5;
+    -fx-background: #f9f9f9;
+}
+
+/* Buttons */
+.btn-primary {
+    -fx-background-color: #4a6da7;
+    -fx-text-fill: white;
+    -fx-padding: 8 16;
+    -fx-background-radius: 4;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #3a5a8c;
+}
+
+.btn-secondary {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-padding: 8 16;
+    -fx-background-radius: 4;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #5a6268;
+}
+
+/* Table styles */
+.custom-table {
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-padding: 1;
+}
+
+.custom-table .column-header {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 0 0 1 0;
+}
+
+.custom-table .table-row-cell {
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 8 12;
+}
+
+.custom-table .table-row-cell:odd {
+    -fx-background-color: #f8f9fa;
+}
+
+.custom-table .table-row-cell:selected {
+    -fx-background-color: #e9ecef;
+}
+
+/* Form styles */
+.text-field, .text-area, .combo-box, .check-box {
+    -fx-pref-height: 35;
+    -fx-padding: 5 10;
+}
+
+.text-area .content {
+    -fx-padding: 10;
+}
+
+/* Dialog styles */
+.dialog-pane {
+    -fx-pref-width: 700;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 15 20;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 0 0 1 0;
+}
+
+.dialog-pane .button-bar {
+    -fx-padding: 15 20;
+    -fx-spacing: 10;
+}
+
+/* Loading overlay */
+#loadingPane {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Status indicators */
+.status-available {
+    -fx-text-fill: #28a745;
+    -fx-font-weight: bold;
+}
+
+.status-unavailable {
+    -fx-text-fill: #dc3545;
+    -fx-font-weight: bold;
+}
+
+/* Card styles */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-padding: 15;
+    -fx-spacing: 10;
+}
+
+/* Scrollbar styling */
+.scroll-bar:vertical {
+    -fx-background-color: #f8f9fa;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #ced4da;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #adb5bd;
+}

@@ -1,7 +1,7 @@
 package asedi.controllers;
 
+import asedi.model.Usuario;
 import asedi.models.RespuestaLogin;
-import asedi.models.Usuario;
 import asedi.services.AuthService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,7 +34,16 @@ public class LoginController {
         try {
             RespuestaLogin respuesta = authService.login(email, password);
             if (respuesta != null && respuesta.getUsuario() != null) {
-                redirigirSegunRol(respuesta.getUsuario());
+                // Obtener detalles completos del usuario incluyendo el local asignado
+                Usuario usuario = respuesta.getUsuario();
+                authService.setCurrentUser(usuario);
+                
+                // Si el usuario es gerente, ya deberíamos tener el local asignado
+                if (usuario.getLocal() != null) {
+                    authService.setLocalAsignado(usuario.getLocal());
+                }
+                
+                redirigirSegunRol(usuario);
             } else {
                 mostrarAlerta("Error", "Credenciales inválidas", Alert.AlertType.ERROR);
             }

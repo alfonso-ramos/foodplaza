@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="asedi.controllers.gerencia.MenuController">
+    
+    <top>
+        <HBox style="-fx-background-color: #2c3e50; -fx-padding: 15;" alignment="CENTER_LEFT">
+            <Label text="Gestión de Menús" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Nuevo Menú" onAction="#nuevoMenu" style="-fx-background-color: #27ae60; -fx-text-fill: white;">
+                <graphic>
+                    <Text text="+" style="-fx-font-weight: bold; -fx-font-size: 16;"/>
+                </graphic>
+            </Button>
+        </HBox>
+    </top>
+    
+    <center>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <!-- Barra de búsqueda y filtros -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBuscar" promptText="Buscar menú..." style="-fx-pref-width: 300; -fx-pref-height: 35;"/>
+                <Button text="Buscar" onAction="#buscarMenus" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                <Button text="Limpiar" onAction="#limpiarBusqueda" style="-fx-background-color: #95a5a6; -fx-text-fill: white;"/>
+            </HBox>
+            
+            <!-- Contenedor para la tabla y mensaje de no hay menús -->
+            <StackPane>
+                <!-- Tabla de menús -->
+                <TableView fx:id="tablaMenus" style="-fx-pref-height: 500;">
+                    <columns>
+                        <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
+                        <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="300"/>
+                        <TableColumn fx:id="colLocal" text="Local" prefWidth="200"/>
+                        <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="150">
+                            <cellFactory>
+                                <TableColumn fx:factory="call" />
+                            </cellFactory>
+                        </TableColumn>
+                    </columns>
+                </TableView>
+                
+                <!-- Mensaje cuando no hay menús -->
+                <Label fx:id="lblNoMenus" text="No se encontraron menús" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;" visible="false">
+                    <StackPane.margin>
+                        <Insets top="20"/>
+                    </StackPane.margin>
+                </Label>
+            </StackPane>
+            
+            <!-- Paginación -->
+            <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+                <Button text="Anterior" onAction="#paginaAnterior" style="-fx-background-color: #95a5a6; -fx-text-fill: white;"/>
+                <Label fx:id="lblPagina" text="Página 1" style="-fx-font-weight: bold;"/>
+                <Button text="Siguiente" onAction="#siguientePagina" style="-fx-background-color: #95a5a6; -fx-text-fill: white;"/>
+            </HBox>
+        </VBox>
+    </center>
+    
+    <!-- Panel de carga -->
+    <StackPane fx:id="loadingPane" visible="false" style="-fx-background-color: rgba(0,0,0,0.5);">
+        <ProgressIndicator style="-fx-pref-width: 50; -fx-pref-height: 50;"/>
+    </StackPane>
+    
+</BorderPane>

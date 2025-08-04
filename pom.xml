@@ -9,21 +9,36 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.parameters>true</maven.compiler.parameters>
+        <javafx.version>21.0.1</javafx.version>
+        <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
+        <checkstyle.version>3.2.1</checkstyle.version>
     </properties>
     <dependencies>
-        <!-- JavaFX core -->
+        <!-- JavaFX modules -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>21.0.1</version>
+            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>21.0.1</version>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>${javafx.version}</version>
         </dependency>
         
         <!-- JSON Processing -->
@@ -31,6 +46,27 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
+        </dependency>
+        
+        <!-- Bean Validation API -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        
+        <!-- Hibernate Validator (implementation) -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>8.0.1.Final</version>
+        </dependency>
+        
+        <!-- Expression Language (required by Hibernate Validator) -->
+        <dependency>
+            <groupId>org.glassfish.expressly</groupId>
+            <artifactId>expressly</artifactId>
+            <version>5.0.0</version>
         </dependency>
         
         <!-- HTTP Client -->
@@ -70,10 +106,10 @@
                     <include>**/*.fxml</include>
                     <include>**/*.css</include>
                     <include>**/*.png</include>
-                    <include>**/*.json</include>
                     <include>**/*.jpg</include>
                     <include>**/*.jpeg</include>
                     <include>**/*.svg</include>
+                    <include>**/*.json</include>
                 </includes>
             </resource>
         </resources>
@@ -87,8 +123,33 @@
                     <target>21</target>
                     <compilerArgs>
                         <arg>--enable-preview</arg>
+                        <arg>-Xlint:all</arg>
                     </compilerArgs>
+                    <parameters>true</parameters>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.version}</version>
+                <configuration>
+                    <configLocation>google_checks.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -101,20 +162,39 @@
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
+                <version>${javafx.maven.plugin.version}</version>
                 <configuration>
                     <mainClass>asedi.Main</mainClass>
+                    <launcher>app</launcher>
+                    <jlinkZipName>app</jlinkZipName>
+                    <jlinkImageName>app</jlinkImageName>
+                    <noManPages>true</noManPages>
+                    <stripDebug>true</stripDebug>
+                    <noHeaderFiles>true</noHeaderFiles>
                     <options>
                         <option>--enable-preview</option>
+                        <option>--add-exports</option>
+                        <option>javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED</option>
+                        <option>--add-opens</option>
+                        <option>javafx.graphics/javafx.scene=ALL-UNNAMED</option>
                     </options>
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
+                    <jlinkExtraArgs>
+                        <arg>--enable-preview</arg>
+                    </jlinkExtraArgs>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>asedi.Main</mainClass>
+                    <commandlineArgs>--enable-preview</commandlineArgs>
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                </configuration>
             </plugin>
         </plugins>
     </build>

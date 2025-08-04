@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+
+<fx:root type="VBox" xmlns:fx="http://javafx.com/fxml" styleClass="producto-card">
+    <stylesheets>
+        <URL value="@/styles/productos/producto-card.css"/>
+    </stylesheets>
+    
+    <!-- Imagen del producto -->
+    <StackPane style="-fx-background-color: #f8f9fa; -fx-pref-height: 180; -fx-alignment: CENTER;">
+        <ImageView fx:id="imgProducto" fitWidth="120" fitHeight="120" preserveRatio="true" smooth="true">
+            <image>
+                <Image url="@/images/placeholder-food.png"/>
+            </image>
+        </ImageView>
+        
+        <!-- Badge de disponibilidad -->
+        <HBox style="-fx-background-color: #28a745; -fx-padding: 3 8; -fx-background-radius: 10; -fx-alignment: CENTER;" 
+              alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" HBox.halignment="RIGHT">
+            <Label fx:id="lblDisponible" text="Disponible" style="-fx-text-fill: white; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+        </HBox>
+    </StackPane>
+    
+    <!-- Contenido de la tarjeta -->
+    <VBox style="-fx-padding: 15; -fx-spacing: 8;" VBox.vgrow="ALWAYS">
+        <!-- Nombre y precio -->
+        <HBox alignment="CENTER_LEFT" spacing="5">
+            <Label fx:id="lblNombre" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;" wrapText="true" maxWidth="180"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblPrecio" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #00D561;"/>
+        </HBox>
+        
+        <!-- Categoría -->
+        <HBox alignment="CENTER_LEFT" spacing="5">
+            <Label text="Categoría:" style="-fx-text-fill: #666666; -fx-font-size: 12px;"/>
+            <Label fx:id="lblCategoria" style="-fx-text-fill: #333333; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+        </HBox>
+        
+        <!-- Descripción -->
+        <Label fx:id="lblDescripcion" style="-fx-text-fill: #666666; -fx-font-size: 12px; -fx-wrap-text: true;" maxWidth="250" wrapText="true"/>
+        
+        <!-- Botones de acción -->
+        <HBox style="-fx-spacing: 8; -fx-padding: 10 0 0 0;">
+            <Button text="Editar" onAction="#editarProducto" styleClass="btn-editar" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                <graphic>
+                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                        <image>
+                            <Image url="@/images/icons/edit.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button text="Eliminar" onAction="#eliminarProducto" styleClass="btn-eliminar" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                <graphic>
+                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                        <image>
+                            <Image url="@/images/icons/delete.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+        </HBox>
+    </VBox>
+</fx:root>

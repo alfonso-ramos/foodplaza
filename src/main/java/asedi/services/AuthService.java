@@ -1,6 +1,6 @@
 package asedi.services;
 
-import asedi.models.Usuario;
+import asedi.model.Usuario;
 import asedi.models.UsuarioRegistro;
 import asedi.models.RespuestaLogin;
 import asedi.utils.HttpClientUtil;
@@ -16,6 +16,7 @@ import java.util.Map;
 public class AuthService {
     private static AuthService instance;
     private Usuario currentUser;
+    private Usuario.Local localAsignado;
     private final Gson gson = new Gson();
 
     private AuthService() {}
@@ -34,6 +35,26 @@ public class AuthService {
      * @return Respuesta del servidor con los datos del usuario
      * @throws IOException Si hay un error de red o las credenciales son inválidas
      */
+    /**
+     * Obtiene el usuario actualmente autenticado
+     * @return El usuario actual o null si no hay sesión activa
+     */
+    public Usuario getCurrentUser() {
+        return currentUser;
+    }
+    
+    public void setCurrentUser(Usuario user) {
+        this.currentUser = user;
+    }
+    
+    public Usuario.Local getLocalAsignado() {
+        return localAsignado;
+    }
+    
+    public void setLocalAsignado(Usuario.Local local) {
+        this.localAsignado = local;
+    }
+    
     public RespuestaLogin login(String email, String password) throws IOException {
         try {
             // Validar campos
@@ -114,10 +135,28 @@ public class AuthService {
                     }
                     
                     if (usuario != null) {
+                        // Obtener los detalles completos del usuario, incluyendo el local asignado
+                        System.out.println("Inicio de sesión exitoso, obteniendo detalles completos del usuario...");
+                        UsuarioService usuarioService = new UsuarioService();
+                        Usuario usuarioCompleto = usuarioService.obtenerDetallesUsuario(usuario.getId());
+                        
+                        // Si no se pudieron obtener los detalles completos, usar los datos básicos
+                        if (usuarioCompleto == null) {
+                            System.err.println("No se pudieron obtener los detalles completos del usuario, usando datos básicos");
+                            usuarioCompleto = usuario;
+                        } else {
+                            System.out.println("Detalles completos del usuario obtenidos con éxito");
+                            if (usuarioCompleto.getLocal() != null) {
+                                System.out.println("Local asignado: " + usuarioCompleto.getLocal().getNombre() + " (ID: " + usuarioCompleto.getLocal().getId() + ")");
+                            } else {
+                                System.out.println("El usuario no tiene un local asignado");
+                            }
+                        }
+                        
                         RespuestaLogin respuesta = new RespuestaLogin();
                         respuesta.setMensaje(jsonResponse.get("mensaje").getAsString());
-                        respuesta.setUsuario(usuario);
-                        currentUser = usuario;
+                        respuesta.setUsuario(usuarioCompleto);
+                        currentUser = usuarioCompleto;
                         return respuesta;
                     }
                 }
@@ -152,13 +191,7 @@ public class AuthService {
         this.currentUser = null;
     }
 
-    /**
-     * Obtiene el usuario actualmente autenticado
-     * @return El usuario actual o null si no hay sesión activa
-     */
-    public Usuario getCurrentUser() {
-        return currentUser;
-    }
+
 
     /**
      * Verifica si hay un usuario autenticado

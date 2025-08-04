@@ -1,0 +1,60 @@
+/* Form styles for menu management */
+
+.titulo-seccion {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+}
+
+/* Style for form fields */
+.text-field, .text-area, .combo-box {
+    -fx-pref-width: 300px;
+}
+
+/* Button styles */
+.btn-primario {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+
+.btn-primario:hover {
+    -fx-background-color: #45a049;
+}
+
+.btn-secundario {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+}
+
+.btn-secundario:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+/* Error message styles */
+.error-label {
+    -fx-text-fill: #d32f2f;
+    -fx-font-size: 11px;
+    -fx-padding: 2px 0 0 4px;
+    -fx-wrap-text: true;
+}
+
+.error-message {
+    -fx-text-fill: #d32f2f;
+    -fx-font-size: 12px;
+}
+
+/* Form layout */
+.form-pane {
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}

@@ -1,5 +1,6 @@
 package asedi.controllers;
 
+import asedi.model.Usuario;
 import asedi.services.AuthService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,16 +17,71 @@ public class GerenteDashboardController {
 
     @FXML
     public void initialize() {
-        // Mostrar el nombre del usuario actual
-        AuthService authService = AuthService.getInstance();
-        if (authService.getCurrentUser() != null) {
-            userNameLabel.setText(authService.getCurrentUser().getNombre());
+        try {
+            // Obtener el servicio de autenticación
+            AuthService authService = AuthService.getInstance();
+            
+            // Obtener el usuario actual
+            Usuario usuario = authService.getCurrentUser();
+            
+            if (usuario != null) {
+                // Mostrar el nombre del usuario
+                String nombreCompleto = usuario.getNombre() != null ? usuario.getNombre() : "Usuario";
+                userNameLabel.setText(nombreCompleto);
+                
+                // Obtener el local asignado del servicio de autenticación
+                Usuario.Local local = authService.getLocalAsignado();
+                
+                // Si no hay local en el servicio, verificar si está en el usuario
+                if (local == null && usuario.getLocal() != null) {
+                    local = usuario.getLocal();
+                    authService.setLocalAsignado(local);
+                }
+                
+                // Verificar si el usuario tiene un local asignado
+                if (local != null) {
+                    System.out.println("GerenteDashboard - Local asignado: " + 
+                                      local.getNombre() + " (ID: " + local.getId() + ")");
+                } else {
+                    System.err.println("ADVERTENCIA: El gerente no tiene un local asignado.");
+                    // Mostrar un mensaje al usuario
+                    mostrarError("Configuración requerida", 
+                               "No tiene un local asignado. Por favor, contacte al administrador.");
+                }
+            } else {
+                System.err.println("Error: No se pudo obtener la información del usuario actual");
+                mostrarError("Error de sesión", "No se pudo cargar la información del usuario");
+                cerrarSesion();
+            }
+        } catch (Exception e) {
+            System.err.println("Error en la inicialización del dashboard del gerente: " + e.getMessage());
+            e.printStackTrace();
+            mostrarError("Error", "Ocurrió un error al cargar el panel de control");
         }
+    }
+    
+    private void mostrarError(String titulo, String mensaje) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+            javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     @FXML
     public void cargarPanelPrincipal() {
         cargarVista("gerente/panelPrincipal");
+    }
+
+    @FXML
+    public void cargarMenus() {
+        cargarVista("gerencia/menus/listado_menus");
+    }
+
+    @FXML
+    public void cargarProductos() {
+        cargarVista("gerencia/productos/listado_productos");
     }
 
     @FXML
@@ -60,17 +116,34 @@ public class GerenteDashboardController {
 
     private void cargarVista(String vista) {
         try {
-            // En un entorno real, aquí cargaríamos la vista correspondiente
-            // Por ahora mostramos un mensaje de "en desarrollo"
+            // Limpiar el contenido actual
             contenidoPane.getChildren().clear();
             
-            // Crear un mensaje simple
-            javafx.scene.control.Label mensaje = new javafx.scene.control.Label("Vista de " + vista + "\n(En desarrollo)");
-            mensaje.setStyle("-fx-font-size: 16px; -fx-alignment: center;");
+            // Cargar la vista FXML
+            String rutaFxml = "/views/" + vista + ".fxml";
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFxml));
+            Parent vistaCargada = loader.load();
             
-            contenidoPane.getChildren().add(mensaje);
-        } catch (Exception e) {
+            // Agregar la vista al panel de contenido
+            contenidoPane.getChildren().add(vistaCargada);
+            
+        } catch (IOException e) {
+            // Si hay un error, mostrar mensaje de error
+            System.err.println("Error al cargar la vista: " + e.getMessage());
             e.printStackTrace();
+            
+            // Mostrar mensaje de error en la interfaz
+            Label errorLabel = new Label("Error al cargar la vista: " + e.getMessage());
+            errorLabel.setStyle("-fx-text-fill: red; -fx-padding: 10;");
+            contenidoPane.getChildren().add(errorLabel);
+        } catch (Exception e) {
+            // Manejar cualquier otra excepción
+            System.err.println("Error inesperado: " + e.getMessage());
+            e.printStackTrace();
+            
+            Label errorLabel = new Label("Error inesperado: " + e.getMessage());
+            errorLabel.setStyle("-fx-text-fill: red; -fx-padding: 10;");
+            contenidoPane.getChildren().add(errorLabel);
         }
     }
 }

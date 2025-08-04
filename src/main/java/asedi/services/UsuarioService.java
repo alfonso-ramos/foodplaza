@@ -152,4 +152,114 @@ public class UsuarioService {
             return false;
         }
     }
+    
+    /**
+     * Obtiene los detalles completos de un usuario, incluyendo su local asignado.
+     * @param id ID del usuario
+     * @return Usuario con todos sus detalles o null si no se encuentra
+     */
+    /**
+     * Obtiene los detalles completos de un usuario, incluyendo su local asignado si es gerente.
+     * @param id ID del usuario
+     * @return Usuario con sus detalles completos o null si no se encuentra
+     */
+    public Usuario obtenerDetallesUsuario(Long id) {
+        if (id == null) {
+            System.err.println("Error: ID de usuario no puede ser nulo");
+            return null;
+        }
+        
+        try {
+            // Primero obtenemos los datos básicos del usuario
+            Usuario usuario = buscarPorId(id);
+            if (usuario == null) {
+                System.err.println("No se pudo encontrar el usuario con ID: " + id);
+                return null;
+            }
+            
+            System.out.println("Usuario encontrado: " + usuario.getEmail());
+            
+            // Si el usuario es gerente, buscamos su local asignado
+            if ("gerente".equalsIgnoreCase(usuario.getRol())) {
+                System.out.println("Buscando local asignado al gerente con ID: " + id);
+                // Usar solo la ruta relativa ya que HttpClientUtil ya maneja la URL base
+                String url = String.format("locales/?id_gerente=%d", id);
+                
+                try {
+                    System.out.println("Solicitando local del gerente...");
+                    System.out.println("URL de la petición: " + url);
+                    
+                    HttpClientUtil.HttpResponseWrapper<String> response = 
+                        HttpClientUtil.get(url, String.class);
+                    
+                    System.out.println("Código de estado de la respuesta: " + response.getStatusCode());
+                    
+                    if (response.getStatusCode() == 200) {
+                        System.out.println("Respuesta del servidor: " + response.getBody());
+                        
+                        // Parsear la respuesta como un array de locales (aunque debería ser solo uno)
+                        Usuario.Local[] locales = gson.fromJson(response.getBody(), Usuario.Local[].class);
+                        
+                        if (locales != null && locales.length > 0) {
+                            // Tomar el primer local de la lista
+                            Usuario.Local local = locales[0];
+                            usuario.setLocal(local);
+                            System.out.println("Local asignado: " + local.getNombre() + " (ID: " + local.getId() + ")");
+                        } else {
+                            System.out.println("El gerente no tiene un local asignado");
+                        }
+                    } else {
+                        System.err.println("Error al obtener el local del gerente: " + response.getBody());
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error al obtener el local del gerente: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+            
+            return usuario;
+        } catch (Exception e) {
+            System.err.println("Excepción al obtener detalles del usuario: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    /**
+     * Busca un usuario por su ID.
+     * @param id ID del usuario a buscar
+     * @return Usuario encontrado o null si no se encuentra
+     */
+    public Usuario buscarPorId(Long id) {
+        if (id == null) {
+            return null;
+        }
+        
+        try {
+            String url = String.format("%s/%d", ENDPOINT, id);
+            System.out.println("Buscando usuario por ID: " + id);
+            System.out.println("URL de la petición: " + url);
+            
+            HttpClientUtil.HttpResponseWrapper<String> response = 
+                HttpClientUtil.get(url, String.class);
+                
+            System.out.println("Código de estado: " + response.getStatusCode());
+            
+            if (response.getStatusCode() == 200) {
+                Usuario usuario = gson.fromJson(response.getBody(), Usuario.class);
+                if (usuario != null) {
+                    System.out.println("Usuario encontrado: " + usuario.getEmail());
+                    return usuario;
+                }
+            }
+            
+            System.err.println("No se encontró el usuario con ID: " + id);
+            return null;
+            
+        } catch (Exception e) {
+            System.err.println("Error al buscar usuario por ID: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -1,0 +1,51 @@
+/* Estilos para los botones de acción en las tablas */
+
+.btn-accion {
+    -fx-background-radius: 4px;
+    -fx-padding: 4px 8px;
+    padding: 4px 8px;
+    -fx-font-size: 12px;
+    font-size: 12px;
+    -fx-cursor: hand;
+    cursor: hand;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);
+}
+
+.btn-accion:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 7, 0, 0, 2);
+}
+
+.btn-accion:disabled {
+    -fx-opacity: 0.6;
+    opacity: 0.6;
+    -fx-cursor: default;
+    cursor: default;
+}
+
+.btn-editar {
+    -fx-background-color: #3498db;
+    background-color: #3498db;
+}
+
+.btn-editar:hover {
+    -fx-background-color: #2980b9;
+    background-color: #2980b9;
+}
+
+.btn-eliminar {
+    -fx-background-color: #e74c3c;
+    background-color: #e74c3c;
+}
+
+.btn-eliminar:hover {
+    -fx-background-color: #c0392b;
+    background-color: #c0392b;
+}
+
+/* Espaciado entre botones en la celda */
+.acciones-cell .button {
+    -fx-margin: 0 2px;
+}

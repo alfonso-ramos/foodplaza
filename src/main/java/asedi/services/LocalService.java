@@ -13,10 +13,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class LocalService {
     private static final String ENDPOINT = "locales";
     private final Gson gson = new Gson();
+    
+    /**
+     * Obtiene los locales por ID de plaza
+     * @param plazaId ID de la plaza
+     * @return Lista de locales
+     */
+    /**
+     * Obtiene un local por su nombre
+     * @param nombre Nombre del local a buscar
+     * @return Optional con el local si se encuentra, vacío en caso contrario
+     */
+    public Optional<Local> obtenerPorNombre(String nombre) {
+        try {
+            // Primero obtenemos todos los locales (podríamos optimizar esto con un endpoint específico)
+            List<Local> locales = obtenerLocalesPorPlaza(1L); // Asumimos plaza 1 por ahora
+            return locales.stream()
+                    .filter(local -> local.getNombre().equalsIgnoreCase(nombre))
+                    .findFirst();
+        } catch (Exception e) {
+            System.err.println("Error al buscar local por nombre: " + e.getMessage());
+            return Optional.empty();
+        }
+    }
     
     /**
      * Obtiene los locales por ID de plaza
@@ -250,7 +274,9 @@ public class LocalService {
         requestBody.put("horario_cierre", local.getHorarioCierre());
         requestBody.put("tipo_comercio", local.getTipoComercio());
         requestBody.put("estado", local.getEstado());
-        requestBody.put("plaza_id", local.getPlazaId()); // Asegurarse de incluir el ID de la plaza
+        requestBody.put("plaza_id", local.getPlazaId());
+        // Incluir el ID del gerente (puede ser null)
+        requestBody.put("id_gerente", local.getIdGerente());
         
         // Realizar la petición PUT
         String url = ENDPOINT + "/" + local.getId();
