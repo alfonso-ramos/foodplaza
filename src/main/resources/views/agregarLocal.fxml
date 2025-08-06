@@ -93,7 +93,7 @@
                         </VBox>
                         
                         <!-- Mensaje de error -->
-                        <Label fx:id="errorLabel" style="-fx-text-fill: #d32f2f; -fx-padding: 5 0 0 0; -fx-wrap-text: true; -fx-max-width: 1.7976931348623157E308; -fx-font-size: 12;" />
+                        <Label fx:id="errorLabel" style="-fx-text-fill: #d32f2f; -fx-padding: 5 0 0 0; -fx-wrap-text: true; -fx-max-width: 100%; -fx-font-size: 12;" />
                     </VBox>
                     
                     <!-- Fila 8: Botones de acción (ocupan ambas columnas) -->

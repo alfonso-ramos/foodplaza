@@ -43,7 +43,7 @@
                     </VBox>
                     
                     <!-- Mensaje de error -->
-                    <Label fx:id="errorLabel" styleClass="error-message" style="-fx-text-fill: #d32f2f; -fx-padding: 5 0 0 0; -fx-wrap-text: true; -fx-max-width: 1.7976931348623157E308;" />
+                    <Label fx:id="errorLabel" styleClass="error-message" style="-fx-text-fill: #d32f2f; -fx-padding: 5 0 0 0; -fx-wrap-text: true; -fx-max-width: 100%;" />
                 </VBox>
                 
                 <!-- Botones de acción -->

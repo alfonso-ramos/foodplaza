@@ -28,9 +28,12 @@
             </HBox>
             
             <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 0 20 20 20;">
-                <TextField fx:id="txtBuscar" promptText="Buscar productos..." style="-fx-pref-width: 300;" />
-                <Button text="Buscar" onAction="#buscarProductos" style="-fx-background-color: #4A90E2; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16;" />
-                <Button text="Limpiar" onAction="#limpiarBusqueda" style="-fx-background-color: #95A5A6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16;" />
+                <TextField fx:id="txtBuscar" promptText="Buscar productos..." style="-fx-pref-width: 250; -fx-pref-height: 35; -fx-font-size: 14;" />
+                
+                <ComboBox fx:id="cmbMenu" promptText="Filtrar por menú" style="-fx-pref-width: 250; -fx-pref-height: 35; -fx-font-size: 14;" />
+                
+                <Button text="Buscar" onAction="#buscarProductos" style="-fx-background-color: #4A90E2; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-pref-height: 35;" />
+                <Button text="Limpiar" onAction="#limpiarBusqueda" style="-fx-background-color: #95A5A6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-pref-height: 35;" />
             </HBox>
         </VBox>
     </top>

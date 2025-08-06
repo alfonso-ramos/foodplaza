@@ -1,0 +1,28 @@
+
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>/home/poncho/Documents/Workspace/foodplaza-frontend/target/foodplaza-frontend-1.0-SNAPSHOT-jar-with-dependencies.jar</jar>
+  <outfile>/home/poncho/Documents/Workspace/foodplaza-frontend/target/FoodPlaza.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon>/home/poncho/Documents/Workspace/foodplaza-frontend/src/main/resources/images/logo.png</icon>
+  <classPath>
+    <mainClass>asedi.Main</mainClass>
+  </classPath>
+  <jre>
+    <minVersion>21</minVersion>
+    <initialHeapSize>512</initialHeapSize>
+    <maxHeapSize>1024</maxHeapSize>
+    <opts>
+      <opt>--enable-preview</opt>
+    </opts>
+  </jre>
+</launch4jConfig>

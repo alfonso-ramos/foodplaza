@@ -50,14 +50,14 @@ public class MenuService {
         }
         
         try {
-            // Construir la URL con el formato correcto: /api/menus/local/{local_id}
-            String url;
-            if (idLocal != null) {
-                url = String.format("menus/local/%d", idLocal);
-            } else {
-                // Si no hay ID de local, obtener todos los menús
-                url = "menus";
+            // Si no hay ID de local, devolvemos una lista vacía
+            if (idLocal == null) {
+                System.out.println("No se proporcionó ID de local, devolviendo lista vacía");
+                return new ArrayList<>();
             }
+            
+            // Construir la URL con el formato correcto: /api/menus/local/{local_id}
+            String url = String.format("menus/local/%d", idLocal);
             
             System.out.println("Solicitando menús desde: " + url);
             
@@ -68,6 +68,7 @@ public class MenuService {
             
             // Verificar si la respuesta es exitosa (código 200)
             if (response.getStatusCode() != 200) {
+                System.out.println("Error en la respuesta del servidor: " + response.getBody());
                 throw new IOException("Error al obtener menús. Código: " + response.getStatusCode());
             }
             

@@ -93,6 +93,7 @@ public class ProductoController implements Initializable {
     public ProductoController() {
         this.productoService = new ProductoService();
     }
+}
     
     /**
      * Establece el ID del menú del cual se mostrarán los productos.
@@ -101,43 +102,32 @@ public class ProductoController implements Initializable {
     public void setMenuId(Long menuId) {
         this.menuId = menuId;
     }
+}
     
     @FXML
     private void handleAgregarProducto(ActionEvent event) {
         try {
-            // Cargar el formulario simplificado
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/gerencia/productos/formulario_producto_simple.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/gerencia/productos/formulario_producto.fxml"));
             Parent root = loader.load();
             
-            // Obtener el controlador
-            ProductoFormController controller = loader.getController();
-            controller.setProductoService(productoService);
+            // Obtener el controlador y configurar el título
+            ProductoController controller = loader.getController();
+            controller.configurarParaNuevoProducto();
             
-            // Pasar el ID del menú seleccionado
-            Menu menuSeleccionado = cmbMenu.getSelectionModel().getSelectedItem();
-            if (menuSeleccionado != null) {
-                controller.setMenuId(menuSeleccionado.getId());
-                System.out.println("ID de menú seleccionado: " + menuSeleccionado.getId());
-            } else {
-                System.err.println("Advertencia: No se seleccionó ningún menú");
-            }
-            
-            // Configurar el escenario
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Nuevo Producto");
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setMinWidth(700);
-            stage.setMinHeight(700);
-            
-            // Mostrar el formulario y recargar productos al cerrar
             stage.showAndWait();
+            
             cargarProductos();
         } catch (IOException e) {
             e.printStackTrace();
             mostrarError("Error", "No se pudo cargar el formulario de producto");
         }
+}
     }
+}
     
     public void configurarParaNuevoProducto() {
         // Limpiar campos
@@ -160,14 +150,17 @@ public class ProductoController implements Initializable {
                 } else {
                     imgVistaPrevia.setImage(null);
                 }
+}
             } else {
                 // Si no se encuentra el recurso, usar un ImageView vacío
                 imgVistaPrevia.setImage(null);
             }
+}
         } catch (Exception e) {
             // En caso de cualquier error, limpiar la imagen
             imgVistaPrevia.setImage(null);
         }
+}
         lblNombreArchivo.setText("Ninguna imagen seleccionada");
         txtImagenUrl.clear();
         txtImagenPublicId.clear();
@@ -175,6 +168,7 @@ public class ProductoController implements Initializable {
         // Limpiar mensajes de error
         limpiarErrores();
     }
+}
     
     @FXML
     private void seleccionarImagen(ActionEvent event) {
@@ -197,6 +191,7 @@ public class ProductoController implements Initializable {
                     mostrarError("Error", "El archivo es demasiado grande. Tamaño máximo permitido: 5MB");
                     return;
                 }
+}
                 
                 // Cargar la imagen para previsualización
                 Image imagen = new Image(archivo.toURI().toString());
@@ -214,13 +209,17 @@ public class ProductoController implements Initializable {
                 e.printStackTrace();
                 mostrarError("Error", "No se pudo cargar la imagen seleccionada");
             }
+}
         }
+}
     }
+}
     
     private void subirImagen() {
         if (imagenSeleccionada == null) {
             return; // No hay imagen para subir
         }
+}
         
         try {
             // Aquí iría la lógica para subir la imagen a tu servicio de almacenamiento
@@ -253,7 +252,9 @@ public class ProductoController implements Initializable {
             e.printStackTrace();
             throw new RuntimeException("Error al subir la imagen: " + e.getMessage());
         }
+}
     }
+}
     
     private void limpiarErrores() {
         if (lblErrorNombre != null) lblErrorNombre.setText("");
@@ -262,6 +263,7 @@ public class ProductoController implements Initializable {
         if (lblErrorStock != null) lblErrorStock.setText("");
         if (lblErrorImagen != null) lblErrorImagen.setText("");
     }
+}
     
     private boolean validarFormulario() {
         boolean valido = true;
@@ -272,12 +274,14 @@ public class ProductoController implements Initializable {
             if (lblErrorNombre != null) lblErrorNombre.setText("El nombre es requerido");
             valido = false;
         }
+}
         
         // Validar descripción
         if (txtDescripcion.getText() == null || txtDescripcion.getText().trim().isEmpty()) {
             if (lblErrorDescripcion != null) lblErrorDescripcion.setText("La descripción es requerida");
             valido = false;
         }
+}
         
         // Validar precio
         try {
@@ -286,10 +290,12 @@ public class ProductoController implements Initializable {
                 if (lblErrorPrecio != null) lblErrorPrecio.setText("El precio debe ser mayor a cero");
                 valido = false;
             }
+}
         } catch (NumberFormatException e) {
             if (lblErrorPrecio != null) lblErrorPrecio.setText("Ingrese un precio válido");
             valido = false;
         }
+}
         
         // Validar stock
         try {
@@ -298,25 +304,30 @@ public class ProductoController implements Initializable {
                 if (lblErrorStock != null) lblErrorStock.setText("El stock no puede ser negativo");
                 valido = false;
             }
+}
         } catch (NumberFormatException e) {
             if (lblErrorStock != null) lblErrorStock.setText("Ingrese una cantidad válida");
             valido = false;
         }
+}
         
         return valido;
     }
+}
     
     @FXML
     private void guardarProducto(ActionEvent event) {
         if (!validarFormulario()) {
             return;
         }
+}
         
         try {
             // Subir la imagen si se seleccionó una nueva
             if (imagenSeleccionada != null) {
                 subirImagen();
             }
+}
             
             // Crear el objeto Producto
             Producto producto = new Producto();
@@ -330,17 +341,20 @@ public class ProductoController implements Initializable {
             if (cmbCategoria.getValue() != null) {
                 producto.setCategoria(cmbCategoria.getValue());
             }
+}
             
             // Si hay un menú seleccionado, asignarlo
             if (cmbMenu != null && cmbMenu.getValue() != null) {
                 producto.setIdMenu(cmbMenu.getValue().getId());
             }
+}
             
             // Asignar URL de la imagen si existe
             if (txtImagenUrl.getText() != null && !txtImagenUrl.getText().isEmpty()) {
                 producto.setImagenUrl(txtImagenUrl.getText());
                 producto.setImagenPublicId(txtImagenPublicId.getText());
             }
+}
             
             // Aquí iría la lógica para guardar el producto en la base de datos
             // Por ejemplo: productoService.guardarProducto(producto);
@@ -355,7 +369,9 @@ public class ProductoController implements Initializable {
             e.printStackTrace();
             mostrarError("Error", "No se pudo guardar el producto: " + e.getMessage());
         }
+}
     }
+}
     
     @FXML
     private void cancelar(ActionEvent event) {
@@ -371,11 +387,14 @@ public class ProductoController implements Initializable {
                 // Cerrar la ventana
                 ((Node) event.getSource()).getScene().getWindow().hide();
             }
+}
         } else {
             // Cerrar la ventana directamente si no hay cambios
             ((Node) event.getSource()).getScene().getWindow().hide();
         }
+}
     }
+}
     
     private boolean hayCambiosSinGuardar() {
         // Verificar si hay cambios en los campos del formulario
@@ -386,6 +405,7 @@ public class ProductoController implements Initializable {
                imagenSeleccionada != null ||
                (txtImagenUrl.getText() != null && !txtImagenUrl.getText().isEmpty());
     }
+}
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -401,22 +421,28 @@ public class ProductoController implements Initializable {
                     } else {
                         menuId = null;
                     }
+}
                     cargarProductos();
                 });
             }
+}
             // Configurar las columnas de la tabla si existen
             if (colNombre != null) {
                 colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
             }
+}
             if (colDescripcion != null) {
                 colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
             }
+}
             if (colPrecio != null) {
                 colPrecio.setCellValueFactory(new PropertyValueFactory<>("precioFormateado"));
             }
+}
             if (colDisponible != null) {
                 colDisponible.setCellValueFactory(new PropertyValueFactory<>("disponible"));
             }
+}
             
             // Configurar la columna de acciones si existe
             if (colAcciones != null) {
@@ -439,6 +465,7 @@ public class ProductoController implements Initializable {
                             confirmarEliminacion(producto);
                         });
                     }
+}
                     
                     @Override
                     protected void updateItem(Void item, boolean empty) {
@@ -448,14 +475,18 @@ public class ProductoController implements Initializable {
                         } else {
                             setGraphic(botones);
                         }
+}
                     }
+}
                 });
             }
+}
             
             // Configurar el listener de búsqueda si el campo de búsqueda existe
             if (txtBuscar != null) {
                 txtBuscar.textProperty().addListener((obs, oldVal, newVal) -> buscarProductos());
             }
+}
             
             // Cargar datos iniciales
             cargarProductos();
@@ -463,13 +494,16 @@ public class ProductoController implements Initializable {
             e.printStackTrace();
             AlertUtils.mostrarError("Error", "Error al inicializar la vista de productos: " + e.getMessage());
         }
+}
     }
+}
 
     @FXML
     private void buscarProductos() {
         paginaActual = 0; // Resetear a la primera página al realizar una nueva búsqueda
         actualizarVistaProductos();
     }
+}
     
     @FXML
     private void limpiarBusqueda() {
@@ -477,8 +511,10 @@ public class ProductoController implements Initializable {
         if (cmbMenu != null && cmbMenu.getItems() != null && !cmbMenu.getItems().isEmpty()) {
             cmbMenu.getSelectionModel().select(0); // Seleccionar "Todos los menús"
         }
+}
         cargarProductos();
     }
+}
     
 
     
@@ -492,7 +528,9 @@ public class ProductoController implements Initializable {
         } catch (Exception e) {
             System.err.println("Error al limpiar recursos: " + e.getMessage());
         }
+}
     }
+}
 
     private Predicate<Producto> crearPredicadoBusqueda(String busqueda, String categoria, String disponibilidad) {
         return producto -> {
@@ -519,16 +557,20 @@ public class ProductoController implements Initializable {
                 } else if (disponibilidad.equals("No disponibles")) {
                     coincideDisponibilidad = producto.getDisponible() == null || !producto.getDisponible();
                 }
+}
             }
+}
 
             return coincideBusqueda && coincideCategoria && coincideDisponibilidad;
         };
     }
+}
 
     @FXML
     public void nuevoProducto() {
         handleAgregarProducto((ActionEvent) null);
     }
+}
     
     @FXML
     private void handleAgregarProducto() {
@@ -565,8 +607,10 @@ public class ProductoController implements Initializable {
                         alert.showAndWait();
                         return null;
                     }
+}
                     return buttonType;
                 }
+}
                 return buttonType;
             });
             
@@ -584,6 +628,7 @@ public class ProductoController implements Initializable {
                         Producto creado = productoService.crear(producto);
                         return creado != null && creado.getId() != null;
                     }
+}
                 };
                 
                 tareaGuardar.setOnSucceeded(_evt -> {
@@ -597,6 +642,7 @@ public class ProductoController implements Initializable {
                             cargarProductos();
                         });
                     }
+}
                 });
                 
                 tareaGuardar.setOnFailed(_evt -> {
@@ -613,6 +659,7 @@ public class ProductoController implements Initializable {
                 
                 new Thread(tareaGuardar).start();
             }
+}
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -622,7 +669,9 @@ public class ProductoController implements Initializable {
             alert.setContentText("No se pudo cargar el formulario: " + e.getMessage());
             alert.showAndWait();
         }
+}
     }
+}
 
     private void confirmarEliminacion(Producto producto) {
         if (producto == null) return;
@@ -644,6 +693,7 @@ public class ProductoController implements Initializable {
                     protected Boolean call() throws Exception {
                         return productoService.eliminar(producto.getId());
                     }
+}
                 };
                 
                 tareaEliminar.setOnSucceeded(_ -> {
@@ -660,6 +710,7 @@ public class ProductoController implements Initializable {
                             AlertUtils.mostrarError("Error", "No se pudo eliminar el producto")
                         );
                     }
+}
                 });
                 
                 tareaEliminar.setOnFailed(_ -> {
@@ -673,87 +724,75 @@ public class ProductoController implements Initializable {
                 
                 new Thread(tareaEliminar).start();
             }
+}
         });
     }
+}
 
     private void editarProducto(Producto producto) {
         try {
-            // Cargar el formulario simplificado
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/gerencia/productos/formulario_producto_simple.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/gerencia/productos/formulario_producto.fxml"));
             Parent root = loader.load();
             
-            // Configurar el controlador
-            ProductoFormController controller = loader.getController();
-            controller.setProductoService(productoService);
-            controller.setProducto(producto);
+            ProductoFormController formController = loader.getController();
+            formController.setProductoService(productoService);
+            formController.setProducto(producto);
             
-            // Configurar el diálogo
             Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle(producto.getId() == null ? "Nuevo Producto" : "Editar Producto: " + producto.getNombre());
+            dialog.setTitle("Editar Producto: " + producto.getNombre());
             dialog.getDialogPane().setContent(root);
             dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
             
-            // Configurar el botón de guardar
             Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
             okButton.setText("Guardar");
             
-            // Deshabilitar el botón de guardar si el formulario no es válido
-            BooleanProperty formularioValido = controller.getFormularioValidoProperty();
+            BooleanProperty formularioValido = formController.getFormularioValidoProperty();
             if (formularioValido != null) {
                 okButton.disableProperty().bind(formularioValido.not());
             }
+}
             
-            // Mostrar el diálogo y procesar el resultado
-            Optional<ButtonType> result = dialog.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Ejecutar la actualización en un hilo separado
-                Task<Boolean> tareaActualizar = new Task<Boolean>() {
-                    @Override
-                    protected Boolean call() {
-                        return controller.guardar();
-                    }
-                };
-                
-                tareaActualizar.setOnSucceeded(event -> {
-                    boolean exito = tareaActualizar.getValue();
-                    if (exito) {
-                        // Cerrar el diálogo solo si el guardado fue exitoso
-                        dialog.close();
-                        // Recargar la lista de productos
-                        Platform.runLater(() -> cargarProductos());
-                    }
-                    // Si no fue exitoso, el controlador ya mostró un mensaje de error
-                });
-                
-                tareaActualizar.setOnFailed(event -> {
-                    Throwable ex = tareaActualizar.getException();
-                    Platform.runLater(() -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error");
-                        alert.setHeaderText("Error al guardar el producto");
-                        alert.setContentText(ex != null ? ex.getMessage() : "Error desconocido");
-                        alert.showAndWait();
+            dialog.showAndWait().ifPresent(buttonType -> {
+                if (buttonType == ButtonType.OK) {
+                    Task<Boolean> tareaActualizar = new Task<>() {
+                        @Override
+                        protected Boolean call() throws Exception {
+                            formController.guardar();
+                            return true;
+                        }
+}
+                    };
+                    
+                    tareaActualizar.setOnSucceeded(_ -> {
+                        cargarProductos(); // Recargar la lista de productos
                     });
-                });
-                
-                new Thread(tareaActualizar).start();
-                
-                // No cerrar el diálogo aquí, esperar a que termine la operación
-                return;
-            }
+                    
+                    tareaActualizar.setOnFailed(_ -> {
+                        Throwable ex = tareaActualizar.getException();
+                        AlertUtils.mostrarError("Error", "No se pudo actualizar el producto: " + 
+                            (ex != null ? ex.getMessage() : "Error desconocido"));
+                    });
+                    
+                    new Thread(tareaActualizar).start();
+                }
+}
+            });
             
         } catch (IOException e) {
             e.printStackTrace();
             AlertUtils.mostrarError("Error", 
                 "No se pudo abrir el formulario de edición: " + e.getMessage());
         }
+}
     }
+}
 
     private void configurarComboMenus() {
         // Si no hay un ComboBox de menú, no hacemos nada
         if (cmbMenu == null) {
             return;
         }
+}
         
         // Obtener el ID del local actual del usuario logueado
         final Long idLocal;
@@ -763,6 +802,7 @@ public class ProductoController implements Initializable {
         } else {
             idLocal = null;
         }
+}
         
         Task<List<Menu>> tarea = new Task<>() {
             @Override
@@ -782,9 +822,11 @@ public class ProductoController implements Initializable {
                     // Si no hay local asignado, obtener todos los menús
                     menus.addAll(menuService.obtenerTodos());
                 }
+}
                 
                 return menus;
             }
+}
         };
 
         tarea.setOnSucceeded(e -> {
@@ -797,22 +839,27 @@ public class ProductoController implements Initializable {
                     if (!menus.isEmpty()) {
                         cmbMenu.getSelectionModel().select(0);
                     }
+}
                 }
+}
             } catch (Exception ex) {
                 mostrarError("Error", "No se pudieron cargar los menús: " + ex.getMessage());
                 ex.printStackTrace();
             }
+}
         });
 
         tarea.setOnFailed(e -> {
             if (cmbMenu != null) {
                 mostrarError("Error", "Error al cargar los menús: " + tarea.getException().getMessage());
             }
+}
             tarea.getException().printStackTrace();
         });
 
         new Thread(tarea).start();
     }
+}
     
     private void cargarProductos() {
         mostrarCargando(true);
@@ -825,7 +872,9 @@ public class ProductoController implements Initializable {
                 } else {
                     return productoService.obtenerTodos();
                 }
+}
             }
+}
             
             @Override
             protected void succeeded() {
@@ -836,13 +885,16 @@ public class ProductoController implements Initializable {
                         totalProductos = productos.size();
                         actualizarVistaProductos();
                     }
+}
                 } catch (Exception e) {
                     e.printStackTrace();
                     AlertUtils.mostrarError("Error", "Error al cargar los productos: " + e.getMessage());
                 } finally {
                     mostrarCargando(false);
                 }
+}
             }
+}
             
             @Override
             protected void failed() {
@@ -851,10 +903,12 @@ public class ProductoController implements Initializable {
                 AlertUtils.mostrarError("Error", "Error al cargar los productos: " + e.getMessage());
                 mostrarCargando(false);
             }
+}
         };
         
         new Thread(tarea).start();
     }
+}
 
     /**
      * Muestra u oculta el indicador de carga
@@ -868,6 +922,7 @@ public class ProductoController implements Initializable {
             alert.showAndWait();
         });
     }
+}
     
     /**
      * Muestra un mensaje informativo al usuario
@@ -883,13 +938,16 @@ public class ProductoController implements Initializable {
             alert.showAndWait();
         });
     }
+}
     
     private void mostrarCargando(boolean mostrar) {
         if (loadingPane != null) {
             loadingPane.setVisible(mostrar);
             loadingPane.setManaged(mostrar);
         }
+}
     }
+}
 
     /**
      * Actualiza los controles de paginación
@@ -900,7 +958,9 @@ public class ProductoController implements Initializable {
             int paginaMostrada = totalProductos > 0 ? paginaActual + 1 : 0;
             lblPagina.setText(String.format("Página %d de %d", paginaMostrada, Math.max(1, totalPaginas)));
         }
+}
     }
+}
 
     /**
      * Navega a la página anterior
@@ -911,7 +971,9 @@ public class ProductoController implements Initializable {
             paginaActual--;
             actualizarVistaProductos();
         }
+}
     }
+}
 
     /**
      * Navega a la página siguiente
@@ -923,7 +985,9 @@ public class ProductoController implements Initializable {
             paginaActual++;
             actualizarVistaProductos();
         }
+}
     }
+}
     
     /**
      * Actualiza la vista de productos aplicando los filtros de búsqueda y paginación
@@ -962,7 +1026,9 @@ public class ProductoController implements Initializable {
                         if (!productosPagina.isEmpty()) {
                             tblProductos.getItems().addAll(productosPagina);
                         }
+}
                     }
+}
                     // Actualizar controles de paginación
                     actualizarControlesPaginacion();
                 } catch (Exception e) {
@@ -971,6 +1037,7 @@ public class ProductoController implements Initializable {
                 } finally {
                     mostrarCargando(false);
                 }
+}
             });
             
         } catch (Exception e) {
@@ -978,5 +1045,6 @@ public class ProductoController implements Initializable {
             AlertUtils.mostrarError("Error", "Error al filtrar productos: " + e.getMessage());
             mostrarCargando(false);
         }
+}
     }
 }

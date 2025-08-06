@@ -26,10 +26,10 @@
             
             <VBox spacing="10.0" alignment="CENTER" maxWidth="300.0">
                 <Label text="Correo Electrónico" styleClass="form-label"/>
-                <TextField fx:id="emailField" promptText="Ingrese su correo" styleClass="text-field" maxWidth="1.7976931348623157E308"/>
+                <TextField fx:id="emailField" promptText="Ingrese su correo" styleClass="text-field" maxWidth="Infinity"/>
 
                 <Label text="Contraseña" styleClass="form-label"/>
-                <PasswordField fx:id="passwordField" promptText="Ingrese su contraseña" styleClass="password-field" maxWidth="1.7976931348623157E308"/>
+                <PasswordField fx:id="passwordField" promptText="Ingrese su contraseña" styleClass="password-field" maxWidth="Infinity"/>
             </VBox>
 
             <StackPane>

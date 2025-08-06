@@ -20,6 +20,7 @@ public class Producto {
     
     @SerializedName("imagen_public_id")
     private String imagenPublicId;
+    private Integer stock;
     
     // Constructors
     public Producto() {
@@ -109,6 +110,14 @@ public class Producto {
     
     public void setImagenPublicId(String imagenPublicId) {
         this.imagenPublicId = imagenPublicId;
+    }
+    
+    public Integer getStock() {
+        return stock;
+    }
+    
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
     
     // Equals and HashCode

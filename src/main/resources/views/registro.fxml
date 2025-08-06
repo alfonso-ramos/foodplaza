@@ -27,19 +27,19 @@
             <!-- Formulario -->
             <VBox spacing="10.0" maxWidth="300.0">
                 <Label text="Nombre Completo" styleClass="form-label"/>
-                <TextField fx:id="nombreField" promptText="Ingrese su nombre completo" styleClass="text-field" maxWidth="1.7976931348623157E308"/>
+                <TextField fx:id="nombreField" promptText="Ingrese su nombre completo" styleClass="text-field" maxWidth="Infinity"/>
 
                 <Label text="Correo Electrónico" styleClass="form-label"/>
-                <TextField fx:id="emailField" promptText="ejemplo@correo.com" styleClass="text-field" maxWidth="1.7976931348623157E308"/>
+                <TextField fx:id="emailField" promptText="ejemplo@correo.com" styleClass="text-field" maxWidth="Infinity"/>
 
                 <Label text="Teléfono" styleClass="form-label"/>
-                <TextField fx:id="telefonoField" promptText="Número de teléfono" styleClass="text-field" maxWidth="1.7976931348623157E308"/>
+                <TextField fx:id="telefonoField" promptText="Número de teléfono" styleClass="text-field" maxWidth="Infinity"/>
 
                 <Label text="Contraseña" styleClass="form-label"/>
-                <PasswordField fx:id="passwordField" promptText="Cree una contraseña" styleClass="password-field" maxWidth="1.7976931348623157E308"/>
+                <PasswordField fx:id="passwordField" promptText="Cree una contraseña" styleClass="password-field" maxWidth="Infinity"/>
 
                 <Label text="Confirmar Contraseña" styleClass="form-label"/>
-                <PasswordField fx:id="confirmarPasswordField" promptText="Confirme su contraseña" styleClass="password-field" maxWidth="1.7976931348623157E308"/>
+                <PasswordField fx:id="confirmarPasswordField" promptText="Confirme su contraseña" styleClass="password-field" maxWidth="Infinity"/>
             </VBox>
 
             <!-- Botón Crear Cuenta -->

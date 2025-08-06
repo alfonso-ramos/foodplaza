@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import java.lang.*?>
+
+<DialogPane fx:controller="asedi.controllers.gerencia.ProductoFormController" 
+            xmlns:fx="http://javafx.com/fxml" 
+            stylesheets="@/styles/styles.css"
+            prefWidth="600" 
+            prefHeight="700">
+    
+    <header>
+        <VBox spacing="10">
+            <Text style="-fx-font-size: 1.5em; -fx-font-weight: bold;" 
+                  fx:id="txtTitulo" />
+            <Text style="-fx-font-size: 0.9em; -fx-text-fill: #666;" 
+                  text="Complete los datos del producto" />
+        </VBox>
+    </header>
+    
+    <content>
+        <GridPane hgap="10" vgap="10" style="-fx-padding: 10 0 0 0;">
+            <padding><Insets topRightBottomLeft="10"/></padding>
+            
+            <!-- Sección de Imagen -->
+            <Label text="Imagen del Producto:" GridPane.columnIndex="0" GridPane.rowIndex="0" 
+                   style="-fx-font-weight: bold;"/>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="10" 
+                  style="-fx-alignment: center;">
+                <ImageView fx:id="imgProducto" fitHeight="150" fitWidth="150" 
+                         style="-fx-border-color: #ccc; -fx-border-width: 1; -fx-border-radius: 4;"/>
+                <HBox spacing="10" style="-fx-alignment: center;">
+                    <Button text="Seleccionar Imagen" onAction="#seleccionarImagen" 
+                            style="-fx-padding: 5 15;"/>
+                    <Button text="Eliminar" onAction="#eliminarImagen" 
+                            style="-fx-padding: 5 15; -fx-background-color: #ffebee; -fx-text-fill: #c62828;"/>
+                </HBox>
+            </VBox>
+            
+            <!-- Campos del formulario -->
+            <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="1" 
+                   style="-fx-font-weight: bold;"/>
+            <TextField fx:id="txtNombre" GridPane.columnIndex="1" GridPane.rowIndex="1" 
+                     promptText="Nombre del producto"/>
+            
+            <Label text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="2" 
+                   style="-fx-font-weight: bold;"/>
+            <TextArea fx:id="txtDescripcion" GridPane.columnIndex="1" GridPane.rowIndex="2" 
+                     promptText="Descripción del producto" wrapText="true" 
+                     prefRowCount="3"/>
+            
+            <Label text="Precio:" GridPane.columnIndex="0" GridPane.rowIndex="3" 
+                   style="-fx-font-weight: bold;"/>
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="3" spacing="5">
+                <TextField fx:id="txtPrecio" promptText="0.00">
+                    <GridPane.margin>
+                        <Insets right="5"/>
+                    </GridPane.margin>
+                </TextField>
+                <Label text="$" style="-fx-text-fill: #666; -fx-font-weight: bold;"/>
+            </HBox>
+            
+            <Label text="Categoría:" GridPane.columnIndex="0" GridPane.rowIndex="4" 
+                   style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="cmbCategoria" GridPane.columnIndex="1" GridPane.rowIndex="4" 
+                     promptText="Seleccione una categoría"/>
+            
+            <Label text="Disponibilidad:" GridPane.columnIndex="0" GridPane.rowIndex="5" 
+                   style="-fx-font-weight: bold;"/>
+            <CheckBox fx:id="chkDisponible" text="Disponible" 
+                     GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            
+            <Label text="Stock:" GridPane.columnIndex="0" GridPane.rowIndex="6" 
+                   style="-fx-font-weight: bold;"/>
+            <TextField fx:id="txtStock" promptText="Cantidad en stock" 
+                     GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            
+            <Label text="Unidad de Medida:" GridPane.columnIndex="0" GridPane.rowIndex="7" 
+                   style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="cmbUnidadMedida" GridPane.columnIndex="1" GridPane.rowIndex="7" 
+                     promptText="Seleccione unidad"/>
+        </GridPane>
+    </content>
+    
+    <stylesheets>
+        <URL value="@/styles/dialog.css"/>
+    </stylesheets>
+    
+</DialogPane>

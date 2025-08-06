@@ -41,6 +41,58 @@ public class ProductoService {
     }
     
     /**
+     * Obtiene los productos asociados a un menú específico.
+     * @param menuId ID del menú
+     * @return Lista de productos del menú
+     * @throws IOException Si hay un error al obtener los productos
+     */
+    public List<Producto> obtenerProductosPorMenu(Long menuId) throws IOException {
+        if (menuId == null) {
+            throw new IllegalArgumentException("El ID del menú no puede ser nulo");
+        }
+        
+        // Verificar si tenemos una caché reciente
+        if (productosPorMenuCache.containsKey(menuId) && 
+            (System.currentTimeMillis() - lastCacheUpdate) < CACHE_DURATION_MS) {
+            return new ArrayList<>(productosPorMenuCache.get(menuId));
+        }
+        
+        try {
+            String url = String.format("productos/menu/%d", menuId);
+            HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.get(url, String.class);
+            
+            if (response.getStatusCode() == 200) {
+                Type listType = new TypeToken<ArrayList<Producto>>() {}.getType();
+                List<Producto> productos = gson.fromJson(response.getBody(), listType);
+                
+                if (productos != null) {
+                    // Actualizar la caché
+                    productosPorMenuCache.put(menuId, productos);
+                    lastCacheUpdate = System.currentTimeMillis();
+                    
+                    // Actualizar la caché de productos individuales
+                    for (Producto producto : productos) {
+                        if (producto != null && producto.getId() != null) {
+                            cache.put(producto.getId(), producto);
+                        }
+                    }
+                    
+                    return new ArrayList<>(productos);
+                }
+                
+                return new ArrayList<>();
+            } else if (response.getStatusCode() == 404) {
+                return new ArrayList<>(); // Menú sin productos
+            } else {
+                throw new IOException("Error al obtener los productos del menú. Código: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            System.err.println("Error al obtener productos del menú: " + e.getMessage());
+            throw new IOException("No se pudieron obtener los productos del menú: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
      * Obtiene todos los productos del sistema, agrupados por menú.
      * @return Lista de todos los productos disponibles
      * @deprecated Usar obtenerTodos() en su lugar

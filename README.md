@@ -110,3 +110,30 @@ Si la aplicación no puede conectarse al backend:
 ## Contacto
 
 Para soporte o consultas, contacta al equipo de desarrollo en [correo@ejemplo.com](mailto:correo@ejemplo.com)
+
+## Generar Ejecutable (.exe) con Launch4j
+
+Para crear un ejecutable nativo de Windows (`.exe`) para la aplicación, puedes usar Launch4j.
+
+### Prerrequisitos
+
+1.  **Tener Java 21 (o superior) instalado** y configurado en las variables de entorno del sistema.
+2.  **Haber compilado el proyecto** para generar el JAR con todas las dependencias. Ejecuta el siguiente comando si aún no lo has hecho:
+    ```bash
+    mvn clean package
+    ```
+    Esto creará el archivo `foodplaza-frontend-1.0-SNAPSHOT-jar-with-dependencies.jar` en el directorio `target/`.
+3.  **Descargar e instalar Launch4j** desde su [sitio web oficial](http://launch4j.sourceforge.net/).
+
+### Pasos para Generar el .exe
+
+1.  **Abrir Launch4j**: Inicia la aplicación Launch4j.
+2.  **Cargar Configuración**: Haz clic en el icono de la carpeta (**Open configuration**) y selecciona el archivo `launch4j.xml` que se encuentra en la raíz del proyecto.
+3.  **Verificar la Configuración**: El archivo ya está preconfigurado, pero puedes verificar los siguientes campos:
+    *   **Output file**: `target/FoodPlaza.exe` (donde se guardará el ejecutable).
+    *   **Jar**: La ruta al "fat JAR" generado por Maven.
+    *   **Icon**: La ruta al icono de la aplicación.
+    *   **Bundled JRE path**: (Opcional) Si quieres incluir un JRE para que los usuarios no necesiten tener Java instalado.
+4.  **Construir el Ejecutable**: Haz clic en el icono del engranaje (**Build wrapper**).
+5.  **Verificar el Log**: Revisa la pestaña de logs en Launch4j para asegurarte de que no haya errores.
+6.  **Encontrar el Ejecutable**: Si el proceso fue exitoso, encontrarás el archivo `FoodPlaza.exe` dentro del directorio `target/`.
