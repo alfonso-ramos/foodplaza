@@ -12,8 +12,8 @@
             fx:id="contentPane">
     
     <center>
-        <ScrollPane fitToWidth="true" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER" style="-fx-background: #f5f5f5;">
-            <VBox style="-fx-padding: 20; -fx-spacing: 20; -fx-max-width: 800;" alignment="CENTER">
+        <ScrollPane fitToWidth="true" fitToHeight="true" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER" style="-fx-background: #f5f5f5;">
+            <VBox style="-fx-padding: 20; -fx-spacing: 20; -fx-min-width: 850;" alignment="CENTER">
                 <!-- Título del formulario -->
                 <Label fx:id="txtTitulo" text="Nuevo Producto" styleClass="title" />
                 

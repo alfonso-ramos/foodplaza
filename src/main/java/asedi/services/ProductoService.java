@@ -107,7 +107,6 @@ public class ProductoService {
      * @param localId ID del local
      * @return Lista de productos del local
      */
-    @SuppressWarnings("unchecked")
     public List<Producto> obtenerProductosPorLocal(Long localId) {
         List<Producto> productos = new ArrayList<>();
         try {
@@ -344,6 +343,10 @@ public class ProductoService {
         }
     }
     
+    /**
+     * @deprecated This method is no longer used and will be removed in a future version.
+     */
+    @Deprecated(since = "1.0", forRemoval = true)
     private void updateCaches(List<Producto> productos, long currentTime) {
         allProductosCache = productos;
         lastCacheUpdate = currentTime;
@@ -356,7 +359,7 @@ public class ProductoService {
                 // Actualizar caché por menú
                 if (producto.getIdMenu() != null) {
                     productosPorMenuCache
-                        .computeIfAbsent(producto.getIdMenu(), _ -> new ArrayList<>())
+                        .computeIfAbsent(producto.getIdMenu(), __ -> new ArrayList<>())
                         .add(producto);
                 }
             }

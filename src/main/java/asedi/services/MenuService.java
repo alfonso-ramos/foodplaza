@@ -197,7 +197,18 @@ public class MenuService {
         
         try {
             String url = BASE_ENDPOINT;
-            String json = gson.toJson(menu);
+            // Create the exact JSON string that the API expects
+            String json = String.format(
+                "{\"nombre_menu\":\"%s\",\"descripcion\":\"%s\",\"id_local\":%d,\"disponible\":%b,\"productos\":[]}",
+                menu.getNombre().replace("\"", "\\\""),  // Escape quotes in the name
+                menu.getDescripcion() != null ? menu.getDescripcion().replace("\"", "\\\"") : "",  // Escape quotes in description
+                menu.getIdLocal(),
+                menu.isDisponible()
+            );
+            
+            System.out.println("Sending menu creation request with body: " + json);
+            
+            // Send the raw JSON string without letting Gson re-serialize it
             HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.post(url, json, String.class);
             
             if (response.getStatusCode() == 201) {

@@ -3,6 +3,8 @@ package asedi.controllers;
 import asedi.model.Usuario;
 import asedi.services.AuthService;
 import asedi.controllers.gerencia.ProductoControllerFactory;
+import asedi.services.ProductoService;
+import asedi.services.MenuService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -87,11 +89,15 @@ public class GerenteDashboardController {
     public void cargarProductos() {
         // Inicializar la fábrica de controladores si no está inicializada
         if (productoControllerFactory == null) {
+            // Obtener las instancias de los servicios
+            ProductoService productoService = new ProductoService();
+            MenuService menuService = new MenuService();
+            
             productoControllerFactory = new ProductoControllerFactory(menuId -> {
                 // Este callback se ejecutará cuando se establezca el ID del menú
                 System.out.println("Menú seleccionado: " + menuId);
                 return null;
-            });
+            }, productoService, menuService);
         }
         
         // Cargar la vista con la fábrica de controladores

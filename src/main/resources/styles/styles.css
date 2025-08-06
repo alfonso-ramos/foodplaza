@@ -50,6 +50,32 @@
     -fx-background-color: #7f8c8d;
 }
 
+/* Loading Indicator Styles */
+.loading-pane {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-alignment: center;
+    -fx-padding: 20;
+}
+
+.loading-indicator {
+    -fx-pref-width: 80px;
+    -fx-pref-height: 80px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+}
+
+.loading-indicator .spinner {
+    -fx-pref-width: 60px;
+    -fx-pref-height: 60px;
+}
+
+.loading-text {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 5, 0, 0, 1);
+    -fx-padding: 10px 0 0 0;
+}
+
 /* Estilos para etiquetas de error */
 .error-label {
     -fx-text-fill: #e74c3c;

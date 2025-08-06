@@ -2,6 +2,8 @@ package asedi.controllers.gerencia;
 
 import java.util.function.Function;
 import javafx.util.Callback;
+import asedi.services.ProductoService;
+import asedi.services.MenuService;
 
 /**
  * Fábrica para crear instancias de ProductoController con inyección de dependencias.
@@ -9,10 +11,16 @@ import javafx.util.Callback;
 public class ProductoControllerFactory implements Callback<Class<?>, Object> {
     
     private final Function<Long, Void> onMenuSelectedCallback;
+    private final ProductoService productoService;
+    private final MenuService menuService;
     private Long menuId;
     
-    public ProductoControllerFactory(Function<Long, Void> onMenuSelectedCallback) {
+    public ProductoControllerFactory(Function<Long, Void> onMenuSelectedCallback, 
+                                   ProductoService productoService,
+                                   MenuService menuService) {
         this.onMenuSelectedCallback = onMenuSelectedCallback;
+        this.productoService = productoService;
+        this.menuService = menuService;
     }
     
     public void setMenuId(Long menuId) {
@@ -25,14 +33,15 @@ public class ProductoControllerFactory implements Callback<Class<?>, Object> {
     @Override
     public Object call(Class<?> type) {
         if (type == ProductoController.class) {
-            ProductoController controller = new ProductoController();
+            // Create controller with required services
+            ProductoController controller = new ProductoController(productoService, menuService);
             if (menuId != null) {
                 controller.setMenuId(menuId);
             }
             return controller;
         }
         
-        // Comportamiento predeterminado para otros controladores
+        // Default behavior for other controllers
         try {
             return type.getDeclaredConstructor().newInstance();
         } catch (Exception e) {

@@ -2,8 +2,9 @@ package asedi.controllers.gerencia;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -12,6 +13,9 @@ import java.util.ResourceBundle;
 import java.util.WeakHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import asedi.model.Menu;
 import asedi.model.Producto;
@@ -20,8 +24,8 @@ import asedi.services.AuthService;
 import asedi.services.MenuService;
 import asedi.services.ProductoService;
 import asedi.utils.AlertUtils;
+
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -29,21 +33,51 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.DialogPane;
+import javafx.beans.property.BooleanProperty;
+import javafx.scene.Node;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class ProductoController implements Initializable {
+    
+    
 
     // Componentes de la interfaz
     @FXML private TableView<Producto> tblProductos;
@@ -75,9 +109,14 @@ public class ProductoController implements Initializable {
     @FXML private Label lblErrorImagen;
     @FXML private CheckBox chkDisponible;
     @FXML private ComboBox<String> cmbCategoria;
+    @FXML private Button btnAgregar;
     
     // Inyectar dependencias
-    private final ProductoService productoService;
+    @Inject
+    private ProductoService productoService;
+    
+    @Inject
+    private MenuService menuService;
     
     private final ObservableList<Producto> productos = FXCollections.observableArrayList();
     private final int ITEMS_POR_PAGINA = 20;
@@ -87,11 +126,67 @@ public class ProductoController implements Initializable {
     // Cache para imágenes
     private final Map<String, Image> imageCache = new WeakHashMap<>();
     private Long menuId; // ID del menú actual, si es que se está viendo un menú específico
-    private final MenuService menuService = new MenuService();
     private File imagenSeleccionada = null;
     
+    /**
+     * Constructor por defecto.
+     * Se recomienda usar la inyección de dependencias en su lugar.
+     */
     public ProductoController() {
+        // Inicialización por compatibilidad
         this.productoService = new ProductoService();
+        this.menuService = new MenuService();
+    }
+    
+    /**
+     * Constructor con inyección de dependencias.
+     */
+    @Inject
+    public ProductoController(ProductoService productoService, MenuService menuService) {
+        this.productoService = productoService;
+        this.menuService = menuService;
+    }
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        try {
+            // Initialize table columns
+            if (colNombre != null) colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+            if (colDescripcion != null) colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+            if (colPrecio != null) colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
+            if (colCategoria != null) colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
+            if (colDisponible != null) colDisponible.setCellValueFactory(new PropertyValueFactory<>("disponible"));
+            
+            // Set up search listener
+            if (txtBuscar != null) {
+                txtBuscar.textProperty().addListener((obs, oldVal, newVal) -> buscarProductos());
+            }
+            
+            // Configure action buttons
+            if (btnAgregar != null) {
+                btnAgregar.setOnAction(event -> handleAgregarProducto(event));
+            }
+            
+            
+            // Configure menus combobox
+            configurarComboMenus();
+            
+            // Add listener for menu selection changes
+            if (cmbMenu != null) {
+                cmbMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                    if (newVal != null) {
+                        this.menuId = newVal.getId();
+                        cargarProductos();
+                    }
+                });
+            }
+            
+            // Load initial data
+            cargarProductos();
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarError("Error", "Error al inicializar el controlador: " + e.getMessage());
+        }
     }
     
     /**
@@ -103,13 +198,14 @@ public class ProductoController implements Initializable {
     }
     
     @FXML
+    @SuppressWarnings("unused")
     private void handleAgregarProducto(ActionEvent event) {
         try {
-            // Cargar el formulario simplificado
+            // Cargar el formulario
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/gerencia/productos/formulario_producto_simple.fxml"));
             Parent root = loader.load();
             
-            // Obtener el controlador
+            // Configurar el controlador
             ProductoFormController controller = loader.getController();
             controller.setProductoService(productoService);
             
@@ -117,25 +213,98 @@ public class ProductoController implements Initializable {
             Menu menuSeleccionado = cmbMenu.getSelectionModel().getSelectedItem();
             if (menuSeleccionado != null) {
                 controller.setMenuId(menuSeleccionado.getId());
-                System.out.println("ID de menú seleccionado: " + menuSeleccionado.getId());
-            } else {
-                System.err.println("Advertencia: No se seleccionó ningún menú");
             }
+
+            // Crear el diálogo
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setTitle("Nuevo Producto");
             
-            // Configurar el escenario
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Nuevo Producto");
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setMinWidth(700);
-            stage.setMinHeight(700);
+            // Configurar el diálogo
+            dialog.getDialogPane().setContent(root);
+            dialog.getDialogPane().setMinSize(900, 600);
+            dialog.getDialogPane().setPrefSize(900, 700);
             
-            // Mostrar el formulario y recargar productos al cerrar
-            stage.showAndWait();
-            cargarProductos();
+            // Habilitar el desplazamiento en el diálogo
+            dialog.getDialogPane().setStyle("-fx-padding: 0;");
+            dialog.getDialogPane().getStyleClass().add("scroll-pane");
+            
+            // Obtener el botón de guardar del controlador
+            Button guardarButton = controller.saveButton;
+            
+            // Configurar la validación del formulario
+            guardarButton.setOnAction(e -> {
+                if (!controller.validarFormulario()) {
+                    e.consume(); // Prevenir el cierre del diálogo
+                } else {
+                    // Mostrar indicador de carga
+                    mostrarCargando(true);
+                    
+                    // Ejecutar la operación en segundo plano
+                    Task<ProductoFormController.ResultadoGuardado> tarea = new Task<>() {
+                        @Override
+                        protected ProductoFormController.ResultadoGuardado call() throws Exception {
+                            return controller.guardar();
+                        }
+                    };
+
+                    // Manejar el resultado exitoso
+                    tarea.setOnSucceeded(evt -> {
+                        mostrarCargando(false);
+                        ProductoFormController.ResultadoGuardado resultado = tarea.getValue();
+                        if (resultado.isExito()) {
+                            // Recargar la lista de productos
+                            cargarProductos(); 
+                            
+                            // Limpiar el formulario
+                            controller.limpiarFormulario();
+                            
+                            // Cerrar el diálogo de producto
+                            dialog.close();
+                            
+                            // Mostrar mensaje de éxito
+                            Platform.runLater(() -> {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Operación Exitosa");
+                                alert.setHeaderText("¡Producto guardado exitosamente!");
+                                alert.setContentText(resultado.getMensaje());
+                                
+                                // Estilo personalizado para el diálogo
+                                DialogPane dialogPane = alert.getDialogPane();
+                                dialogPane.getStylesheets().add(
+                                    getClass().getResource("/styles/agregarPlaza.css").toExternalForm()
+                                );
+                                dialogPane.getStyleClass().add("my-dialog");
+                                
+                                // Mostrar el diálogo
+                                alert.showAndWait();
+                            });
+                        } else {
+                            mostrarError("Error", resultado.getMensaje());
+                        }
+                    });
+
+                    // Manejar errores
+                    tarea.setOnFailed(evt -> {
+                        mostrarCargando(false);
+                        mostrarError("Error", "Error al guardar el producto: " + 
+                            (tarea.getException() != null ? tarea.getException().getMessage() : "Error desconocido"));
+                    });
+
+                    // Ejecutar la tarea en un hilo separado
+                    new Thread(tarea).start();
+                    
+                    // Prevenir que el diálogo se cierre hasta que la operación termine
+                    e.consume();
+                }
+            });
+            
+            // Mostrar el diálogo sin botones adicionales
+            dialog.getDialogPane().getButtonTypes().clear(); // Eliminar cualquier botón por defecto
+            dialog.showAndWait();
+            
         } catch (IOException e) {
             e.printStackTrace();
-            mostrarError("Error", "No se pudo cargar el formulario de producto");
+            mostrarError("Error", "No se pudo cargar el formulario de producto: " + e.getMessage());
         }
     }
     
@@ -177,6 +346,7 @@ public class ProductoController implements Initializable {
     }
     
     @FXML
+    @SuppressWarnings("unused")
     private void seleccionarImagen(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccionar imagen del producto");
@@ -307,6 +477,7 @@ public class ProductoController implements Initializable {
     }
     
     @FXML
+    @SuppressWarnings("unused")
     private void guardarProducto(ActionEvent event) {
         if (!validarFormulario()) {
             return;
@@ -356,114 +527,6 @@ public class ProductoController implements Initializable {
             mostrarError("Error", "No se pudo guardar el producto: " + e.getMessage());
         }
     }
-    
-    @FXML
-    private void cancelar(ActionEvent event) {
-        // Mostrar confirmación si hay cambios sin guardar
-        if (hayCambiosSinGuardar()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmar cancelación");
-            alert.setHeaderText("¿Está seguro de que desea cancelar?");
-            alert.setContentText("Los cambios no guardados se perderán.");
-            
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Cerrar la ventana
-                ((Node) event.getSource()).getScene().getWindow().hide();
-            }
-        } else {
-            // Cerrar la ventana directamente si no hay cambios
-            ((Node) event.getSource()).getScene().getWindow().hide();
-        }
-    }
-    
-    private boolean hayCambiosSinGuardar() {
-        // Verificar si hay cambios en los campos del formulario
-        return (txtNombre.getText() != null && !txtNombre.getText().trim().isEmpty()) ||
-               (txtDescripcion.getText() != null && !txtDescripcion.getText().trim().isEmpty()) ||
-               (txtPrecio.getText() != null && !txtPrecio.getText().trim().isEmpty()) ||
-               (txtStock.getText() != null && !txtStock.getText().trim().isEmpty()) ||
-               imagenSeleccionada != null ||
-               (txtImagenUrl.getText() != null && !txtImagenUrl.getText().isEmpty());
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        try {
-            // Configurar el ComboBox de menús
-            configurarComboMenus();
-            
-            // Agregar listener para cambios en la selección del menú solo si el ComboBox existe
-            if (cmbMenu != null) {
-                cmbMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-                    if (newVal != null) {
-                        menuId = newVal.getId();
-                    } else {
-                        menuId = null;
-                    }
-                    cargarProductos();
-                });
-            }
-            // Configurar las columnas de la tabla si existen
-            if (colNombre != null) {
-                colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-            }
-            if (colDescripcion != null) {
-                colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-            }
-            if (colPrecio != null) {
-                colPrecio.setCellValueFactory(new PropertyValueFactory<>("precioFormateado"));
-            }
-            if (colDisponible != null) {
-                colDisponible.setCellValueFactory(new PropertyValueFactory<>("disponible"));
-            }
-            
-            // Configurar la columna de acciones si existe
-            if (colAcciones != null) {
-                colAcciones.setCellFactory(param -> new TableCell<Producto, Void>() {
-                    private final Button btnEditar = new Button("Editar");
-                    private final Button btnEliminar = new Button("Eliminar");
-                    private final HBox botones = new HBox(5, btnEditar, btnEliminar);
-                    
-                    {
-                        btnEditar.getStyleClass().add("btn-editar");
-                        btnEliminar.getStyleClass().add("btn-eliminar");
-                        
-                        btnEditar.setOnAction(event -> {
-                            Producto producto = getTableView().getItems().get(getIndex());
-                            editarProducto(producto);
-                        });
-                        
-                        btnEliminar.setOnAction(event -> {
-                            Producto producto = getTableView().getItems().get(getIndex());
-                            confirmarEliminacion(producto);
-                        });
-                    }
-                    
-                    @Override
-                    protected void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(botones);
-                        }
-                    }
-                });
-            }
-            
-            // Configurar el listener de búsqueda si el campo de búsqueda existe
-            if (txtBuscar != null) {
-                txtBuscar.textProperty().addListener((obs, oldVal, newVal) -> buscarProductos());
-            }
-            
-            // Cargar datos iniciales
-            cargarProductos();
-        } catch (Exception e) {
-            e.printStackTrace();
-            AlertUtils.mostrarError("Error", "Error al inicializar la vista de productos: " + e.getMessage());
-        }
-    }
 
     @FXML
     private void buscarProductos() {
@@ -494,6 +557,7 @@ public class ProductoController implements Initializable {
         }
     }
 
+    @SuppressWarnings("unused")
     private Predicate<Producto> crearPredicadoBusqueda(String busqueda, String categoria, String disponibilidad) {
         return producto -> {
             if (producto == null) return false;
@@ -531,6 +595,7 @@ public class ProductoController implements Initializable {
     }
     
     @FXML
+    @SuppressWarnings("unused")
     private void handleAgregarProducto() {
         try {
             // Cargar el FXML simplificado
@@ -588,7 +653,7 @@ public class ProductoController implements Initializable {
                 
                 tareaGuardar.setOnSucceeded(_evt -> {
                     if (tareaGuardar.getValue()) {
-                        Platform.runLater(() -> {
+                        Platform.runLater((Runnable)() -> {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             alert.setTitle("Éxito");
                             alert.setHeaderText(null);
@@ -600,7 +665,7 @@ public class ProductoController implements Initializable {
                 });
                 
                 tareaGuardar.setOnFailed(_evt -> {
-                    Platform.runLater(() -> {
+                    Platform.runLater((Runnable)() -> {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Error");
                         alert.setHeaderText(null);
@@ -624,6 +689,7 @@ public class ProductoController implements Initializable {
         }
     }
 
+    @SuppressWarnings("unused")
     private void confirmarEliminacion(Producto producto) {
         if (producto == null) return;
         
@@ -650,7 +716,7 @@ public class ProductoController implements Initializable {
                     mostrarCargando(false);
                     if (tareaEliminar.getValue()) {
                         // Eliminación exitosa, actualizar la vista
-                        Platform.runLater(() -> {
+                        Platform.runLater((Runnable)() -> {
                             productos.remove(producto);
                             actualizarVistaProductos();
                             AlertUtils.mostrarInformacion("Éxito", "Producto eliminado correctamente");
@@ -676,6 +742,7 @@ public class ProductoController implements Initializable {
         });
     }
 
+    @SuppressWarnings("unused")
     private void editarProducto(Producto producto) {
         try {
             // Cargar el formulario simplificado
@@ -707,32 +774,244 @@ public class ProductoController implements Initializable {
             Optional<ButtonType> result = dialog.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 // Ejecutar la actualización en un hilo separado
-                Task<Boolean> tareaActualizar = new Task<Boolean>() {
+                Task<ProductoFormController.ResultadoGuardado> tareaActualizar = new Task<ProductoFormController.ResultadoGuardado>() {
                     @Override
-                    protected Boolean call() {
+                    protected ProductoFormController.ResultadoGuardado call() throws Exception {
                         return controller.guardar();
                     }
                 };
                 
-                tareaActualizar.setOnSucceeded(event -> {
-                    boolean exito = tareaActualizar.getValue();
-                    if (exito) {
-                        // Cerrar el diálogo solo si el guardado fue exitoso
-                        dialog.close();
-                        // Recargar la lista de productos
-                        Platform.runLater(() -> cargarProductos());
+                // Mostrar indicador de carga
+                ProgressIndicator progressIndicator = new ProgressIndicator();
+                progressIndicator.setMaxSize(30, 30);
+                
+                // Crear diálogo de carga
+                Dialog<Void> loadingDialog = new Dialog<>();
+                loadingDialog.initModality(Modality.APPLICATION_MODAL);
+                loadingDialog.setTitle("Guardando producto");
+                loadingDialog.setHeaderText("Por favor espere...");
+                loadingDialog.setGraphic(progressIndicator);
+                loadingDialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+                
+                // Configurar comportamiento del botón cancelar
+                Button cancelButton = (Button) loadingDialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+                cancelButton.setText("Cancelar");
+                cancelButton.setOnAction(e -> {
+                    tareaActualizar.cancel(true);
+                    loadingDialog.close();
+                    if (controller.saveButton != null) {
+                        controller.saveButton.setDisable(false);
                     }
-                    // Si no fue exitoso, el controlador ya mostró un mensaje de error
                 });
                 
-                tareaActualizar.setOnFailed(event -> {
-                    Throwable ex = tareaActualizar.getException();
-                    Platform.runLater(() -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error");
-                        alert.setHeaderText("Error al guardar el producto");
-                        alert.setContentText(ex != null ? ex.getMessage() : "Error desconocido");
-                        alert.showAndWait();
+                // Configurar diálogo de carga con barra de progreso y estilo mejorado
+                ProgressBar progressBar = new ProgressBar();
+                progressBar.setPrefWidth(350);
+                progressBar.setProgress(-1); // Indicador indeterminado
+                progressBar.setStyle("-fx-accent: #4CAF50;");
+                
+                Label loadingLabel = new Label("Guardando producto...");
+                loadingLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #333;");
+                
+                VBox loadingContent = new VBox(15);
+                loadingContent.setAlignment(Pos.CENTER);
+                loadingContent.setPadding(new Insets(25));
+                loadingContent.setStyle("-fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-width: 1;");
+                loadingContent.getChildren().addAll(
+                    loadingLabel,
+                    progressBar
+                );
+                
+                // Configurar el diálogo de carga
+                loadingDialog.initModality(Modality.APPLICATION_MODAL);
+                loadingDialog.setTitle("Procesando...");
+                loadingDialog.getDialogPane().setContent(loadingContent);
+                loadingDialog.getDialogPane().getButtonTypes().clear();
+                
+                // Mostrar diálogo de carga en el hilo de la interfaz
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadingDialog.show();
+                        // Centrar el diálogo en la pantalla
+                        Stage stage = (Stage) loadingDialog.getDialogPane().getScene().getWindow();
+                        stage.centerOnScreen();
+                    }
+                });
+                
+                tareaActualizar.setOnSucceeded(_ -> {
+                    Platform.runLater((Runnable)() -> {
+                        try {
+                            // Cerrar diálogo de carga
+                            if (loadingDialog.isShowing()) {
+                                loadingDialog.close();
+                            }
+                            
+                            ProductoFormController.ResultadoGuardado resultado = tareaActualizar.getValue();
+                            
+                            if (resultado.isExito()) {
+                                // Construir mensaje de éxito con formato mejorado
+                                String titulo = "¡Operación Exitosa! 🎉";
+                                StringBuilder mensaje = new StringBuilder();
+                                mensaje.append("El producto se ha guardado correctamente.\n\n");
+                                
+                                // Agregar detalles adicionales
+                                mensaje.append("• ").append(resultado.getMensaje()).append("\n");
+                                if (resultado.isTieneImagen()) {
+                                    mensaje.append("• ✅ Imagen cargada exitosamente\n");
+                                }
+                                
+                                // Mostrar notificación emergente no bloqueante
+                                mostrarNotificacionEmergente("✅ Operación exitosa", "Los cambios se han guardado correctamente");
+                                
+                                // Crear diálogo de éxito con opciones
+                                Alert alertaExito = new Alert(Alert.AlertType.INFORMATION);
+                                alertaExito.setTitle(titulo);
+                                alertaExito.setHeaderText("Operación completada con éxito");
+                                alertaExito.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                                
+                                // Configurar botones personalizados
+                                ButtonType verProductoBtn = new ButtonType("Ver Producto", ButtonBar.ButtonData.YES);
+                                ButtonType nuevoProductoBtn = new ButtonType("Nuevo Producto", ButtonBar.ButtonData.APPLY);
+                                ButtonType continuarBtn = new ButtonType("Continuar", ButtonBar.ButtonData.OK_DONE);
+                                alertaExito.getButtonTypes().setAll(verProductoBtn, nuevoProductoBtn, continuarBtn);
+                                
+                                // Configurar el contenido del diálogo
+                                Label contenido = new Label(mensaje.toString());
+                                contenido.setStyle("-fx-font-size: 14px; -fx-padding: 10 0 15 0;");
+                                contenido.setWrapText(true);
+                                contenido.setMaxWidth(400);
+                                alertaExito.getDialogPane().setContent(contenido);
+                                
+                                // Manejar la respuesta del usuario
+                                alertaExito.showAndWait().ifPresent(buttonType -> {
+                                    if (buttonType == verProductoBtn) {
+                                        // Navegar al producto recién creado/actualizado
+                                        // Aquí iría la lógica para mostrar el producto
+                                        System.out.println("Navegando al producto...");
+                                    } else if (buttonType == nuevoProductoBtn) {
+                                        // Crear un nuevo producto
+                                        System.out.println("Creando nuevo producto...");
+                                        // Aquí iría la lógica para crear un nuevo producto
+                                    }
+                                });
+                                
+                                // Cerrar el diálogo actual y recargar la lista de productos
+                                dialog.close();
+                                cargarProductos();
+                                
+                            } else {
+                                // Mostrar mensaje de error con formato mejorado
+                                String titulo = "⚠️ Error al guardar";
+                                String mensajeError = resultado.getMensaje();
+                                
+                                // Crear diálogo de error con más detalles
+                                Alert alertaError = new Alert(Alert.AlertType.ERROR);
+                                alertaError.setTitle(titulo);
+                                alertaError.setHeaderText("No se pudo completar la operación");
+                                
+                                // Crear área de texto para el mensaje de error
+                                TextArea textArea = new TextArea(mensajeError);
+                                textArea.setEditable(false);
+                                textArea.setWrapText(true);
+                                textArea.setMaxWidth(Double.MAX_VALUE);
+                                textArea.setMaxHeight(Double.MAX_VALUE);
+                                
+                                // Crear contenedor para el mensaje
+                                VBox content = new VBox(10);
+                                content.setPadding(new Insets(10));
+                                content.getChildren().addAll(
+                                    new Label("Se produjo el siguiente error:"),
+                                    textArea,
+                                    new Label("Por favor, verifica los datos e inténtalo nuevamente.")
+                                );
+                                
+                                // Configurar el diálogo
+                                alertaError.getDialogPane().setContent(content);
+                                alertaError.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                                alertaError.getButtonTypes().setAll(ButtonType.OK);
+                                
+                                // Mostrar diálogo
+                                alertaError.showAndWait();
+                                
+                                // Reactivar el botón de guardar
+                                if (controller.saveButton != null) {
+                                    controller.saveButton.setDisable(false);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            loadingDialog.close();
+                            AlertUtils.mostrarError("Error inesperado", "Ocurrió un error inesperado al procesar la respuesta.");
+                            if (controller.saveButton != null) {
+                                controller.saveButton.setDisable(false);
+                            }
+                        }
+                    });
+                });
+                
+                tareaActualizar.setOnFailed(_ -> {
+                    Platform.runLater((Runnable)() -> {
+                        try {
+                            loadingDialog.close();
+                            Throwable ex = tareaActualizar.getException();
+                            String errorMsg = ex != null ? ex.getMessage() : "Error desconocido al procesar la solicitud";
+                            
+                            // Mostrar error detallado
+                            Alert alertaError = new Alert(Alert.AlertType.ERROR);
+                            alertaError.setTitle("❌ Error crítico");
+                            alertaError.setHeaderText("No se pudo completar la operación");
+                            
+                            // Mensaje más descriptivo según el tipo de error
+                            String mensajeDetallado = "Se produjo un error al intentar guardar el producto.\n\n";
+                            if (ex != null && ex.getCause() != null) {
+                                mensajeDetallado += "Causa: " + ex.getCause().getMessage();
+                            } else {
+                                mensajeDetallado += "Detalles: " + errorMsg;
+                            }
+                            
+                            alertaError.setContentText(mensajeDetallado);
+                            
+                            // Añadir área de texto para el stack trace en desarrollo
+                            if (ex != null) {
+                                StringWriter sw = new StringWriter();
+                                PrintWriter pw = new PrintWriter(sw);
+                                ex.printStackTrace(pw);
+                                String exceptionText = sw.toString();
+                                
+                                TextArea textArea = new TextArea(exceptionText);
+                                textArea.setEditable(false);
+                                textArea.setWrapText(true);
+                                textArea.setMaxWidth(Double.MAX_VALUE);
+                                textArea.setMaxHeight(Double.MAX_VALUE);
+                                
+                                GridPane.setVgrow(textArea, Priority.ALWAYS);
+                                GridPane.setHgrow(textArea, Priority.ALWAYS);
+                                
+                                GridPane expContent = new GridPane();
+                                expContent.setMaxWidth(Double.MAX_VALUE);
+                                expContent.add(new Label("Detalles del error:"), 0, 0);
+                                expContent.add(textArea, 0, 1);
+                                
+                                alertaError.getDialogPane().setExpandableContent(expContent);
+                            }
+                            
+                            alertaError.showAndWait();
+                            
+                            // Reproducir sonido de error
+                            playSound("/sounds/error.wav");
+                            
+                        } finally {
+                            // Asegurarse de que el diálogo de carga se cierre
+                            if (loadingDialog.isShowing()) {
+                                loadingDialog.close();
+                            }
+                            
+                            // Reactivar el botón de guardar
+                            if (controller.saveButton != null) {
+                                controller.saveButton.setDisable(false);
+                            }
+                        }
                     });
                 });
                 
@@ -749,6 +1028,66 @@ public class ProductoController implements Initializable {
         }
     }
 
+    /**
+     * Muestra una notificación emergente en la esquina superior derecha de la pantalla.
+     * @param titulo Título de la notificación
+     * @param mensaje Mensaje a mostrar
+     */
+    /**
+     * Reproduce un sonido desde la ruta especificada.
+     * @param soundPath Ruta del archivo de sonido relativa a la carpeta de recursos
+     */
+    @SuppressWarnings("unused")
+    private void playSound(String soundPath) {
+        try {
+            // Obtener la URL del recurso
+            String soundUrl = getClass().getResource(soundPath).toExternalForm();
+            
+            // Crear y reproducir el sonido
+            Media sound = new Media(soundUrl);
+            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+            mediaPlayer.play();
+            
+            // Liberar recursos cuando termine de reproducirse
+            mediaPlayer.setOnEndOfMedia(mediaPlayer::dispose);
+        } catch (Exception e) {
+            System.err.println("No se pudo reproducir el sonido: " + e.getMessage());
+            // No es crítico, continuar sin sonido
+        }
+    }
+    
+    /**
+     * Muestra una notificación emergente en la esquina superior derecha de la pantalla.
+     * @param titulo Título de la notificación
+     * @param mensaje Mensaje a mostrar
+     */
+    private void mostrarNotificacionEmergente(String titulo, String mensaje) {
+        // Crear una alerta personalizada
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        
+        // Configurar posición
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.setX(stage.getX() + 20);
+        stage.setY(20);
+        
+        // Mostrar y ocultar automáticamente después de 3 segundos
+        alert.show();
+        
+        // Cerrar automáticamente después de 3 segundos
+        new Thread(() -> {
+            try {
+                Thread.sleep(3000);
+                Platform.runLater(alert::close);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }).start();
+    }
+    
+    @SuppressWarnings("unused")
     private void configurarComboMenus() {
         // Si no hay un ComboBox de menú, no hacemos nada
         if (cmbMenu == null) {
@@ -860,7 +1199,7 @@ public class ProductoController implements Initializable {
      * Muestra u oculta el indicador de carga
      */
     private void mostrarError(String titulo, String mensaje) {
-        Platform.runLater(() -> {
+        Platform.runLater((Runnable)() -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(titulo);
             alert.setHeaderText(null);
@@ -875,7 +1214,7 @@ public class ProductoController implements Initializable {
      * @param mensaje El contenido del mensaje
      */
     private void mostrarMensaje(String titulo, String mensaje) {
-        Platform.runLater(() -> {
+        Platform.runLater((Runnable)() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(titulo);
             alert.setHeaderText(null);
@@ -896,12 +1235,12 @@ public class ProductoController implements Initializable {
      */
     private void actualizarControlesPaginacion() {
         if (lblPagina != null) {
-            int totalPaginas = (int) Math.ceil((double) productos.size() / ITEMS_POR_PAGINA);
+            int totalPaginas = (int) Math.ceil((double) totalProductos / ITEMS_POR_PAGINA);
             int paginaMostrada = totalProductos > 0 ? paginaActual + 1 : 0;
             lblPagina.setText(String.format("Página %d de %d", paginaMostrada, Math.max(1, totalPaginas)));
         }
     }
-
+    
     /**
      * Navega a la página anterior
      */
@@ -910,18 +1249,20 @@ public class ProductoController implements Initializable {
         if (paginaActual > 0) {
             paginaActual--;
             actualizarVistaProductos();
+            actualizarControlesPaginacion();
         }
     }
-
+    
     /**
      * Navega a la página siguiente
      */
     @FXML
     private void paginaSiguiente() {
-        int totalPaginas = (int) Math.ceil((double) productos.size() / ITEMS_POR_PAGINA);
+        int totalPaginas = (int) Math.ceil((double) totalProductos / ITEMS_POR_PAGINA);
         if (paginaActual < totalPaginas - 1) {
             paginaActual++;
             actualizarVistaProductos();
+            actualizarControlesPaginacion();
         }
     }
     

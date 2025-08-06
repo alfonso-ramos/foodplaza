@@ -3,14 +3,11 @@ package asedi.controllers.gerencia;
 import asedi.model.Producto;
 import asedi.services.ProductoService;
 import asedi.utils.AlertUtils;
-import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,12 +15,10 @@ import javafx.concurrent.Task;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
-import javafx.stage.Window;
 import javafx.util.Duration;
 
 import java.io.File;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 
 public class ProductoFormController {
     @FXML private TextField txtNombre;
@@ -33,7 +28,7 @@ public class ProductoFormController {
     @FXML private CheckBox chkDisponible;
     @FXML private ImageView imgPreview;
     @FXML private Label txtTitulo;
-    @FXML private Button saveButton;
+    @FXML public Button saveButton;
     
     private Producto producto;
     private ProductoService productoService;
@@ -42,11 +37,9 @@ public class ProductoFormController {
     private final BooleanProperty formularioValido = new SimpleBooleanProperty(false);
     // Aumentar el tiempo de debounce para reducir la frecuencia de validaciones
     private final PauseTransition validationTimer = new PauseTransition(Duration.millis(700));
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
     private volatile boolean isValidating = false;
     private volatile boolean isLoading = false;
     private final Object lock = new Object();
-    private String lastValidationState = ""; // Cache del último estado de validación
     
     /**
      * Establece el servicio de productos.
@@ -76,12 +69,10 @@ public class ProductoFormController {
             }
         };
 
-        imageLoadTask.setOnSucceeded(event -> {
+        imageLoadTask.setOnSucceeded(__ -> {
             Image image = imageLoadTask.getValue();
             if (image != null && !image.isError()) {
-                Platform.runLater(() -> {
-                    imgPreview.setImage(image);
-                });
+                Platform.runLater(() -> imgPreview.setImage(image));
             }
         });
 
@@ -374,8 +365,27 @@ public class ProductoFormController {
         }
     }
     
+    /**
+     * Resultado de la operación de guardado
+     */
+    public static class ResultadoGuardado {
+        private final boolean exito;
+        private final String mensaje;
+        private final boolean tieneImagen;
+        
+        public ResultadoGuardado(boolean exito, String mensaje, boolean tieneImagen) {
+            this.exito = exito;
+            this.mensaje = mensaje;
+            this.tieneImagen = tieneImagen;
+        }
+        
+        public boolean isExito() { return exito; }
+        public String getMensaje() { return mensaje; }
+        public boolean isTieneImagen() { return tieneImagen; }
+    }
+    
     @FXML
-    public boolean guardar() {
+    public ResultadoGuardado guardar() {
         System.out.println("=== Iniciando método guardar() ===");
         if (saveButton != null) {
             saveButton.setDisable(true);
@@ -385,10 +395,13 @@ public class ProductoFormController {
             System.out.println("Validando formulario...");
             if (!validarFormulario()) {
                 System.out.println("Validación fallida, deteniendo guardado");
+                String mensajeError = "Por favor complete todos los campos requeridos correctamente.";
                 if (saveButton != null) {
                     saveButton.setDisable(false);
                 }
-                return false;
+                // Asegurarse de que el mensaje de error no sea nulo
+            String mensajeFinal = mensajeError != null ? mensajeError : "Error desconocido al guardar el producto";
+            return new ResultadoGuardado(false, mensajeFinal, false);
             }
             
             System.out.println("Validación exitosa, procediendo con el guardado");
@@ -461,26 +474,45 @@ public class ProductoFormController {
             // Si hay una imagen seleccionada, subirla
             if (archivoImagen != null) {
                 System.out.println("Procesando imagen: " + archivoImagen.getName());
-                // Aquí iría la lógica para subir la imagen
-                // productoService.subirImagen(producto.getId(), archivoImagen, "Imagen de " + producto.getNombre());
+                try {
+                    // Subir la imagen usando el servicio
+                    boolean imagenSubida = productoService.subirImagen(
+                        producto.getId(), 
+                        archivoImagen, 
+                        "Imagen de " + producto.getNombre()
+                    );
+                    
+                    if (!imagenSubida) {
+                        System.err.println("No se pudo subir la imagen, pero el producto se guardó correctamente");
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error al subir la imagen: " + e.getMessage());
+                    // No lanzamos la excepción para no perder los datos del producto
+                }
             }
             
             System.out.println("Producto guardado exitosamente con ID: " + producto.getId());
-            return true;
+            
+            // Verificar si se subió una imagen
+            boolean tieneImagen = archivoImagen != null || 
+                                (producto.getImagenUrl() != null && !producto.getImagenUrl().isEmpty());
+            
+            String mensaje = "Producto guardado exitosamente";
+            if (tieneImagen) {
+                mensaje += " con imagen adjunta.";
+            } else {
+                mensaje += " sin imagen.";
+            }
+            
+            return new ResultadoGuardado(true, mensaje, tieneImagen);
             
         } catch (Exception e) {
             e.printStackTrace();
             String mensajeError = "Error al guardar el producto: " + e.getMessage();
             System.err.println(mensajeError);
             
-            Platform.runLater(() -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Error al guardar el producto");
-                alert.setContentText(mensajeError);
-                alert.showAndWait();
-            });
-            return false;
+            // No es necesario mostrar la alerta aquí, ya que el controlador padre lo manejará
+            return new ResultadoGuardado(false, mensajeError, false);
         } finally {
             // Asegurarse de que los controles se reactiven
             setControlesHabilitados(true);
@@ -490,6 +522,22 @@ public class ProductoFormController {
                 saveButton.setDisable(false);
             }
         }
+    }
+    
+    /**
+     * Limpia todos los campos del formulario
+     */
+    public void limpiarFormulario() {
+        Platform.runLater(() -> {
+            txtNombre.clear();
+            txtDescripcion.clear();
+            txtPrecio.clear();
+            cmbCategoria.getSelectionModel().clearSelection();
+            chkDisponible.setSelected(true);
+            imgPreview.setImage(null);
+            archivoImagen = null;
+            producto = null;
+        });
     }
     
     @FXML

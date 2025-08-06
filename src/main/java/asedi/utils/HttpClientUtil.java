@@ -401,8 +401,22 @@ public class HttpClientUtil {
             request.setHeader("Content-Type", "application/json");
             request.setHeader("Accept", "application/json");
             
-            // Convertir el objeto a JSON
-            String jsonBody = gson.toJson(requestBody);
+            // Determinar el cuerpo de la petición
+            String jsonBody;
+            if (requestBody instanceof String) {
+                // Si ya es un String, asumimos que es JSON formateado correctamente
+                jsonBody = (String) requestBody;
+                // Verificar si el string está entre comillas dobles (lo que indica que está escapado)
+                if (jsonBody.startsWith("\"") && jsonBody.endsWith("\"")) {
+                    // Eliminar las comillas dobles exteriores
+                    jsonBody = jsonBody.substring(1, jsonBody.length() - 1);
+                    // Reemplazar las comillas escapadas
+                    jsonBody = jsonBody.replace("\\\"", "\"");
+                }
+            } else {
+                // Si no es un String, convertirlo a JSON
+                jsonBody = gson.toJson(requestBody);
+            }
             
             // Log detallado de la petición
             System.out.println("\n=== DETALLES DE LA PETICIÓN ===");
@@ -421,8 +435,7 @@ public class HttpClientUtil {
             
             // Configurar el cuerpo de la petición
             StringEntity entity = new StringEntity(jsonBody, StandardCharsets.UTF_8);
-            entity.setContentType("application/json");
-            entity.setContentEncoding("UTF-8");
+            entity.setContentType("application/json; charset=UTF-8");
             request.setEntity(entity);
             
             // Ejecutar la petición

@@ -24,8 +24,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.geometry.Pos;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -60,15 +63,36 @@ public class MenuController implements Initializable {
     private static final String TITULO_NUEVO = "Nuevo Menú";
     
     private void mostrarCargando(boolean mostrar) {
-        if (Platform.isFxApplicationThread()) {
-            loadingPane.setVisible(mostrar);
-            loadingPane.setManaged(mostrar);
-        } else {
-            Platform.runLater(() -> {
-                loadingPane.setVisible(mostrar);
-                loadingPane.setManaged(mostrar);
-            });
-        }
+        Platform.runLater(() -> {
+            if (mostrar) {
+                // Clear existing content
+                loadingPane.getChildren().clear();
+                
+                // Create spinner
+                ProgressIndicator spinner = new ProgressIndicator();
+                spinner.getStyleClass().add("loading-indicator");
+                
+                // Create loading text
+                Label loadingText = new Label("Cargando menús...");
+                loadingText.getStyleClass().add("loading-text");
+                
+                // Create container
+                VBox container = new VBox(10, spinner, loadingText);
+                container.setAlignment(Pos.CENTER);
+                container.getStyleClass().add("loading-container");
+                
+                // Add to loading pane
+                loadingPane.getChildren().add(container);
+                
+                // Make sure loading pane is visible
+                loadingPane.setVisible(true);
+                loadingPane.setManaged(true);
+                loadingPane.toFront();
+            } else {
+                loadingPane.setVisible(false);
+                loadingPane.setManaged(false);
+            }
+        });
     }
     
     private void mostrarError(String titulo, String mensaje) {
@@ -143,38 +167,67 @@ public class MenuController implements Initializable {
      * Carga los menús del local del gerente actual
      */
     private void cargarMenus() {
+        // Mostrar indicador de carga
+        mostrarCargando(true);
+        
+        // Obtener el ID del local del gerente si no está establecido
         if (idLocalGerente == null) {
             idLocalGerente = obtenerIdLocalGerente();
             if (idLocalGerente == null) {
                 mostrarError("Error", "No se pudo determinar el local del gerente");
+                mostrarCargando(false);
                 return;
             }
         }
         
+        // Crear tarea para cargar los menús en segundo plano
         Task<List<Menu>> task = new Task<>() {
             @Override
             protected List<Menu> call() throws Exception {
-                return menuService.obtenerPorLocal(idLocalGerente);
+                try {
+                    return menuService.obtenerPorLocal(idLocalGerente);
+                } catch (Exception e) {
+                    throw new Exception("Error al conectar con el servidor: " + e.getMessage());
+                }
             }
         };
         
+        // Configurar manejadores de eventos para la tarea
         task.setOnSucceeded(_ -> {
-            List<Menu> menusLocal = task.getValue();
-            if (menusLocal != null) {
-                menus.setAll(menusLocal);
-                filtrarMenus();
-            } else {
-                mostrarError("Error", "No se pudieron cargar los menús");
+            try {
+                List<Menu> menusLocal = task.getValue();
+                if (menusLocal != null && !menusLocal.isEmpty()) {
+                    menus.setAll(menusLocal);
+                    filtrarMenus();
+                    Platform.runLater(() -> {
+                        tablaMenus.setVisible(true);
+                        if (lblNoMenus != null) {
+                            lblNoMenus.setVisible(false);
+                        }
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        tablaMenus.setVisible(false);
+                        if (lblNoMenus != null) {
+                            lblNoMenus.setVisible(true);
+                            lblNoMenus.setText("No se encontraron menús para mostrar");
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                mostrarError("Error", "Error al procesar los menús: " + e.getMessage());
+            } finally {
+                mostrarCargando(false);
             }
-            mostrarCargando(false);
         });
         
         task.setOnFailed(_ -> {
-            mostrarError("Error", "Error al cargar los menús: " + task.getException().getMessage());
+            mostrarError("Error", "Error al cargar los menús: " + 
+                (task.getException() != null ? task.getException().getMessage() : "Error desconocido"));
             mostrarCargando(false);
         });
         
-        mostrarCargando(true);
+        // Ejecutar la tarea en el executor
         executor.submit(task);
     }
     
@@ -578,7 +631,7 @@ public class MenuController implements Initializable {
     }
     
     public void actualizarTablaMenus() {
-        cargarDatos();
+        cargarMenus();
     }
     
     @FXML
