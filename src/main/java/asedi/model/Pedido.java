@@ -1,53 +1,147 @@
 package asedi.model;
 
+import javafx.beans.property.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Pedido {
-    private Long id;
-    private Long idUsuario;
-    private Long idLocal;
-    private List<Producto> productos;
-    private double total;
+    private final LongProperty id = new SimpleLongProperty();
+    private final ObjectProperty<Usuario> cliente = new SimpleObjectProperty<>();
+    private final ObjectProperty<Local> local = new SimpleObjectProperty<>();
+    private final ListProperty<DetallePedido> detalles = new SimpleListProperty<>();
+    private final DoubleProperty total = new SimpleDoubleProperty();
+    private final ObjectProperty<LocalDateTime> fechaHora = new SimpleObjectProperty<>();
+    private final StringProperty estado = new SimpleStringProperty();
+    private final StringProperty direccionEntrega = new SimpleStringProperty();
+    private final StringProperty notas = new SimpleStringProperty();
 
-    // Getters and setters
+    // Getters y setters para propiedades JavaFX
+    
+    public long getId() {
+        return id.get();
+    }
 
-    public Long getId() {
+    public LongProperty idProperty() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(long id) {
+        this.id.set(id);
     }
 
-    public Long getIdUsuario() {
-        return idUsuario;
+    public Usuario getCliente() {
+        return cliente.get();
     }
 
-    public void setIdUsuario(Long idUsuario) {
-        this.idUsuario = idUsuario;
+    public ObjectProperty<Usuario> clienteObjectProperty() {
+        return cliente;
+    }
+    
+    public String getClienteNombre() {
+        return cliente.get() != null ? cliente.get().getNombre() : "";
+    }
+    
+    public StringProperty clienteProperty() {
+        return new SimpleStringProperty(getClienteNombre());
     }
 
-    public Long getIdLocal() {
-        return idLocal;
+    public void setCliente(Usuario cliente) {
+        this.cliente.set(cliente);
     }
 
-    public void setIdLocal(Long idLocal) {
-        this.idLocal = idLocal;
+    public Local getLocal() {
+        return local.get();
     }
 
-    public List<Producto> getProductos() {
-        return productos;
+    public ObjectProperty<Local> localProperty() {
+        return local;
     }
 
-    public void setProductos(List<Producto> productos) {
-        this.productos = productos;
+    public void setLocal(Local local) {
+        this.local.set(local);
+    }
+
+    public List<DetallePedido> getDetalles() {
+        return detalles.get();
+    }
+
+    public ListProperty<DetallePedido> detallesProperty() {
+        return detalles;
+    }
+
+    public void setDetalles(List<DetallePedido> detalles) {
+        this.detalles.setAll(detalles);
     }
 
     public double getTotal() {
+        return total.get();
+    }
+
+    public DoubleProperty totalProperty() {
         return total;
     }
 
     public void setTotal(double total) {
-        this.total = total;
+        this.total.set(total);
+    }
+
+    public LocalDateTime getFechaHora() {
+        return fechaHora.get();
+    }
+
+    public ObjectProperty<LocalDateTime> fechaHoraProperty() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(LocalDateTime fechaHora) {
+        this.fechaHora.set(fechaHora);
+    }
+
+    public String getEstado() {
+        return estado.get();
+    }
+
+    public StringProperty estadoProperty() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado.set(estado);
+    }
+
+    public String getDireccionEntrega() {
+        return direccionEntrega.get();
+    }
+
+    public StringProperty direccionEntregaProperty() {
+        return direccionEntrega;
+    }
+
+    public void setDireccionEntrega(String direccionEntrega) {
+        this.direccionEntrega.set(direccionEntrega);
+    }
+
+    public String getNotas() {
+        return notas.get();
+    }
+
+    public StringProperty notasProperty() {
+        return notas;
+    }
+
+    public void setNotas(String notas) {
+        this.notas.set(notas);
+    }
+    
+    // Métodos de conveniencia
+    public void agregarDetalle(DetallePedido detalle) {
+        this.detalles.add(detalle);
+        this.total.set(this.total.get() + detalle.getSubtotal());
+    }
+    
+    public void eliminarDetalle(DetallePedido detalle) {
+        if (this.detalles.remove(detalle)) {
+            this.total.set(this.total.get() - detalle.getSubtotal());
+        }
     }
 }

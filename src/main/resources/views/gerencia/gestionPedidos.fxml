@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="asedi.controllers.gerencia.GestionPedidosController"
+      spacing="10" 
+      style="-fx-padding: 20;"
+      stylesheets="@/styles/gerencia.css">
+    
+    <Label text="Gestión de Pedidos" 
+           styleClass="title-label"/>
+    
+    <Separator />
+    
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Filtrar por estado:" />
+        <ComboBox fx:id="filtroEstado" 
+                  onAction="#filtrarPedidos" 
+                  styleClass="combo-box" />
+        <Button text="Recargar" 
+                onAction="#cargarPedidos" 
+                styleClass="button" />
+    </HBox>
+    
+    <TableView fx:id="tablaPedidos" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" />
+            <TableColumn fx:id="colCliente" text="Cliente" />
+            <TableColumn fx:id="colFecha" text="Fecha" />
+            <TableColumn fx:id="colTotal" text="Total" />
+            <TableColumn fx:id="colEstado" text="Estado" />
+            <TableColumn fx:id="colAcciones" text="Acciones" />
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+    </TableView>
+    
+    <VBox fx:id="detallePedidoContainer" 
+          styleClass="detalle-pedido" 
+          visible="false" 
+          spacing="10">
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="Detalle del Pedido #" 
+                   styleClass="subtitle-label" />
+            <Label fx:id="numeroPedido" 
+                   styleClass="subtitle-label" />
+        </HBox>
+        
+        <VBox fx:id="detalleProductos" 
+              styleClass="detalle-productos" 
+              spacing="5" />
+        
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Label text="Cambiar estado a:" />
+            <ComboBox fx:id="estadoCombo" 
+                     styleClass="combo-box" />
+            <Button text="Actualizar" 
+                    onAction="#actualizarEstado" 
+                    styleClass="button" />
+        </HBox>
+    </VBox>
+    
+    <Button text="Volver al menú principal" 
+            onAction="#volverAMenu" 
+            styleClass="button" 
+            HBox.hgrow="NEVER" />
+            
+</VBox>

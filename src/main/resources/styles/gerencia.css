@@ -1,0 +1,92 @@
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10px 0;
+}
+
+.subtitle-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 8px 16px;
+    -fx-border-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #45a049;
+}
+
+.small-button {
+    -fx-padding: 4px 8px;
+    -fx-font-size: 12px;
+}
+
+.combo-box {
+    -fx-pref-width: 200px;
+}
+
+.table-view {
+    -fx-pref-height: 400px;
+}
+
+.detalle-pedido {
+    -fx-padding: 15px;
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-spacing: 10px;
+}
+
+.detalle-productos {
+    -fx-padding: 10px;
+    -fx-background-color: white;
+    -fx-border-color: #eee;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-max-height: 200px;
+    -fx-pref-height: 200px;
+    -fx-spacing: 5px;
+}
+
+.detalle-item {
+    -fx-padding: 5px;
+    -fx-border-color: #eee;
+    -fx-border-width: 0 0 1px 0;
+}
+
+/* Estilos para los estados */
+.status-pendiente {
+    -fx-text-fill: #f39c12;
+    -fx-font-weight: bold;
+}
+
+.status-en-preparacion {
+    -fx-text-fill: #3498db;
+    -fx-font-weight: bold;
+}
+
+.status-listo-para-recoger {
+    -fx-text-fill: #2ecc71;
+    -fx-font-weight: bold;
+}
+
+.status-en-camino {
+    -fx-text-fill: #9b59b6;
+    -fx-font-weight: bold;
+}
+
+.status-entregado {
+    -fx-text-fill: #27ae60;
+    -fx-font-weight: bold;
+}
+
+.status-cancelado {
+    -fx-text-fill: #e74c3c;
+    -fx-font-weight: bold;
+}
