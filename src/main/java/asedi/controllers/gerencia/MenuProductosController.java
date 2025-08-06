@@ -65,7 +65,7 @@ public class MenuProductosController implements Initializable {
     
     private void configurarEventos() {
         // Habilitar/deshabilitar botón de quitar según selección
-        tblProductos.getSelectionModel().selectedItemProperty().addListener((_, _, newVal) -> {
+        tblProductos.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             btnQuitar.setDisable(newVal == null);
         });
     }

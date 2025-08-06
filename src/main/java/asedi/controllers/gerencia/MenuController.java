@@ -193,7 +193,7 @@ public class MenuController implements Initializable {
         };
         
         // Configurar manejadores de eventos para la tarea
-        task.setOnSucceeded(_ -> {
+        task.setOnSucceeded(e -> {
             try {
                 List<Menu> menusLocal = task.getValue();
                 if (menusLocal != null && !menusLocal.isEmpty()) {
@@ -214,14 +214,14 @@ public class MenuController implements Initializable {
                         }
                     });
                 }
-            } catch (Exception e) {
-                mostrarError("Error", "Error al procesar los menús: " + e.getMessage());
+            } catch (Exception ex) {
+                mostrarError("Error", "Error al procesar los menús: " + ex.getMessage());
             } finally {
                 mostrarCargando(false);
             }
         });
         
-        task.setOnFailed(_ -> {
+        task.setOnFailed(e -> {
             mostrarError("Error", "Error al cargar los menús: " + 
                 (task.getException() != null ? task.getException().getMessage() : "Error desconocido"));
             mostrarCargando(false);
@@ -321,7 +321,7 @@ public class MenuController implements Initializable {
      * Configura la columna de acciones con botones de editar y eliminar
      */
     private void configurarColumnaAcciones() {
-        colAcciones.setCellFactory(_ -> new TableCell<>() {
+        colAcciones.setCellFactory(column -> new TableCell<>() {
             private final Button btnEditar = new Button("Editar");
             private final Button btnEliminar = new Button("Eliminar");
             private final HBox botones = new HBox(5, btnEditar, btnEliminar);
@@ -332,7 +332,7 @@ public class MenuController implements Initializable {
                 btnEliminar.getStyleClass().add("btn-eliminar");
                 
                 // Acción del botón editar
-                btnEditar.setOnAction(_ -> {
+                btnEditar.setOnAction(event -> {
                     Menu menu = getTableView().getItems().get(getIndex());
                     if (menu != null) {
                         mostrarFormularioMenu(menu);
@@ -340,7 +340,7 @@ public class MenuController implements Initializable {
                 });
                 
                 // Acción del botón eliminar
-                btnEliminar.setOnAction(_ -> {
+                btnEliminar.setOnAction(event -> {
                     Menu menu = getTableView().getItems().get(getIndex());
                     if (menu != null) {
                         confirmarEliminarMenu(menu);
@@ -503,13 +503,13 @@ public class MenuController implements Initializable {
     
     private void configurarUI() {
         // Configurar el campo de búsqueda
-        txtBuscar.textProperty().addListener((_, _, newValue) -> filtrarMenus(newValue));
+        txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> filtrarMenus(newValue));
         
         // Configurar la columna de acciones
         configurarColumnaAcciones();
         
         // Configurar la tabla
-        tablaMenus.setRowFactory(_ -> {
+        tablaMenus.setRowFactory(e -> {
             TableRow<Menu> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {

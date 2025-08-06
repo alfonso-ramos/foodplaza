@@ -40,6 +40,16 @@
     -fx-max-width: 100%;
 }
 
+/* Estilos simples para el botón de agregar al carrito */
+.add-to-cart-button {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+}
+
 /* Estilos para el indicador de carga */
 .loading-spinner .indicator {
     -fx-progress-color: #27ae60;

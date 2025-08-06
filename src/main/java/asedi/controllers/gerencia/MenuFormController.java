@@ -50,7 +50,7 @@ public class MenuFormController {
     
     private void configurarValidaciones() {
         // Validación del campo nombre
-        txtNombre.textProperty().addListener((_, _, newValue) -> {
+        txtNombre.textProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue == null || newValue.trim().isEmpty()) {
                 agregarError("nombre", "El nombre es obligatorio");
                 txtNombre.setStyle(ERROR_STYLE);
@@ -65,7 +65,7 @@ public class MenuFormController {
         });
         
         // Validación del campo descripción
-        txtDescripcion.textProperty().addListener((_, _, newValue) -> {
+        txtDescripcion.textProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null && newValue.length() > 500) {
                 agregarError("descripcion", "La descripción no puede exceder los 500 caracteres");
                 txtDescripcion.setStyle(ERROR_STYLE);

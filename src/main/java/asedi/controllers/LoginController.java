@@ -125,7 +125,7 @@ public class LoginController {
     
     @FXML
     private void handleRecoverPassword() {
-        mostrarAlerta("Recuperar Contraseña", "Funcionalidad en desarrollo.", Alert.AlertType.INFORMATION);
+        loadView("/views/solicitarCodigo.fxml", "Recuperar Contraseña");
     }
     
     private void loadView(String fxmlPath, String title) {

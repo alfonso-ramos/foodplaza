@@ -71,7 +71,7 @@ public class AgregarLocalController {
     
     private void configurarValidaciones() {
         // Validar formato de hora (HH:mm)
-        horaAperturaField.textProperty().addListener((_, _, newVal) -> {
+        horaAperturaField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")) {
                 horaAperturaField.setStyle("-fx-border-color: #d32f2f; -fx-border-width: 1px;");
             } else {
@@ -79,7 +79,7 @@ public class AgregarLocalController {
             }
         });
         
-        horaCierreField.textProperty().addListener((_, _, newVal) -> {
+        horaCierreField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")) {
                 horaCierreField.setStyle("-fx-border-color: #d32f2f; -fx-border-width: 1px;");
             } else {

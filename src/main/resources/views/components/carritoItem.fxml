@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<HBox xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="asedi.controllers.CarritoItemController"
+      styleClass="carrito-item"
+      spacing="15"
+      style="-fx-padding: 15; -fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+    
+    <!-- Imagen del producto -->
+    <ImageView fx:id="imagenProducto" 
+               fitHeight="80" 
+               fitWidth="80" 
+               preserveRatio="true" 
+               style="-fx-background-radius: 4;" />
+    
+    <VBox HBox.hgrow="ALWAYS" spacing="5">
+        <!-- Nombre y precio -->
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label fx:id="nombreLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+            <Label fx:id="precioUnitarioLabel" style="-fx-text-fill: #28a745; -fx-font-weight: bold;" />
+        </HBox>
+        
+        <!-- Descripción -->
+        <Label fx:id="descripcionLabel" style="-fx-text-fill: #6c757d; -fx-wrap-text: true;" />
+        
+        <!-- Controles de cantidad -->
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Button text="-" onAction="#decrementarCantidad" style="-fx-background-color: #e9ecef; -fx-text-fill: #495057; -fx-font-weight: bold; -fx-min-width: 30; -fx-pref-width: 30; -fx-max-width: 30;" />
+            <Label fx:id="cantidadLabel" style="-fx-font-weight: bold; -fx-min-width: 30; -fx-alignment: CENTER;" />
+            <Button text="+" onAction="#incrementarCantidad" style="-fx-background-color: #e9ecef; -fx-text-fill: #495057; -fx-font-weight: bold; -fx-min-width: 30; -fx-pref-width: 30; -fx-max-width: 30;" />
+            <Label fx:id="subtotalLabel" style="-fx-font-weight: bold; -fx-text-fill: #28a745; -fx-padding: 0 0 0 20;" />
+        </HBox>
+    </VBox>
+    
+    <!-- Botón de eliminar -->
+    <Button onAction="#eliminarDelCarrito" style="-fx-background-color: transparent; -fx-text-fill: #dc3545; -fx-cursor: hand;">
+        <graphic>
+            <FontIcon iconLiteral="fas-times" iconSize="18" />
+        </graphic>
+    </Button>
+    
+</HBox>

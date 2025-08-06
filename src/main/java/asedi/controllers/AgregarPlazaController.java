@@ -92,7 +92,7 @@ public class AgregarPlazaController {
                 // Botón para eliminar
                 Button btnEliminar = new Button("X");
                 btnEliminar.getStyleClass().add("delete-button");
-                btnEliminar.setOnAction(_ -> {
+                btnEliminar.setOnAction(event -> {
                     imagenesSeleccionadas.remove(archivo);
                     actualizarVistaPrevia();
                 });

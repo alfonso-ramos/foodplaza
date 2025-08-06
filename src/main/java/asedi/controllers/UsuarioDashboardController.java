@@ -3,10 +3,17 @@ package asedi.controllers;
 import asedi.model.Local;
 import asedi.model.Plaza;
 import asedi.services.AuthService;
+import asedi.services.CarritoService;
 import asedi.services.PlazaService;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.util.Duration;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -22,8 +29,11 @@ public class UsuarioDashboardController {
     @FXML private Label userNameLabel;
     @FXML private StackPane contenidoPane;
     @FXML private VBox plazasContainer;
+    @FXML private Label carritoBadge;
 
     private final PlazaService plazaService = new PlazaService();
+    private final CarritoService carritoService = CarritoService.getInstance();
+    private Timeline cartBadgeUpdater;
 
     @FXML
     public void initialize() {
@@ -33,6 +43,65 @@ public class UsuarioDashboardController {
             userNameLabel.setText(authService.getCurrentUser().getNombre());
         }
         cargarPlazas();
+        
+        // Configurar actualización periódica del badge del carrito
+        configurarActualizadorCarrito();
+        
+        // Actualizar el badge al inicio
+        actualizarBadgeCarrito();
+    }
+    
+    private void configurarActualizadorCarrito() {
+        cartBadgeUpdater = new Timeline(
+            new KeyFrame(Duration.seconds(1), e -> actualizarBadgeCarrito())
+        );
+        cartBadgeUpdater.setCycleCount(Timeline.INDEFINITE);
+        cartBadgeUpdater.play();
+    }
+    
+    public void actualizarBadgeCarrito() {
+        Platform.runLater(() -> {
+            int totalItems = carritoService.getCantidadTotal();
+            carritoBadge.setText(String.valueOf(totalItems));
+            carritoBadge.setVisible(totalItems > 0);
+        });
+    }
+    
+    @FXML
+    public void verCarrito() {
+        try {
+            // Cargar el FXML del carrito desde la ubicación correcta
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/usuario/carrito.fxml"));
+            Parent carritoView = loader.load();
+            
+            // Obtener el controlador del carrito y configurar la actualización del badge
+            NuevoCarritoController carritoController = loader.getController();
+            carritoController.setStage((Stage) contenidoPane.getScene().getWindow());
+            carritoController.setOnCartUpdate(e -> actualizarBadgeCarrito());
+            
+            // Crear una nueva escena para el carrito
+            Scene carritoScene = new Scene(carritoView);
+            Stage carritoStage = new Stage();
+            carritoStage.setScene(carritoScene);
+            carritoStage.setTitle("Mi Carrito");
+            carritoStage.setMaximized(true);
+            
+            // Configurar para actualizar el badge cuando se cierre el carrito
+            carritoStage.setOnHidden(e -> actualizarBadgeCarrito());
+            
+            carritoStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarError("No se pudo cargar el carrito de compras: " + e.getMessage());
+        }
+    }
+    
+    private void mostrarError(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     @FXML

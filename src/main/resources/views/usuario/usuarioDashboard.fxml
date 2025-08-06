@@ -37,6 +37,18 @@
         </VBox>
     </left>
 
+    <!-- Barra superior -->
+    <top>
+        <HBox style="-fx-background-color: white; -fx-padding: 15 20; -fx-alignment: CENTER_RIGHT; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+            <Button onAction="#verCarrito" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 5; -fx-graphic-text-gap: 5;">
+                <HBox spacing="5" alignment="CENTER">
+                    <Label text="🛒" style="-fx-font-size: 16;"/>
+                    <Label fx:id="carritoBadge" text="0" style="-fx-background-color: #28a745; -fx-background-radius: 10; -fx-text-fill: white; -fx-padding: 0 6; -fx-font-size: 12; -fx-font-weight: bold;"/>
+                </HBox>
+            </Button>
+        </HBox>
+    </top>
+    
     <!-- Área de contenido principal -->
     <center>
         <StackPane fx:id="contenidoPane" style="-fx-padding: 20;">

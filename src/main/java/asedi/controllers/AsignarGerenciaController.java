@@ -114,8 +114,8 @@ public class AsignarGerenciaController implements Initializable {
     }
     
     private void configurarEventos() {
-        buscarBtn.setOnAction(_ -> buscarUsuario());
-        plazaCombo.getSelectionModel().selectedItemProperty().addListener((_, __, newVal) -> {
+        buscarBtn.setOnAction(e -> buscarUsuario());
+        plazaCombo.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 cargarLocalesPorPlaza(newVal.getId());
                 localCombo.setDisable(false);
@@ -126,12 +126,12 @@ public class AsignarGerenciaController implements Initializable {
             actualizarEstadoBotonAsignar();
         });
         
-        localCombo.getSelectionModel().selectedItemProperty().addListener((_, _, _) -> 
+        localCombo.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> 
             actualizarEstadoBotonAsignar()
         );
         
-        asignarBtn.setOnAction(_ -> asignarGerencia());
-        cancelarBtn.setOnAction(_ -> limpiarFormulario());
+        asignarBtn.setOnAction(e -> asignarGerencia());
+        cancelarBtn.setOnAction(e -> limpiarFormulario());
     }
     
     private void buscarUsuario() {

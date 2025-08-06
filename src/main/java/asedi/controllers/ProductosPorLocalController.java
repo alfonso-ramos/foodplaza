@@ -12,6 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,8 +29,72 @@ public class ProductosPorLocalController {
     
     @FXML
     private StackPane loadingContainer;
+    
+    @FXML
+    private VBox root;
 
     private Local local;
+    
+    @FXML
+    public void initialize() {
+        // Aplicar estilos directamente en el código
+        String css = """
+            .productos-por-local {
+                -fx-background-color: #f5f7fa;
+                -fx-padding: 0;
+            }
+            
+            .producto-card {
+                -fx-background-color: white;
+                -fx-background-radius: 8;
+                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+                -fx-padding: 15;
+                -fx-spacing: 10;
+                -fx-min-width: 250;
+                -fx-max-width: 300;
+            }
+            
+            .producto-nombre {
+                -fx-font-size: 16px;
+                -fx-font-weight: bold;
+                -fx-text-fill: #2c3e50;
+            }
+            
+            .producto-descripcion {
+                -fx-font-size: 14px;
+                -fx-text-fill: #7f8c8d;
+                -fx-wrap-text: true;
+            }
+            
+            .producto-precio {
+                -fx-font-size: 18px;
+                -fx-font-weight: bold;
+                -fx-text-fill: #e74c3c;
+            }
+            
+            .boton-agregar {
+                -fx-background-color: #2ecc71;
+                -fx-text-fill: white;
+                -fx-font-weight: bold;
+                -fx-padding: 8 16;
+                -fx-background-radius: 4;
+                -fx-cursor: hand;
+            }
+            
+            .boton-agregar:hover {
+                -fx-background-color: #27ae60;
+            }
+            
+            .no-products-message {
+                -fx-font-size: 16px;
+                -fx-text-fill: #7f8c8d;
+                -fx-padding: 20;
+            }
+            """;
+            
+        root.getStylesheets().add("data:text/css;base64," + 
+            java.util.Base64.getEncoder().encodeToString(css.getBytes()));
+    }
 
     private final ProductoService productoService = new ProductoService();
 

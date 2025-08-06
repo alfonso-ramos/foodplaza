@@ -68,13 +68,13 @@ public class EditarLocalController implements Initializable {
     @FXML
     private void initialize() {
         // Configurar los botones
-        btnGuardar.setOnAction(_ -> guardarCambios());
-        btnCancelar.setOnAction(_ -> cerrarVentana());
-        btnEliminarImagen.setOnAction(_ -> eliminarImagen());
+        btnGuardar.setOnAction(event -> guardarCambios());
+        btnCancelar.setOnAction(event -> cerrarVentana());
+        btnEliminarImagen.setOnAction(event -> eliminarImagen());
         
         // Configurar el botón de seleccionar imagen
         if (btnSeleccionarImagen != null) {
-            btnSeleccionarImagen.setOnAction(_ -> seleccionarImagen());
+            btnSeleccionarImagen.setOnAction(event -> seleccionarImagen());
         }
     }
     

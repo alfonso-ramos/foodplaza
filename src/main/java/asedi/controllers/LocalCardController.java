@@ -83,7 +83,7 @@ public class LocalCardController implements Initializable {
                     new Thread(() -> {
                         try {
                             Image image = new Image(local.getImagenUrl(), true); // true para carga en segundo plano
-                            image.progressProperty().addListener((_, _, newVal) -> {
+                            image.progressProperty().addListener((obs, oldVal, newVal) -> {
                                 if (newVal.doubleValue() == 1.0) {
                                     Platform.runLater(() -> imagenLocal.setImage(image));
                                 }

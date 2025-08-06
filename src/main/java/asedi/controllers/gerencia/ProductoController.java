@@ -651,7 +651,7 @@ public class ProductoController implements Initializable {
                     }
                 };
                 
-                tareaGuardar.setOnSucceeded(_evt -> {
+                tareaGuardar.setOnSucceeded(evt -> {
                     if (tareaGuardar.getValue()) {
                         Platform.runLater((Runnable)() -> {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -712,7 +712,7 @@ public class ProductoController implements Initializable {
                     }
                 };
                 
-                tareaEliminar.setOnSucceeded(_ -> {
+                tareaEliminar.setOnSucceeded(e -> {
                     mostrarCargando(false);
                     if (tareaEliminar.getValue()) {
                         // Eliminación exitosa, actualizar la vista
@@ -728,7 +728,7 @@ public class ProductoController implements Initializable {
                     }
                 });
                 
-                tareaEliminar.setOnFailed(_ -> {
+                tareaEliminar.setOnFailed(e -> {
                     mostrarCargando(false);
                     Platform.runLater(() -> 
                         AlertUtils.mostrarError("Error", "Error al intentar eliminar el producto: " + 
@@ -839,7 +839,7 @@ public class ProductoController implements Initializable {
                     }
                 });
                 
-                tareaActualizar.setOnSucceeded(_ -> {
+                tareaActualizar.setOnSucceeded(e -> {
                     Platform.runLater((Runnable)() -> {
                         try {
                             // Cerrar diálogo de carga
@@ -939,8 +939,8 @@ public class ProductoController implements Initializable {
                                     controller.saveButton.setDisable(false);
                                 }
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
                             loadingDialog.close();
                             AlertUtils.mostrarError("Error inesperado", "Ocurrió un error inesperado al procesar la respuesta.");
                             if (controller.saveButton != null) {
@@ -950,7 +950,7 @@ public class ProductoController implements Initializable {
                     });
                 });
                 
-                tareaActualizar.setOnFailed(_ -> {
+                tareaActualizar.setOnFailed(e -> {
                     Platform.runLater((Runnable)() -> {
                         try {
                             loadingDialog.close();

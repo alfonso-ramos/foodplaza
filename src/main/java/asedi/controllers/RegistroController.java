@@ -37,10 +37,10 @@ public class RegistroController {
     @FXML
     private void initialize() {
         // Configurar el botón de registro para que se active con Enter
-        registrarButton.setOnAction(_ -> handleRegistrar());
+        registrarButton.setOnAction(event -> handleRegistrar());
         
         // Configurar el campo de teléfono para solo aceptar números
-        telefonoField.textProperty().addListener((_, _, newValue) -> {
+        telefonoField.textProperty().addListener((obs, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
                 telefonoField.setText(newValue.replaceAll("[^\\d]", ""));
             }
@@ -178,8 +178,10 @@ public class RegistroController {
     }
     
     private boolean esEmailValido(String email) {
-        String regex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
-        return Pattern.matches(regex, email);
+        // Patrón más permisivo que acepta la mayoría de los formatos de correo electrónico válidos
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        // Validación adicional para asegurar que hay un @ y al menos un punto después
+        return email != null && email.contains("@") && email.contains(".") && Pattern.matches(regex, email);
     }
     
     private String validarContrasena(String password) {

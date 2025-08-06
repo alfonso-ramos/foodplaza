@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="asedi.controllers.CarritoController" 
+            stylesheets="@/styles/carrito.css">
+    
+    <top>
+        <VBox style="-fx-background-color: #28a745; -fx-padding: 15;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Button text="← Volver" onAction="#volver" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" />
+                <Label text="Mi Carrito" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;" />
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <VBox style="-fx-padding: 20;" spacing="20">
+            <!-- Lista de productos en el carrito -->
+            <VBox fx:id="itemsContainer" spacing="15" style="-fx-padding: 10;" />
+            
+            <!-- Resumen del pedido -->
+            <VBox style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-spacing: 15; -fx-background-radius: 10;">
+                <Label text="Resumen del Pedido" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+                <Separator />
+                
+                <HBox style="-fx-spacing: 10; -fx-alignment: CENTER_LEFT;">
+                    <Label text="Subtotal:" style="-fx-font-size: 16px;" />
+                    <Label fx:id="subtotalLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                </HBox>
+                
+                <HBox style="-fx-spacing: 10; -fx-alignment: CENTER_LEFT;">
+                    <Label text="IVA (16%):" style="-fx-font-size: 16px;" />
+                    <Label fx:id="ivaLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                </HBox>
+                
+                <HBox style="-fx-spacing: 10; -fx-alignment: CENTER_LEFT; -fx-padding: 10 0 0 0;">
+                    <Label text="Total:" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+                    <Label fx:id="totalLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #28a745;" />
+                </HBox>
+                
+                <Button text="Proceder al Pago" onAction="#procederAlPago" 
+                        style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 24; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 16px;" />
+            </VBox>
+        </Vbox>
+    </center>
+    
+</BorderPane>

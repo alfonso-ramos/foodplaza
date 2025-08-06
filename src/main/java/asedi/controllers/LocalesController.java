@@ -38,7 +38,7 @@ public class LocalesController {
         localService = new LocalService();
         
         // Configurar el ComboBox
-        plazasComboBox.setCellFactory(_ -> new ListCell<Plaza>() {
+        plazasComboBox.setCellFactory(e -> new ListCell<Plaza>() {
             @Override
             protected void updateItem(Plaza plaza, boolean empty) {
                 super.updateItem(plaza, empty);
@@ -54,7 +54,7 @@ public class LocalesController {
             }
         });
         
-        plazasComboBox.valueProperty().addListener((_, __, newValue) -> {
+        plazasComboBox.valueProperty().addListener((obs, oldVal, newValue) -> {
             if (newValue != null) {
                 mostrarCargando(true, "Cargando locales...");
                 cargarLocales(newValue.getId());
@@ -62,14 +62,14 @@ public class LocalesController {
         });
         
         // Configurar el campo de búsqueda
-        searchField.textProperty().addListener((_, _, _) -> {
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (plazasComboBox.getValue() != null) {
                 cargarLocales(plazasComboBox.getValue().getId());
             }
         });
         
         // Configurar el botón de reintento
-        retryButton.setOnAction(_ -> {
+        retryButton.setOnAction(event -> {
             if (plazasComboBox.getValue() != null) {
                 mostrarCargando(true, "Cargando locales...");
                 cargarLocales(plazasComboBox.getValue().getId());

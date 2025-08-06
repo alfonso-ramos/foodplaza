@@ -319,4 +319,32 @@ public class AuthService {
     // Los métodos isAdmin(), isManager() e isUser() han sido eliminados
     // ya que no se utilizan y causan errores de tipo.
     // Se recomienda usar tieneRol("admin"), tieneRol("gerente"), tieneRol("usuario") en su lugar.
+
+    public void solicitarCodigoRecuperacion(String email) throws IOException {
+        Map<String, String> body = new HashMap<>();
+        body.put("email", email);
+        try {
+            HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.post("/auth/password-reset/request", body, String.class);
+            if (response.getStatusCode() != 200) {
+                throw new IOException("Error al solicitar el código de recuperación: " + response.getBody());
+            }
+        } catch (Exception e) {
+            throw new IOException("Error al solicitar el código de recuperación: " + e.getMessage(), e);
+        }
+    }
+
+    public void verificarCodigoYCambiarPassword(String email, String code, String newPassword) throws IOException {
+        Map<String, String> body = new HashMap<>();
+        body.put("email", email);
+        body.put("code", code);
+        body.put("new_password", newPassword);
+        try {
+            HttpClientUtil.HttpResponseWrapper<String> response = HttpClientUtil.post("/auth/password-reset/verify", body, String.class);
+            if (response.getStatusCode() != 200) {
+                throw new IOException("Error al cambiar la contraseña: " + response.getBody());
+            }
+        } catch (Exception e) {
+            throw new IOException("Error al cambiar la contraseña: " + e.getMessage(), e);
+        }
+    }
 }

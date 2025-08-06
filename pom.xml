@@ -135,7 +135,6 @@
                     <source>21</source>
                     <target>21</target>
                     <compilerArgs>
-                        <arg>--enable-preview</arg>
                         <arg>-Xlint:all</arg>
                     </compilerArgs>
                     <parameters>true</parameters>
@@ -185,9 +184,8 @@
                     <stripDebug>true</stripDebug>
                     <noHeaderFiles>true</noHeaderFiles>
                     <executable>java</executable>
-                    <commandlineArgs>--enable-preview -Xms512m -Xmx1024m -XX:MaxMetaspaceSize=256m -XX:+UseG1GC -XX:+UseStringDeduplication</commandlineArgs>
+                    <commandlineArgs>-Xms512m -Xmx1024m -XX:MaxMetaspaceSize=256m -XX:+UseG1GC -XX:+UseStringDeduplication</commandlineArgs>
                     <options>
-                        <option>--enable-preview</option>
                         <option>--add-exports</option>
                         <option>javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED</option>
                         <option>--add-opens</option>
@@ -197,10 +195,8 @@
                         <option>-XX:MaxMetaspaceSize=256m</option>
                     </options>
                     <compilerArgs>
-                        <arg>--enable-preview</arg>
                     </compilerArgs>
                     <jlinkExtraArgs>
-                        <arg>--enable-preview</arg>
                     </jlinkExtraArgs>
                 </configuration>
             </plugin>
@@ -210,7 +206,7 @@
                 <version>3.1.0</version>
                 <configuration>
                     <mainClass>${main.class}</mainClass>
-                    <commandlineArgs>--enable-preview</commandlineArgs>
+                    <commandlineArgs></commandlineArgs>
                     <cleanupDaemonThreads>false</cleanupDaemonThreads>
                 </configuration>
             </plugin>
@@ -258,7 +254,6 @@
                     <runtimeImage>${java.home}</runtimeImage>
                     <destination>${project.build.directory}/jpackage</destination>
                     <javaOptions>
-                        <option>--enable-preview</option>
                         <option>-Dfile.encoding=UTF-8</option>
                     </javaOptions>
                     <jlinkOptions>

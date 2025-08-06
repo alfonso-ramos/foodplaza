@@ -5,16 +5,26 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.effect.DropShadow?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" 
-      xmlns:fx="http://javafx.com/fxml/1" 
+<VBox xmlns="http://javafx.com/javafx/17" 
+      xmlns:fx="http://javafx.com/fxml" 
       fx:controller="asedi.controllers.UsuarioProductoCardController" 
+      fx:id="root"
       styleClass="producto-card"
       spacing="0"
-      alignment="TOP_CENTER"
-      style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+      alignment="TOP_CENTER">
+    
+    <!-- Definición del efecto de sombra -->
+    <effect>
+        <DropShadow color="rgba(0,0,0,0.1)" radius="10" spread="0" offsetX="0" offsetY="2" />
+    </effect>
+    
+    <!-- StackPane principal para el overlay de confirmación -->
+    <StackPane fx:id="cardContainer" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 0;">
+        <effect>
+            <DropShadow color="rgba(0,0,0,0.1)" radius="10" spread="0" offsetX="0" offsetY="2" />
+        </effect>
     
     <!-- Imagen del producto -->
     <StackPane style="-fx-background-color: #f8f9fa; -fx-background-radius: 12 12 0 0;" alignment="CENTER">
@@ -40,12 +50,21 @@
             <Label fx:id="precioLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #28a745;" />
             
             <!-- Botón de agregar al carrito -->
-            <Button onAction="#agregarAlCarrito" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-background-radius: 20; -fx-cursor: hand;">
-                Añadir
+            <Button fx:id="agregarButton" 
+                    onAction="#agregarAlCarrito" 
+                    style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-background-radius: 20; -fx-cursor: hand;">
+                Agregar al Carrito
+                <HBox.margin>
+                    <Insets left="10" right="10" />
+                </HBox.margin>
             </Button>
         </HBox>
     </VBox>
     
+    </StackPane>
+    
     <!-- Etiqueta de no disponible (inicialmente oculta) -->
-    <Label fx:id="disponibleLabel" style="-fx-text-fill: #dc3545; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 4 8; -fx-background-color: #f8d7da; -fx-background-radius: 4; -fx-border-radius: 4; -fx-border-color: #f5c6cb; -fx-border-width: 1; -fx-alignment: center;" visible="false" />
+    <Label fx:id="disponibleLabel" 
+           style="-fx-text-fill: #dc3545; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 4 8; -fx-background-color: #f8d7da; -fx-background-radius: 4; -fx-border-radius: 4; -fx-border-color: #f5c6cb; -fx-border-width: 1; -fx-alignment: center;" 
+           visible="false" />
 </VBox>
