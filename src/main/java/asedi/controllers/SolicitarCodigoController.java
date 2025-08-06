@@ -34,7 +34,7 @@ public class SolicitarCodigoController {
             messageLabel.setText("Se ha enviado un código de verificación a tu correo electrónico.");
             
             // Navegar a la siguiente vista
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/asedi/views/verificarCodigo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/verificarCodigo.fxml"));
             Parent root = loader.load();
             VerificarCodigoController controller = loader.getController();
             controller.setEmail(email);
