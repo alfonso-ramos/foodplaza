@@ -22,6 +22,10 @@
     <initialHeapSize>512</initialHeapSize>
     <maxHeapSize>1024</maxHeapSize>
     <opts>
+      <opt>--module-path</opt>
+      <opt>/opt/javafx-sdk-21.0.2/lib</opt>
+      <opt>--add-modules</opt>
+      <opt>javafx.controls,javafx.fxml</opt>
       <opt>--enable-preview</opt>
     </opts>
   </jre>
